@@ -6,12 +6,13 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import { useSelector } from 'react-redux';
 import { RootState } from 'modules/core/rootReducer';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import LoginedMenu from 'components/common/header/sub/LoginedMenu';
+import GuestMenu from 'components/common/header/sub/GuestMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Header: React.FC = () => {
+const Main: React.FC = () => {
   const { auth } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -51,11 +52,27 @@ const Header: React.FC = () => {
           </IconButton>
 
           <Link component={RouterLink} to="/" className={classes.title} underline="none">
-            <Typography variant="h5"  color="primary">
-                Quiiz
+            <Typography variant="h5" color="primary">
+              Quiiz
             </Typography>
           </Link>
-          
+          {!auth && (
+            <div>
+              <IconButton
+                aria-label="display more actions"
+                edge="end"
+                color="inherit"
+                onClick={handleMenu}
+              >
+                <MoreIcon />
+              </IconButton>
+              <GuestMenu
+                anchorEl={anchorEl}
+                open={open}
+                handleClose={handleClose}
+              />
+            </div>
+          )}
           {auth && (
             <div>
               <IconButton
@@ -67,32 +84,11 @@ const Header: React.FC = () => {
               >
                 <AccountCircle />
               </IconButton>
-              <Menu
-                id="menu-appbar"
+              <LoginedMenu
                 anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
                 open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>
-                  <Typography variant="body1" color="textSecondary">
-                    プロフィール
-                  </Typography>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Typography variant="body1" color="textSecondary">
-                    アカウント
-                  </Typography>
-                </MenuItem>
-              </Menu>
+                handleClose={handleClose}
+              />
             </div>
           )}
         </Toolbar>
@@ -101,4 +97,4 @@ const Header: React.FC = () => {
   )
 }
 
-export default Header;
+export default Main;
