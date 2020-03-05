@@ -3,11 +3,13 @@ import Header from './components/common/header/Main';
 import theme from './components/core/CustomeTheme';
 import MuiThemeProvider from '@material-ui/styles/ThemeProvider';
 import Container from '@material-ui/core/Container';
-import DebugConfig from 'components/common/DebugSetting';
 import { useLocation } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles, Theme, createStyles, Backdrop } from '@material-ui/core';
 import ContentRouter from 'components/core/Router';
+import AuthService from 'services/auth/AuthService';
+import { setUser } from 'modules/auth/authModule';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,13 +27,19 @@ const noHeaderPathList = [
 const App = () => {
   const location = useLocation();
   const classes = useStyles();
-  console.log(location.pathname);
+  const dispatch = useDispatch();
+
+  AuthService.onAuthStateChanged((user: firebase.User | null) => {
+    if (user) {
+      dispatch(setUser({ user }));
+    }
+  });
+
   return (
     <MuiThemeProvider theme={theme}>
       {!noHeaderPathList.includes(location.pathname) &&
         (
           <div>
-            <DebugConfig />
             <Header />
           </div>
         )

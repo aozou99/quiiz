@@ -29,7 +29,7 @@ const rows = [
   createData('kame3', 'ゼニガメの正式名は？', 'failed'),
 ];
 
-function ExerciseList({history}: RouteComponentProps) {
+const ExerciseList = ({history}: RouteComponentProps) => {
   const classes = useStyles();
   const theme = useTheme();
 

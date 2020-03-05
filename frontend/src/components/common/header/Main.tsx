@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Main: React.FC = () => {
-  const { auth } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -56,7 +56,7 @@ const Main: React.FC = () => {
               Quiiz
             </Typography>
           </Link>
-          {!auth && (
+          {!user && (
             <div>
               <IconButton
                 aria-label="display more actions"
@@ -73,7 +73,7 @@ const Main: React.FC = () => {
               />
             </div>
           )}
-          {auth && (
+          {user && (
             <div>
               <IconButton
                 aria-label="account of current user"

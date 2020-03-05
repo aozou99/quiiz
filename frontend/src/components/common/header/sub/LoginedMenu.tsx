@@ -1,5 +1,8 @@
 import React from 'react';
 import { Menu, MenuItem, Typography } from '@material-ui/core';
+import { signOut } from 'modules/auth/authModule';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom'
 
 type State = {
   anchorEl: null | HTMLElement
@@ -8,6 +11,8 @@ type State = {
 }
 
 const LoginedMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   return (
     <Menu
       id="menu-appbar"
@@ -32,6 +37,14 @@ const LoginedMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
       <MenuItem onClick={handleClose}>
         <Typography variant="body1" color="textSecondary">
           アカウント
+        </Typography>
+      </MenuItem>
+      <MenuItem onClick={() => {
+        dispatch(signOut());
+        history.push('/signin');
+      }}>
+        <Typography variant="body1" color="textSecondary">
+          ログアウト
         </Typography>
       </MenuItem>
     </Menu>

@@ -1,29 +1,71 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, Dispatch } from '@reduxjs/toolkit';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
+type AuthArgs = {
+  displayName?: string
+  email: string 
+  password: string
+}
 
 type State = {
-  auth: boolean
+  user: firebase.User | null
 }
 
 const initialState: State = {
-  auth: true
+  user: null
 }
 
 const authModule = createSlice({
-  name: 'mosaicQuizGame',
+  name: 'auth',
   initialState,
   reducers: {
-    login(state:State) {
-      state.auth = true;
+    setUser(state: State, action: PayloadAction<{ user: firebase.User | null }>) {
+      state.user = action.payload.user;
     },
-    logout(state:State) {
-      state.auth = false;
+    signOut(state: State) {
+      firebase
+        .auth()
+        .signOut();
+      state.user = null;
     }
   }
 })
 
 export const {
-  login,
-  logout
+  signOut,
+  setUser,
 } = authModule.actions;
 
 export default authModule;
+
+export const signUp = ({displayName, email, password}: AuthArgs) => {
+  return async (dispatch: Dispatch) => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(user => {
+        user.user?.updateProfile({
+          displayName
+        });
+        dispatch(setUser({ user: user.user }));
+      })
+      .catch(reason => {
+        console.error(reason);
+      })
+  }
+}
+
+export const signIn = ({ email, password }: AuthArgs) => {
+  return async (dispatch: Dispatch) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(user => {
+        dispatch(setUser({ user: user.user }));
+      })
+      .catch(reason => {
+        console.error(reason);
+      })
+  }
+}
