@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { Snackbar, Backdrop, CircularProgress } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { useHistory } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom';
 
 type FormData = {
   email: string;
@@ -123,8 +124,8 @@ const SignInForm = () => {
         </Link>
         </Grid>
         <Grid item>
-          <Link href="#" variant="body2">
-            {"新規登録はこちら"}
+          <Link component={RouterLink} to="/signup" variant="body2">
+            新規登録はこちら
           </Link>
         </Grid>
       </Grid>

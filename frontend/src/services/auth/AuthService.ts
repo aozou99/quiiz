@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/functions';
 
 type AuthArgs = {
   displayName?: string
@@ -16,6 +17,9 @@ class AuthService {
       return fetch('/__/firebase/init.json').then(async response => {
         const json = await response.json();
         firebase.initializeApp(json);
+        if (window.location.hostname === 'localhost') {
+          firebase.functions().useFunctionsEmulator('http://localhost:5001');
+        }
       });   
     }
   }
@@ -44,6 +48,15 @@ class AuthService {
         });
         return user.user;
       });
+  }
+
+  async existDisplayName(displayName: string) {
+    const res = await firebase
+    .functions()
+    .httpsCallable('existDisplayName')({
+      displayName
+    });
+    return res.data.message;
   }
 }
 

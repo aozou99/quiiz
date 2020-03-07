@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import SignInForm from 'components/main/auth/signIn/sub/SignInForm';
-import Copyright from 'components/main/auth/CommonSub/Copyright';
+import Copyright from 'components/main/auth/commonSub/Copyright';
 
 const useStyles = makeStyles(theme => ({
   paper: {

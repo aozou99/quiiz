@@ -43,7 +43,8 @@ cd frontend && yarn install && cd ../
 ### Local development environment
 
 ```bash
-firebase serve --host 0.0.0.0
+export GOOGLE_APPLICATION_CREDENTIALS=your_service_account.json
+firebase serve
 ```
 
 # Note
