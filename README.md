@@ -13,7 +13,6 @@
 
 # Requirement
 
-* npm
 * yarn
 * firebase
 
@@ -31,7 +30,7 @@ git clone https://github.com/aozou99/quiiz.git
 ### Install the liblary functions need
 
 ```bash
-cd functions && npm install && cd ../
+cd functions && yarn install && cd ../
 ```
 
 ### Install the liblary frontend need
@@ -43,6 +42,7 @@ cd frontend && yarn install && cd ../
 ### Local development environment
 
 ```bash
+# firebaseのエミュレータを利用するのに必要
 export GOOGLE_APPLICATION_CREDENTIALS=your_service_account.json
 firebase serve
 ```

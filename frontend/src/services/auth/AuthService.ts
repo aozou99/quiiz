@@ -1,6 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/functions';
+import * as firebaseui from 'firebaseui';
+import 'firebaseui/dist/firebaseui.css';
 
 type AuthArgs = {
   displayName?: string
@@ -9,6 +11,7 @@ type AuthArgs = {
 }
 
 class AuthService {
+  ui!: firebaseui.auth.AuthUI;
   
   async init() {
     try {
@@ -17,6 +20,7 @@ class AuthService {
       return fetch('/__/firebase/init.json').then(async response => {
         const json = await response.json();
         firebase.initializeApp(json);
+        this.ui = new firebaseui.auth.AuthUI(firebase.auth());
         if (window.location.hostname === 'localhost') {
           firebase.functions().useFunctionsEmulator('http://localhost:5001');
         }
@@ -57,6 +61,17 @@ class AuthService {
       displayName
     });
     return res.data.message;
+  }
+
+  createFirebaseUI() {
+    this.ui.start('#firebaseui-auth-container', {
+      signInOptions: [
+        // List of OAuth providers supported.
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      ],
+      signInFlow: 'popup',
+      signInSuccessUrl: '/',
+    });
   }
 }
 

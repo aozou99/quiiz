@@ -5,7 +5,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useSelector } from 'react-redux';
 import { RootState } from 'modules/core/rootReducer';
 import { Link as RouterLink } from 'react-router-dom';
@@ -13,6 +12,7 @@ import Link from '@material-ui/core/Link';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LoginedMenu from 'components/common/header/sub/LoginedMenu';
 import GuestMenu from 'components/common/header/sub/GuestMenu';
+import { Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,7 +82,7 @@ const Main: React.FC = () => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                <Avatar alt={user.displayName || ''} src={user.photoURL || ''} />
               </IconButton>
               <LoginedMenu
                 anchorEl={anchorEl}

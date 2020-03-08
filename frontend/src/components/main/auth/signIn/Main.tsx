@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import SignInForm from 'components/main/auth/signIn/sub/SignInForm';
 import Copyright from 'components/main/auth/commonSub/Copyright';
+import AuthService from 'services/auth/AuthService';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -35,7 +36,10 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = () => {
   const classes = useStyles();
-
+  useEffect(() => {
+    AuthService.createFirebaseUI();
+  }, [])
+  
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -50,6 +54,7 @@ const SignIn = () => {
           </Typography>
         </Typography>
         <SignInForm />
+        <div id="firebaseui-auth-container"></div>
       </div>
       <Box mt={8}>
         <Copyright />
