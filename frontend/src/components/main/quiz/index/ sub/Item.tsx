@@ -5,18 +5,24 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { Avatar, Grid } from '@material-ui/core';
+import { Avatar, Grid, Theme, createStyles } from '@material-ui/core';
 
-const useStyles = makeStyles({
-  root: {
-    minWidth: "250px",
-    maxWidth: "300px",
-    flexGrow: 1,
-  },
-  media: {
-    height: 140,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      minWidth: "250px",
+      maxWidth: "300px",
+      flexGrow: 1,
+      [theme.breakpoints.down('xs')]: {
+        minWidth: "350px",
+        maxWidth: "350px",
+      }
+    },
+    media: {
+      height: 140,
+    },
+  })
+);
 
 type Props = {
   title: string

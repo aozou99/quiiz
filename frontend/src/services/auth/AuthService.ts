@@ -12,24 +12,8 @@ type AuthArgs = {
 
 class AuthService {
   ui!: firebaseui.auth.AuthUI;
-  
-  async init() {
-    try {
-      firebase.app();  
-    } catch (error) {
-      return fetch('/__/firebase/init.json').then(async response => {
-        const json = await response.json();
-        firebase.initializeApp(json);
-        this.ui = new firebaseui.auth.AuthUI(firebase.auth());
-        if (window.location.hostname === 'localhost') {
-          firebase.functions().useFunctionsEmulator('http://localhost:5001');
-        }
-      });   
-    }
-  }
 
   async onAuthStateChanged(callback: (user: firebase.User | null) => any) {
-    await this.init();
     firebase
       .auth()
       .onAuthStateChanged(callback);
@@ -56,14 +40,17 @@ class AuthService {
 
   async existDisplayName(displayName: string) {
     const res = await firebase
-    .functions()
-    .httpsCallable('existDisplayName')({
-      displayName
-    });
+      .functions()
+      .httpsCallable('existDisplayName')({
+        displayName
+      });
     return res.data.message;
   }
 
   createFirebaseUI() {
+    if (!this.ui) {
+      this.ui = new firebaseui.auth.AuthUI(firebase.auth());
+    }
     this.ui.start('#firebaseui-auth-container', {
       signInOptions: [
         // List of OAuth providers supported.
