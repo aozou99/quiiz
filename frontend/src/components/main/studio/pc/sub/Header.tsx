@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 type State = {
   handleDrawer: (event: {}) => void
@@ -28,7 +29,8 @@ const useStyles = makeStyles(theme => ({
 
 const Header: React.FC<State> = ({ handleDrawer }) => {
   const classes = useStyles();
-
+  const history = useHistory();
+  const { url } = useRouteMatch();
   return (
     <AppBar
       position="fixed"
@@ -46,9 +48,11 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h5" color="primary">
+        <IconButton onClick={()=>history.push(url)}>
+          <Typography variant="h5" color="primary">
             Quiiz Studio
-        </Typography>
+          </Typography>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
