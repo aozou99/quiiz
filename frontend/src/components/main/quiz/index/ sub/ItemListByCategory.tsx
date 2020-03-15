@@ -50,7 +50,7 @@ const ItemListByCategory: React.FC<Props> = ({ category, itemList }) => {
       <Box className={classes.list}>
         {
           itemList.map(item => (
-            <Link component={RouterLink} to={`/workbook/${item.id}`} underline="none">
+            <Link component={RouterLink} to={`/series/${item.id}`} underline="none">
               <Item
                 imgPath={item.imgPath}
                 title={item.title}

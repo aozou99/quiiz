@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,14 +8,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useSelector } from 'react-redux';
 import { RootState } from 'modules/core/rootReducer';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@material-ui/core/Link';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import LoginedMenu from 'components/common/header/sub/LoginedMenu';
 import GuestMenu from 'components/common/header/sub/GuestMenu';
-import { Avatar, fade, InputBase } from '@material-ui/core';
+import { Avatar, fade, InputBase, Tooltip } from '@material-ui/core';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import SearchIcon from '@material-ui/icons/Search';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,9 +69,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Main: React.FC = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const auth = useSelector((state: RootState) => state.firebase.auth);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const history = useHistory();
   const open = Boolean(anchorEl);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -89,12 +90,11 @@ const Main: React.FC = () => {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-
-          <Link component={RouterLink} to="/" className={classes.title} underline="none">
-            <Typography variant="h5" color="primary">
+          <IconButton onClick={() => history.push("/")}>
+            <Typography variant="h5" color="primary" >
               Quiiz
             </Typography>
-          </Link>
+          </IconButton>
           <div className={classes.grow} />
           <div className={classes.search}>
             <div className={classes.searchIcon}>
@@ -110,7 +110,7 @@ const Main: React.FC = () => {
             />
           </div>
           <div className={classes.grow} />
-          {!user && (
+          {!auth && (
             <div>
               <IconButton
                 aria-label="display more actions"
@@ -127,22 +127,27 @@ const Main: React.FC = () => {
               />
             </div>
           )}
-          {user && (
+          {auth && (
             <div>
-              <IconButton
-                className={`${classes.menuButton} ${classes.smDisplayNone}`}
-              >
-                <PostAddIcon fontSize="large" />
-              </IconButton>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <Avatar alt={user.displayName || ''} src={user.photoURL || ''} />
-              </IconButton>
+              <Tooltip title="クイズを作成する">
+                <IconButton
+                  className={clsx(classes.menuButton, classes.smDisplayNone)}
+                  onClick={() => history.push("/studio")}
+                >
+                  <PostAddIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="アカウント">
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <Avatar alt={auth.displayName || ''} src={auth.photoURL || ''} />
+                </IconButton>
+              </Tooltip>
               <LoginedMenu
                 anchorEl={anchorEl}
                 open={open}

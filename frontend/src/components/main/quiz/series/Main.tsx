@@ -1,7 +1,7 @@
 import React from 'react';
-import Head from 'components/main/quiz/workbook/sub/Head';
+import Head from 'components/main/quiz/series/sub/Head';
 import { makeStyles, Theme, createStyles, Container } from '@material-ui/core';
-import ExerciseList from 'components/main/quiz/workbook/sub/ExerciseList';
+import ExerciseList from 'components/main/quiz/series/sub/ExerciseList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

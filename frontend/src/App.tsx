@@ -7,9 +7,6 @@ import { useLocation } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles, Theme, createStyles, Backdrop } from '@material-ui/core';
 import ContentRouter from 'components/core/Router';
-import AuthService from 'services/auth/AuthService';
-import { setUser } from 'modules/auth/authModule';
-import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,29 +18,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 const noHeaderPathList = [
   "/signup",
-  "/signin"
+  "/signin",
+  "/studio"
 ];
 
 const App = () => {
   const location = useLocation();
   const classes = useStyles();
-  const dispatch = useDispatch();
-
-  AuthService.onAuthStateChanged((user: firebase.User | null) => {
-    if (user) {
-      dispatch(setUser({ user }));
-    }
-  });
+  const isShowHeader = noHeaderPathList.filter(el => location.pathname.indexOf(el) === 0).length === 0;
 
   return (
     <MuiThemeProvider theme={theme}>
-      {!noHeaderPathList.includes(location.pathname) &&
-        (
-          <div>
-            <Header />
-          </div>
-        )
-      }
+      {isShowHeader && (<Header />)}
       <Container maxWidth="lg">
         <Suspense fallback={
           <Backdrop className={classes.backdrop} open>

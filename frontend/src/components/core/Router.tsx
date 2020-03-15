@@ -7,22 +7,31 @@ import { Backdrop, CircularProgress } from '@material-ui/core';
 
 const Exercises = lazy(() => import('components/main/quiz/exercises/Main'))
 const Index = lazy(() => import('components/main/quiz/index/Main'))
-const Workbook = lazy(() => import('components/main/quiz/workbook/Main'))
+const Workbook = lazy(() => import('components/main/quiz/series/Main'))
 const Signup = lazy(() => import('components/main/auth/signUp/Main'))
 const Signin = lazy(() => import('components/main/auth/signIn/Main'))
+const Studio = lazy(() => import('components/main/studio/pc/Main'))
 
-const authRedirectTop = (el: JSX.Element, auth:FirebaseReducer.AuthState) => {
+const authRedirectTop = (el: JSX.Element, auth: FirebaseReducer.AuthState) => {
+  return authRedirect(!isEmpty(auth), "/", el, auth)
+}
+
+const guestRedirectSignin = (el: JSX.Element, auth: FirebaseReducer.AuthState) => {
+  return authRedirect(isEmpty(auth), "/signin", el, auth)
+}
+
+const authRedirect = (authState: boolean, redirectTo: string, el: JSX.Element, auth: FirebaseReducer.AuthState) => {
   return ({ location }: any) => {
     if (isLoaded(auth)) {
-      return !isEmpty(auth) ? (<Redirect to={{
-        pathname: "/",
+      return authState ? (<Redirect to={{
+        pathname: redirectTo,
         state: { from: location }
       }} />) : (el)
     } else {
       return (
-      <Backdrop open>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+        <Backdrop open>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       )
     }
   }
@@ -34,9 +43,10 @@ export default () => {
   return (
     <Switch>
       <Route path="/exercise/:exercisesId" component={Exercises} />
-      <Route path="/workbook/:workbookId" component={Workbook} />
-      <Route path="/signup" render={authRedirectTop(<Signup/>, auth)} />
-      <Route path="/signin" render={authRedirectTop(<Signin/>, auth)} />
+      <Route path="/series/:seriesId" component={Workbook} />
+      <Route path="/signup" render={authRedirectTop(<Signup />, auth)} />
+      <Route path="/signin" render={authRedirectTop(<Signin />, auth)} />
+      <Route path="/studio" render={guestRedirectSignin(<Studio />, auth)} />
       <Route path="/" component={Index} />
     </Switch>
   )
