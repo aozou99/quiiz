@@ -1,71 +1,71 @@
-import React from 'react';
-import clsx from 'clsx';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { useSelector } from 'react-redux';
-import { RootState } from 'modules/core/rootReducer';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import LoginedMenu from 'components/common/header/sub/LoginedMenu';
-import GuestMenu from 'components/common/header/sub/GuestMenu';
-import { Avatar, fade, InputBase, Tooltip } from '@material-ui/core';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import SearchIcon from '@material-ui/icons/Search';
-import { useHistory } from 'react-router-dom';
+import React from "react";
+import clsx from "clsx";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import { useSelector } from "react-redux";
+import { RootState } from "modules/core/rootReducer";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import LoginedMenu from "components/common/header/sub/LoginedMenu";
+import GuestMenu from "components/common/header/sub/GuestMenu";
+import { Avatar, fade, InputBase, Tooltip } from "@material-ui/core";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import SearchIcon from "@material-ui/icons/Search";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grow: {
-      flexGrow: 1,
+      flexGrow: 1
     },
     menuButton: {
-      marginRight: theme.spacing(1),
+      marginRight: theme.spacing(1)
     },
     title: {
-      fontFamily: "Chalkboard",
+      fontFamily: "Chalkboard"
     },
     search: {
       flexGrow: 3,
-      position: 'relative',
+      position: "relative",
       borderRadius: theme.shape.borderRadius,
       backgroundColor: fade(theme.palette.grey[500], 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.grey[500], 0.25),
+      "&:hover": {
+        backgroundColor: fade(theme.palette.grey[500], 0.25)
       },
       marginRight: theme.spacing(2),
       marginLeft: 0,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down("sm")]: {
         marginLeft: theme.spacing(3),
-        width: 250,
-      },
+        width: 250
+      }
     },
     searchIcon: {
       width: theme.spacing(7),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      height: "100%",
+      position: "absolute",
+      pointerEvents: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
     },
     inputRoot: {
-      color: 'inherit',
-      width: '100%',
+      color: "inherit",
+      width: "100%"
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
-      transition: theme.transitions.create('width'),
-      width: '100%',
+      transition: theme.transitions.create("width"),
+      width: "100%"
     },
     smDisplayNone: {
-      [theme.breakpoints.down('xs')]: {
-        display: 'none',
-      },
+      [theme.breakpoints.down("xs")]: {
+        display: "none"
+      }
     }
-  }),
+  })
 );
 
 const Main: React.FC = () => {
@@ -87,11 +87,16 @@ const Main: React.FC = () => {
     <div className={classes.grow}>
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
             <MenuIcon />
           </IconButton>
           <IconButton onClick={() => history.push("/")}>
-            <Typography variant="h5" color="primary" >
+            <Typography variant="h5" color="primary">
               Quiiz
             </Typography>
           </IconButton>
@@ -104,9 +109,9 @@ const Main: React.FC = () => {
               placeholder="検索"
               classes={{
                 root: classes.inputRoot,
-                input: classes.inputInput,
+                input: classes.inputInput
               }}
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{ "aria-label": "search" }}
             />
           </div>
           <div className={classes.grow} />
@@ -145,7 +150,10 @@ const Main: React.FC = () => {
                   onClick={handleMenu}
                   color="inherit"
                 >
-                  <Avatar alt={auth.displayName || ''} src={auth.photoURL || ''} />
+                  <Avatar
+                    alt={auth.displayName || ""}
+                    src={auth.photoURL || ""}
+                  />
                 </IconButton>
               </Tooltip>
               <LoginedMenu
@@ -158,7 +166,7 @@ const Main: React.FC = () => {
         </Toolbar>
       </AppBar>
     </div>
-  )
-}
+  );
+};
 
 export default Main;

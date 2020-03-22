@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import { setUser } from 'modules/auth/authModule';
-import { useDispatch } from 'react-redux';
-import AuthService from 'services/auth/AuthService';
-import { useForm } from 'react-hook-form';
-import { Snackbar, Backdrop, CircularProgress } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-import { useHistory } from 'react-router-dom'
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import { setUser } from "modules/auth/authModule";
+import { useDispatch } from "react-redux";
+import AuthService from "services/auth/AuthService";
+import { useForm } from "react-hook-form";
+import { Snackbar, Backdrop, CircularProgress } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import { useHistory } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 type FormData = {
   email: string;
@@ -24,19 +24,19 @@ type FormData = {
 
 const useStyles = makeStyles(theme => ({
   form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    color: "white",
+    color: "white"
   },
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 1
   },
   input: {
     WebkitBoxShadow: "0 0 0 1000px white inset"
-  },
+  }
 }));
 
 const SignInForm = () => {
@@ -44,25 +44,31 @@ const SignInForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [progressing, setProgressing] = useState(false);
-  const { register, handleSubmit, setError, errors, clearError } = useForm<FormData>();
+  const { register, handleSubmit, setError, errors, clearError } = useForm<
+    FormData
+  >();
   const onSubmit = handleSubmit(async ({ password, email }) => {
     try {
       setProgressing(true);
       const user = await AuthService.signIn({ email, password });
       dispatch(setUser({ user }));
-      history.push('/');
+      history.push("/");
     } catch (error) {
       setProgressing(false);
       switch (error.code) {
-        case 'auth/invalid-email':
-          setError('email', error.code, 'メールアドレスの形式が誤っています');
+        case "auth/invalid-email":
+          setError("email", error.code, "メールアドレスの形式が誤っています");
           break;
 
-        case 'auth/user-not-found':
-          setError('user', error.code, 'メールアドレス/パスワードのいずれかが誤っています');
+        case "auth/user-not-found":
+          setError(
+            "user",
+            error.code,
+            "メールアドレス/パスワードのいずれかが誤っています"
+          );
           break;
         default:
-          setError('user', error.code, '不明なエラーが発生しました');
+          setError("user", error.code, "不明なエラーが発生しました");
           console.error(error);
           break;
       }
@@ -81,7 +87,7 @@ const SignInForm = () => {
         name="email"
         autoComplete="email"
         inputRef={register({
-          required: "メールアドレスを入力してください",
+          required: "メールアドレスを入力してください"
         })}
         error={!!errors.email}
         inputProps={{ className: classes.input }}
@@ -97,7 +103,7 @@ const SignInForm = () => {
         id="password"
         autoComplete="password"
         inputRef={register({
-          required: "パスワードを入力してください",
+          required: "パスワードを入力してください"
         })}
         error={!!errors.password}
         inputProps={{ className: classes.input }}
@@ -115,13 +121,13 @@ const SignInForm = () => {
       >
         <Typography component="span" variant="h4">
           Go !
-      </Typography>
+        </Typography>
       </Button>
       <Grid container>
         <Grid item xs>
           <Link href="#" variant="body2">
             パスワードを忘れた方
-        </Link>
+          </Link>
         </Grid>
         <Grid item>
           <Link component={RouterLink} to="/signup" variant="body2">
@@ -131,10 +137,10 @@ const SignInForm = () => {
       </Grid>
       <Snackbar
         open={!!errors.user}
-        onClose={() => clearError('user')}
-        anchorOrigin={{ vertical: "top", horizontal: 'center' }}
+        onClose={() => clearError("user")}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={() => clearError('user')} severity="error">
+        <Alert onClose={() => clearError("user")} severity="error">
           {errors.user?.message}
         </Alert>
       </Snackbar>
@@ -143,6 +149,6 @@ const SignInForm = () => {
       </Backdrop>
     </form>
   );
-}
+};
 
 export default SignInForm;

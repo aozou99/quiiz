@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import { setUser } from 'modules/auth/authModule';
-import { useDispatch } from 'react-redux';
-import AuthService from 'services/auth/AuthService';
-import { useHistory } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { Snackbar, Backdrop, CircularProgress } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import { setUser } from "modules/auth/authModule";
+import { useDispatch } from "react-redux";
+import AuthService from "services/auth/AuthService";
+import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Snackbar, Backdrop, CircularProgress } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import { Link as RouterLink } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3)
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    color: "white",
+    color: "white"
   },
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 1
   },
   input: {
     WebkitBoxShadow: "0 0 0 1000px white inset"
-  },
+  }
 }));
 
 type FormData = {
@@ -45,29 +45,35 @@ const SignUpForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [progressing, setProgressing] = useState(false);
-  const { register, handleSubmit, setError, errors, clearError } = useForm<FormData>();
+  const { register, handleSubmit, setError, errors, clearError } = useForm<
+    FormData
+  >();
   const onSubmit = handleSubmit(async ({ password, email, userName }) => {
     try {
       setProgressing(true);
       if (await AuthService.existDisplayName(userName)) {
         setProgressing(false);
-        setError('userName', 'already-used', '既に使われているユーザ名です');
+        setError("userName", "already-used", "既に使われているユーザ名です");
         return;
       }
-      const user = await AuthService.signUp({ displayName: userName, email, password });
+      const user = await AuthService.signUp({
+        displayName: userName,
+        email,
+        password
+      });
       dispatch(setUser({ user }));
-      history.push('/');
+      history.push("/");
     } catch (error) {
       setProgressing(false);
       switch (error.code) {
-        case 'auth/invalid-email':
-          setError('email', error.code, 'メールアドレスの形式が誤っています');
+        case "auth/invalid-email":
+          setError("email", error.code, "メールアドレスの形式が誤っています");
           break;
-        case 'auth/email-already-in-use':
-          setError('email', error.code, '既に登録されているメールアドレスです');
+        case "auth/email-already-in-use":
+          setError("email", error.code, "既に登録されているメールアドレスです");
           break;
         default:
-          setError('user', error.code, '不明なエラーが発生しました');
+          setError("user", error.code, "不明なエラーが発生しました");
           console.error(error);
           break;
       }
@@ -87,7 +93,7 @@ const SignUpForm = () => {
             name="userName"
             autoComplete="username"
             inputRef={register({
-              required: "ユーザ名を入力してください",
+              required: "ユーザ名を入力してください"
             })}
             error={!!errors.userName}
             inputProps={{ className: classes.input }}
@@ -104,7 +110,7 @@ const SignUpForm = () => {
             type="email"
             autoComplete="email"
             inputRef={register({
-              required: "メールアドレスを入力してください",
+              required: "メールアドレスを入力してください"
             })}
             error={!!errors.email}
             inputProps={{ className: classes.input }}
@@ -124,8 +130,9 @@ const SignUpForm = () => {
               required: "パスワードを入力してください",
               pattern: {
                 value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
-                message: "パスワードは8文字以上、大文字・小文字英数字を含んでください"
-              },
+                message:
+                  "パスワードは8文字以上、大文字・小文字英数字を含んでください"
+              }
             })}
             error={!!errors.password}
             inputProps={{ className: classes.input }}
@@ -147,7 +154,7 @@ const SignUpForm = () => {
       >
         <Typography component="span" variant="h4">
           Go !
-      </Typography>
+        </Typography>
       </Button>
       <Grid container justify="flex-end">
         <Grid item>
@@ -158,10 +165,10 @@ const SignUpForm = () => {
       </Grid>
       <Snackbar
         open={!!errors.user}
-        onClose={() => clearError('user')}
-        anchorOrigin={{ vertical: "top", horizontal: 'center' }}
+        onClose={() => clearError("user")}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={() => clearError('user')} severity="error">
+        <Alert onClose={() => clearError("user")} severity="error">
           {errors.user?.message}
         </Alert>
       </Snackbar>
@@ -170,6 +177,6 @@ const SignUpForm = () => {
       </Backdrop>
     </form>
   );
-}
+};
 
 export default SignUpForm;

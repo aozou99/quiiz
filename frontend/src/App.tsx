@@ -2,7 +2,6 @@ import React, { Suspense } from 'react';
 import Header from './components/common/header/Main';
 import theme from './components/core/CustomeTheme';
 import MuiThemeProvider from '@material-ui/styles/ThemeProvider';
-import Container from '@material-ui/core/Container';
 import { useLocation } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles, Theme, createStyles, Backdrop } from '@material-ui/core';
@@ -30,15 +29,13 @@ const App = () => {
   return (
     <MuiThemeProvider theme={theme}>
       {isShowHeader && (<Header />)}
-      <Container maxWidth="lg">
-        <Suspense fallback={
-          <Backdrop className={classes.backdrop} open>
-            <CircularProgress color="inherit" />
-          </Backdrop>
-        }>
-          <ContentRouter />
-        </Suspense>
-      </Container>
+      <Suspense fallback={
+        <Backdrop className={classes.backdrop} open>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      }>
+        <ContentRouter />
+      </Suspense>
     </MuiThemeProvider>
   );
 }

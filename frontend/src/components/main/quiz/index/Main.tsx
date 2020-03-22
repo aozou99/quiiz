@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import ItemListByCategory from 'components/main/quiz/index/ sub/ItemListByCategory';
 
 
@@ -72,7 +72,7 @@ const itemList = [
 
 const Main: React.FC = () => {
   return (
-    <Box>
+    <Container maxWidth="lg">
       <ItemListByCategory 
         category="動物シリーズ"
         itemList={itemList}
@@ -81,7 +81,7 @@ const Main: React.FC = () => {
         category="動物シリーズ"
         itemList={itemList}
       />
-    </Box>
+    </Container>
   );
 }
 

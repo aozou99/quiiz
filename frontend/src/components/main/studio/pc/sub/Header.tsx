@@ -36,7 +36,7 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
       position="fixed"
       className={classes.appBar}
       color="inherit"
-      elevation={0}
+      elevation={1}
     >
       <Toolbar>
         <IconButton

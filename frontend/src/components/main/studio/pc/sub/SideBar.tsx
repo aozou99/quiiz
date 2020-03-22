@@ -35,12 +35,10 @@ const listItems = [
 
 const useStyles = makeStyles(theme => ({
   drawer: {
-    width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
   },
   drawerOpen: {
-    borderRight: 0,
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
@@ -48,15 +46,14 @@ const useStyles = makeStyles(theme => ({
     }),
   },
   drawerClose: {
-    borderRight: 0,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
+    width: theme.spacing(9) + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(7) + 1,
+      width: theme.spacing(9) + 1,
     },
   },
   toolbar: {
@@ -76,6 +73,7 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 0,
   },
   listRoot: {
+    paddingLeft: theme.spacing(3),
     '&:hover $listChild': {
       color: themeColors.secondary[400],
     }
@@ -105,33 +103,33 @@ const Sidebar: React.FC<State> = ({ open }) => {
       <div className={classes.toolbar} />
       <List className={classes.list}>
         {listItems.map(item => (
-          <Tooltip title={item.name} >
-            <ListItem
-              button
-              key={item.name}
-              onClick={() => history.push(url + item.linkPath)}
-              className={clsx(classes.listRoot, {
-                [classes.selected]: history.location.pathname === (url + item.linkPath)
-              })}
-            >
+          <ListItem
+            button
+            key={item.name}
+            onClick={() => history.push(url + item.linkPath)}
+            className={clsx(classes.listRoot, {
+              [classes.selected]: history.location.pathname === (url + item.linkPath)
+            })}
+          >
+            <Tooltip title={item.name} key={item.name}>
               <ListItemIcon className={classes.listChild}>
                 {item.icon}
               </ListItemIcon>
-              <ListItemText primary={item.name} />
-            </ListItem>
-          </Tooltip>
+            </Tooltip>
+            <ListItemText primary={item.name} />
+          </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        <Tooltip title="トップに戻る">
-          <ListItem button key="トップに戻る" onClick={() => history.push("/")}>
+        <ListItem button key="トップに戻る" onClick={() => history.push("/")} className={classes.listRoot}>
+          <Tooltip title="トップに戻る">
             <ListItemIcon>
               <ArrowBackIcon />
             </ListItemIcon>
-            <ListItemText primary="トップに戻る" />
-          </ListItem>
-        </Tooltip>
+          </Tooltip>
+          <ListItemText primary="トップに戻る" />
+        </ListItem>
       </List>
     </Drawer>
   );

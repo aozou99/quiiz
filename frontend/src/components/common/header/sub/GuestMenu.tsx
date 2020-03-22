@@ -1,22 +1,31 @@
-import React from 'react';
-import { Menu, MenuItem, Typography, Link, makeStyles, Theme, createStyles, ListItemIcon } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
-import InputIcon from '@material-ui/icons/Input';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import React from "react";
+import {
+  Menu,
+  MenuItem,
+  Typography,
+  Link,
+  makeStyles,
+  Theme,
+  createStyles,
+  ListItemIcon
+} from "@material-ui/core";
+import { Link as RouterLink } from "react-router-dom";
+import InputIcon from "@material-ui/icons/Input";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
 type State = {
-  anchorEl: null | HTMLElement
-  open: boolean
-  handleClose: (event: {}) => void
-}
+  anchorEl: null | HTMLElement;
+  open: boolean;
+  handleClose: (event: {}) => void;
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listIcon: {
       minWidth: "inherit",
-      marginRight: theme.spacing(2),
-    },
-  }),
+      marginRight: theme.spacing(2)
+    }
+  })
 );
 
 const GuestMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
@@ -26,13 +35,13 @@ const GuestMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
       id="menu-appbar"
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right"
       }}
       keepMounted
       transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: "top",
+        horizontal: "right"
       }}
       open={open}
       onClose={handleClose}
@@ -59,6 +68,6 @@ const GuestMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
       </MenuItem>
     </Menu>
   );
-}
+};
 
 export default GuestMenu;
