@@ -7,8 +7,6 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { setUser } from "modules/auth/authModule";
-import { useDispatch } from "react-redux";
 import AuthService from "services/auth/AuthService";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -43,7 +41,6 @@ type FormData = {
 const SignUpForm = () => {
   const classes = useStyles();
   const history = useHistory();
-  const dispatch = useDispatch();
   const [progressing, setProgressing] = useState(false);
   const { register, handleSubmit, setError, errors, clearError } = useForm<
     FormData
@@ -56,12 +53,11 @@ const SignUpForm = () => {
         setError("userName", "already-used", "既に使われているユーザ名です");
         return;
       }
-      const user = await AuthService.signUp({
+      await AuthService.signUp({
         displayName: userName,
         email,
         password
       });
-      dispatch(setUser({ user }));
       history.push("/");
     } catch (error) {
       setProgressing(false);

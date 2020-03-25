@@ -115,7 +115,7 @@ const Main: React.FC = () => {
             />
           </div>
           <div className={classes.grow} />
-          {!auth && (
+          {auth.isEmpty && (
             <div>
               <IconButton
                 aria-label="display more actions"
@@ -132,7 +132,7 @@ const Main: React.FC = () => {
               />
             </div>
           )}
-          {auth && (
+          {!auth.isEmpty && (
             <div>
               <Tooltip title="クイズを作成する">
                 <IconButton

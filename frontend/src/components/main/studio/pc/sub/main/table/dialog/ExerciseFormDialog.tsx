@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -10,29 +10,23 @@ import {
   makeStyles,
   MenuItem,
   Box,
-  Typography
+  Typography,
+  Backdrop,
+  CircularProgress
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { useForm, Controller } from "react-hook-form";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import { ExerciseFormData } from "Types";
+import ChipInput from "material-ui-chip-input";
+import ExerciseService from "services/quiz/ExerciseService";
+import CropDialog from "components/common/dialog/CropDialog";
 
 type State = {
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   open: boolean;
   setOpen: (open: boolean) => any;
-};
-
-type FormData = {
-  question: string;
-  thumbnail: string;
-  selectA: string;
-  selectB: string;
-  selectC: string;
-  selectD: string;
-  answer: string;
-  description: string;
-  privacy: string;
 };
 
 const answers = [
@@ -75,10 +69,13 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "start",
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
     "&>*": {
       height: theme.spacing(9 * 1.5),
       width: theme.spacing(16 * 1.5)
+    },
+    "& img": {
+      height: "inherit",
+      width: "inherit"
     }
   },
   thumbnailPreview: {
@@ -101,26 +98,90 @@ const useStyles = makeStyles(theme => ({
   helperText: {
     textAlign: "right"
   },
+  tagsHelperText: {
+    display: "flex",
+    justifyContent: "space-between"
+  },
   selectBox: {
     "&>*": {
       marginRight: theme.spacing(2)
     }
+  },
+  chipInput: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(3)
+  },
+  backdrop: {
+    zIndex: theme.zIndex.modal + 1
   }
 }));
 
+const loadImage = (src: string): Promise<HTMLImageElement> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = e => reject(e);
+    img.src = src;
+  });
+};
+
+const is16to9 = async (src: string) => {
+  const res = await loadImage(src);
+  return res.width / res.height === 16 / 9;
+};
+
 const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
   const classes = useStyles();
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const { register, handleSubmit, watch, control, errors } = useForm<FormData>({
+  const [progressing, setProgressing] = useState(false);
+  const [cropOpen, setCropOpen] = useState(false);
+  const [croppedImage, setCroppedImage] = useState<string | undefined>(
+    undefined
+  );
+  // 入力フォーム系
+  const { register, handleSubmit, setValue, watch, control, errors } = useForm<
+    ExerciseFormData
+  >({
     mode: "onBlur"
   });
   const fields = watch();
-  const onSubmit = handleSubmit(data => {
-    console.log(data);
+
+  // tagsのカスタム登録
+  register(
+    { name: "tags", type: "text" },
+    {
+      validate: {
+        maxLength: (value: string) =>
+          (value?.replace(/,/g, "").length || 0) < 100 ||
+          "合計の文字数が長すぎます"
+      }
+    }
+  );
+  // thumbnailのカスタム登録
+  register({ name: "thumbnail" });
+
+  // handler
+  const handleClose = () => {
+    setOpen(false);
+    setCroppedImage(undefined);
+  };
+  const onSubmit = handleSubmit(async data => {
+    setProgressing(true);
+    // サムネを再設定
+    if (croppedImage !== undefined) {
+      data.thumbnail = croppedImage;
+    }
+    try {
+      // 登録
+      await ExerciseService.register(data);
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setProgressing(false);
+    }
   });
 
+  // helper
   const wrapTextFiled = ({
     id,
     label,
@@ -129,7 +190,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
     nullable,
     rows
   }: {
-    id: keyof FormData;
+    id: keyof ExerciseFormData;
     label: string;
     maxLength: number;
     multiline?: boolean;
@@ -259,17 +320,59 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
                 accept="image/*"
                 id="thumbnail"
                 name="thumbnail"
-                ref={register()}
+                onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                  if (
+                    e.target.files !== null &&
+                    (e.target.files?.length || 0) > 0
+                  ) {
+                    const url = URL.createObjectURL(e.target.files[0]);
+                    setValue("thumbnail", url, true);
+                    if (!(await is16to9(url))) {
+                      setCropOpen(true);
+                    } else {
+                      setCroppedImage(url);
+                    }
+                  }
+                }}
               />
             </Button>
-            {fields.thumbnail?.length > 0 && (
-              <img
-                className={classes.thumbnailPreview}
-                src={URL.createObjectURL(fields.thumbnail[0])}
-                alt="thumbnail-preview"
-              />
+            {(croppedImage?.length || 0) > 0 && (
+              <a href={croppedImage} target="_blank" rel="noopener noreferrer">
+                <img
+                  src={croppedImage}
+                  alt="thumbnail-preview"
+                  className={classes.thumbnailPreview}
+                />
+              </a>
             )}
           </Box>
+          <CropDialog
+            open={cropOpen}
+            setOpen={setCropOpen}
+            imgUrl={fields.thumbnail || ""}
+            setCroppedImage={setCroppedImage}
+          ></CropDialog>
+          <ChipInput
+            helperText={
+              <React.Fragment>
+                <span>カンマで区切って入力してください</span>
+                <span>{fields.tags?.replace(/,/g, "").length || 0}/100</span>
+              </React.Fragment>
+            }
+            FormHelperTextProps={{
+              className: classes.tagsHelperText
+            }}
+            fullWidth
+            label={errors.tags?.message || "タグ"}
+            variant="outlined"
+            newChipKeyCodes={[188]}
+            newChipKeys={[",", "<"]}
+            className={classes.chipInput}
+            onChange={(chips: string[]) =>
+              setValue("tags", chips.join(","), true)
+            }
+            error={!!errors.tags}
+          ></ChipInput>
           {wrapTextFiled({
             id: "description",
             label: "解説",
@@ -298,6 +401,9 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
           </Button>
         </DialogActions>
       </form>
+      <Backdrop open={progressing} className={classes.backdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Dialog>
   );
 };

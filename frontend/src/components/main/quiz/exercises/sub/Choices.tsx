@@ -1,25 +1,25 @@
-import React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Choice from 'components/main/quiz/exercises/sub/Choice';
+import React from "react";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Choice from "components/main/quiz/exercises/sub/Choice";
 import { themeColors } from "components/core/CustomeTheme";
-import { useSelector } from 'react-redux';
-import { RootState } from 'modules/core/rootReducer';
-import { grey } from '@material-ui/core/colors';
+import { useSelector } from "react-redux";
+import { RootState } from "modules/core/rootReducer";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2, 0),
-    },
+      padding: theme.spacing(2, 0)
+    }
   })
 );
 
-const labelColorsMap = new Map([
+const labelColorsMap = new Map<string, any>([
   ["A", themeColors.primary],
   ["B", themeColors.secondary],
   ["C", themeColors.tertiary],
-  ["D", themeColors.quaternary],
+  ["D", themeColors.quaternary]
 ]);
 
 const Choices: React.FC = () => {
@@ -34,10 +34,11 @@ const Choices: React.FC = () => {
           color={labelColorsMap.get(label) ?? grey}
           label={label}
           text={quiz.choices[i]}
-          isRight={quiz.answer === i} />
+          isRight={quiz.answer === i}
+        />
       ))}
     </Grid>
   );
-}
+};
 
 export default Choices;

@@ -7,8 +7,6 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { setUser } from "modules/auth/authModule";
-import { useDispatch } from "react-redux";
 import AuthService from "services/auth/AuthService";
 import { useForm } from "react-hook-form";
 import { Snackbar, Backdrop, CircularProgress } from "@material-ui/core";
@@ -42,7 +40,6 @@ const useStyles = makeStyles(theme => ({
 const SignInForm = () => {
   const classes = useStyles();
   const history = useHistory();
-  const dispatch = useDispatch();
   const [progressing, setProgressing] = useState(false);
   const { register, handleSubmit, setError, errors, clearError } = useForm<
     FormData
@@ -50,8 +47,7 @@ const SignInForm = () => {
   const onSubmit = handleSubmit(async ({ password, email }) => {
     try {
       setProgressing(true);
-      const user = await AuthService.signIn({ email, password });
-      dispatch(setUser({ user }));
+      await AuthService.signIn({ email, password });
       history.push("/");
     } catch (error) {
       setProgressing(false);
