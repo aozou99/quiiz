@@ -40,7 +40,7 @@ class AuthService {
     const res = await firebase.functions().httpsCallable("existDisplayName")({
       displayName
     });
-    return res.data.message;
+    return res.data.isExist;
   }
 
   createFirebaseUI() {

@@ -41,13 +41,15 @@ type State = {
   actions: (Action<any> | ((rowData: any) => Action<any>))[];
   columns: Column<any>[];
   data: object[] | ((query: Query<object>) => Promise<QueryResult<object>>);
+  isLoading: boolean;
 };
 
-const BasicTable: React.FC<State> = ({ actions, columns, data }) => {
+const BasicTable: React.FC<State> = ({ actions, columns, data, isLoading }) => {
   const theme = useTheme();
   return (
     <MuiThemeProvider theme={themeTable}>
       <MaterialTable
+        isLoading={isLoading}
         actions={actions}
         components={{
           Container: props => <Paper {...props} elevation={0} />
@@ -55,6 +57,9 @@ const BasicTable: React.FC<State> = ({ actions, columns, data }) => {
         columns={columns}
         data={data}
         localization={{
+          body: {
+            emptyDataSourceMessage: "データが登録されてません"
+          },
           pagination: {
             labelRowsSelect: "行を表示",
             firstTooltip: "最初のページ",

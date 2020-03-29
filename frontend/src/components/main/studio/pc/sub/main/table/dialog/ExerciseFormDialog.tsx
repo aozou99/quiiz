@@ -22,6 +22,7 @@ import { ExerciseFormData } from "Types";
 import ChipInput from "material-ui-chip-input";
 import ExerciseService from "services/quiz/ExerciseService";
 import CropDialog from "components/common/dialog/CropDialog";
+import is16to9 from "utils/helper/is16to9";
 
 type State = {
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -115,20 +116,6 @@ const useStyles = makeStyles(theme => ({
     zIndex: theme.zIndex.modal + 1
   }
 }));
-
-const loadImage = (src: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = e => reject(e);
-    img.src = src;
-  });
-};
-
-const is16to9 = async (src: string) => {
-  const res = await loadImage(src);
-  return res.width / res.height === 16 / 9;
-};
 
 const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
   const classes = useStyles();
