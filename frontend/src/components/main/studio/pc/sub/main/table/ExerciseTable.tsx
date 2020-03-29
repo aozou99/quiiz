@@ -1,4 +1,10 @@
-import { Box, makeStyles, Theme, Typography, Button } from "@material-ui/core";
+import {
+  makeStyles,
+  Theme,
+  Button,
+  Backdrop,
+  CircularProgress
+} from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
@@ -7,16 +13,11 @@ import BasicTable from "components/common/table/BasicTable";
 import ExerciseFormDialog from "components/main/studio/pc/sub/main/table/dialog/ExerciseFormDialog";
 import ExerciseService from "services/quiz/ExerciseService";
 import imageUrl from "utils/helper/imageUrl";
+import QuizCell from "components/main/studio/pc/sub/main/table/cell/QuizCell";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex"
-  },
-  thumbnail: {
-    width: 120
-  },
-  description: {
-    marginLeft: theme.spacing(2)
+  backdrop: {
+    zIndex: theme.zIndex.modal + 100
   }
 }));
 
@@ -71,6 +72,7 @@ const ExerciseTable = () => {
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<any>([]);
+  const [progressing, setProgressing] = useState(false);
 
   useEffect(() => {
     const update = async () => {
@@ -95,35 +97,16 @@ const ExerciseTable = () => {
       setIsLoading(false);
     };
     ExerciseService.onUpdate(update);
+    // cleanup
+    return ExerciseService.onUpdate(() => console.log("cleanup"));
   }, [setData]);
-
-  const quizCell = ({
-    thumbnail,
-    question,
-    description
-  }: {
-    thumbnail: string;
-    question: string;
-    description: string;
-  }) => {
-    return (
-      <Box className={classes.root}>
-        <img src={thumbnail} className={classes.thumbnail} alt={question} />
-        <div className={classes.description}>
-          <Typography variant="subtitle2" gutterBottom>
-            {question}
-          </Typography>
-          <Typography variant="caption">{description}</Typography>
-        </div>
-      </Box>
-    );
-  };
 
   const handleDelete = (_event: any, rowData: any[]) => {
     setDeleteTarget(rowData);
     setOpenDeleteDialog(true);
   };
   const handleAdd = () => setOpenRegisterFormDialog(true);
+
   return (
     <React.Fragment>
       <BasicTable
@@ -133,14 +116,20 @@ const ExerciseTable = () => {
           {
             title: "クイズ",
             field: "quiz",
-            render: rowData => quizCell(rowData),
+            render: rowData => (
+              <QuizCell
+                thumbnail={rowData.thumbnail}
+                question={rowData.question}
+                description={rowData.description}
+              />
+            ),
             cellStyle: {
               width: 400,
-              minWidth: 400
+              maxWidth: 400
             },
             headerStyle: {
               width: 400,
-              minWidth: 400
+              maxWidth: 400
             }
           },
           { title: "公開設定", field: "privacy" },
@@ -168,16 +157,20 @@ const ExerciseTable = () => {
         setOpen={setOpenDeleteDialog}
         title={"選択したクイズを削除する"}
         body={`${deleteTarget.length}件のクイズを削除してもいいですか？`}
-        yesOnClick={() => {
-          deleteTarget.forEach((exercise: any) => {
-            ExerciseService.delete(exercise.id);
-          });
+        yesOnClick={async () => {
+          setOpenDeleteDialog(false);
+          setProgressing(true);
+          await ExerciseService.delete(deleteTarget.map((t: any) => t.id));
+          setProgressing(false);
         }}
       ></BasicDialog>
       <ExerciseFormDialog
         open={openRegisterFormDialog}
         setOpen={setOpenRegisterFormDialog}
       ></ExerciseFormDialog>
+      <Backdrop open={progressing} className={classes.backdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </React.Fragment>
   );
 };

@@ -5,10 +5,10 @@ const storageRef = firebase.storage().ref();
 
 const imageUrl = async (filePath: string, size: string) => {
   const { ext, dir, name } = pathParse(filePath);
-  const url = await storageRef
+  return storageRef
     .child(`${dir}/${name}_${size}${ext}`)
-    .getDownloadURL();
-  return url;
+    .getDownloadURL()
+    .catch(_err => filePath);
 };
 
 export default imageUrl;

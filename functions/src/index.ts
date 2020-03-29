@@ -20,17 +20,27 @@ export const existDisplayName = functions.https.onCall(
 );
 
 export const deleteExercise = functions.https.onCall(async (data, context) => {
-  if (!data.id) throw new HttpsError("invalid-argument", "Invalid Parameter");
-  const docRef = db.collection("exercise").doc(data.id);
-  return docRef.get().then(async doc => {
-    console.log({ postData: data, docData: doc, contextAuth: context.auth });
-    if (!(doc.data()?.userId === context.auth?.uid))
-      throw new HttpsError(
-        "permission-denied",
-        "Cannot Delete Someone's Exercise"
-      );
-    await docRef.delete();
-    return { isSuccess: true };
+  if (!data.ids) throw new HttpsError("invalid-argument", "Invalid Parameter");
+  const rs = [];
+  for (const id of data.ids) {
+    const result = db
+      .collection("exercise")
+      .doc(id)
+      .get()
+      .then(doc => {
+        if (doc.data()?.userId !== context.auth?.uid) {
+          throw new HttpsError(
+            "permission-denied",
+            "Cannot Delete Someone's Exercise"
+          );
+        }
+        doc.ref.delete();
+        return true;
+      });
+    rs.push(result);
+  }
+  return Promise.all(rs).then(vals => {
+    return { isSuccess: vals.every(val => val) };
   });
 });
 
@@ -38,11 +48,17 @@ export const autoDeleteExerciseThumbnails = functions.firestore
   .document("exercise/{doc}")
   .onDelete((snapshot, _context) => {
     const thumbnail: string = snapshot.data()?.thumbnail;
-    if (!thumbnail || !thumbnail.match(exerciseThumbnailDir)) return;
-    const splited = thumbnail.split("_");
-    // imagedir/userId_timestamp_size.ext -> imagedir/userId,timestamp,size.ext
-    if (splited.length !== 3) return;
-    storage.bucket().deleteFiles({
-      prefix: `${splited[0]}_${splited[1]}`
+    if (!thumbnail || !thumbnail.match(exerciseThumbnailDir))
+      return console.log({
+        message: `${thumbnail} is not delete target!`
+      });
+    const splited = thumbnail.split(".");
+    // imagedir/userId_timestamp.ext -> imagedir/userId_timestamp, ext
+    if (splited.length !== 2)
+      return console.log({
+        message: `because ivalid path format, not delete file: ${splited}`
+      });
+    return storage.bucket().deleteFiles({
+      prefix: `${splited[0]}`
     });
   });

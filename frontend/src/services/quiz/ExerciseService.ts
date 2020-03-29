@@ -43,9 +43,9 @@ class ExerciseService {
     });
   }
 
-  async delete(exerciseId: string) {
+  async delete(exerciseIds: string[]) {
     const res = await firebase.functions().httpsCallable("deleteExercise")({
-      id: exerciseId
+      ids: exerciseIds
     });
     return res.data.isSuccess;
   }
