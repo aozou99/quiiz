@@ -20,15 +20,11 @@ class ExerciseService {
 
     // 画像のアップロードを行う
     if (formData.thumbnail) {
+      filepath = this.genThumbnailPath();
       // dataURLをBlobに変換する
-      const response = await fetch(formData.thumbnail);
-      const userHash = hash({ id: firebase.auth().currentUser?.uid });
-      filepath = `${uploadThumbnailPath}${userHash}_${new Date().getTime()}.jpg`;
-      // アップロード
-      response.blob().then(blob => {
-        this.storageRef.child(filepath).put(blob);
-      });
+      this.uploadThumbnail(formData.thumbnail, filepath);
     }
+
     // FireStoreに登録
     return this.db.add({
       ...formData,
@@ -41,6 +37,36 @@ class ExerciseService {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
+  }
+
+  async update(
+    docId: string,
+    thumbnailUpdate: boolean,
+    formData: ExerciseFormData
+  ) {
+    const postData = {
+      ...formData,
+      tags: formData.tags?.split(",") || [],
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    // 新規サムネのパスを設定する
+    if (thumbnailUpdate && formData.thumbnail) {
+      postData.thumbnail = this.genThumbnailPath();
+    }
+
+    const res = await firebase.functions().httpsCallable("updateExercise")({
+      docId,
+      thumbnailUpdate,
+      postData
+    });
+
+    // サムネのアップロード & 更新が成功した場合
+    if (formData.thumbnail && postData.thumbnail && res.data.isSuccess) {
+      this.uploadThumbnail(formData.thumbnail, postData.thumbnail);
+    }
+
+    return true;
   }
 
   async delete(exerciseIds: string[]) {
@@ -76,6 +102,20 @@ class ExerciseService {
           callback();
         }
       });
+  }
+
+  private async uploadThumbnail(orgUrl: string, uploadPath: string) {
+    // dataURLをBlobに変換する
+    const response = await fetch(orgUrl);
+    // アップロード
+    response.blob().then(blob => {
+      this.storageRef.child(uploadPath).put(blob);
+    });
+  }
+
+  private genThumbnailPath() {
+    const userHash = hash({ id: firebase.auth().currentUser?.uid });
+    return `${uploadThumbnailPath}${userHash}_${new Date().getTime()}.jpg`;
   }
 }
 

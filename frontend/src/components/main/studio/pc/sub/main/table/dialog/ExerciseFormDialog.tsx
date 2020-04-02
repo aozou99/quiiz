@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -18,16 +18,19 @@ import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { useForm, Controller } from "react-hook-form";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import { ExerciseFormData } from "Types";
+import { ExerciseFormData, ExerciseTableRowData } from "Types";
 import ChipInput from "material-ui-chip-input";
 import ExerciseService from "services/quiz/ExerciseService";
 import CropDialog from "components/common/dialog/CropDialog";
 import is16to9 from "utils/helper/is16to9";
+import imageUrl from "utils/helper/imageUrl";
 
 type State = {
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   open: boolean;
   setOpen: (open: boolean) => any;
+  oldData?: ExerciseTableRowData;
+  setOldData: (oldData: ExerciseTableRowData | undefined) => any;
 };
 
 const answers = [
@@ -117,13 +120,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
+const ExerciseFormDialog: React.FC<State> = ({
+  noOnClick,
+  open,
+  setOpen,
+  oldData,
+  setOldData
+}) => {
   const classes = useStyles();
   const [progressing, setProgressing] = useState(false);
   const [cropOpen, setCropOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState<string | undefined>(
     undefined
   );
+
+  useEffect(() => {
+    imageUrl(oldData?.thumbnail || "", "256x144").then(path => {
+      setCroppedImage(path);
+    });
+  }, [oldData, open]);
   // 入力フォーム系
   const { register, handleSubmit, setValue, watch, control, errors } = useForm<
     ExerciseFormData
@@ -150,6 +165,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
   const handleClose = () => {
     setOpen(false);
     setCroppedImage(undefined);
+    setOldData(undefined);
   };
   const onSubmit = handleSubmit(async data => {
     setProgressing(true);
@@ -158,8 +174,14 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
       data.thumbnail = croppedImage;
     }
     try {
-      // 登録
-      await ExerciseService.register(data);
+      // 登録 or 更新
+      oldData
+        ? await ExerciseService.update(
+            oldData.id,
+            oldData.thumbnail !== data.thumbnail,
+            data
+          )
+        : await ExerciseService.register(data);
       handleClose();
     } catch (error) {
       console.log(error);
@@ -172,6 +194,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
   const wrapTextFiled = ({
     id,
     label,
+    defaultValue,
     maxLength,
     multiline,
     nullable,
@@ -179,6 +202,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
   }: {
     id: keyof ExerciseFormData;
     label: string;
+    defaultValue?: any;
     maxLength: number;
     multiline?: boolean;
     nullable?: boolean;
@@ -191,6 +215,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
         multiline={!!multiline}
         id={id}
         name={id}
+        defaultValue={defaultValue || ""}
         rows={rows}
         label={errors[id]?.message || label}
         type="text"
@@ -225,27 +250,32 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
           {wrapTextFiled({
             id: "question",
             label: "問題文",
-            maxLength: 100
+            maxLength: 100,
+            defaultValue: oldData?.question || ""
           })}
           {wrapTextFiled({
             id: "selectA",
             label: "選択肢A",
-            maxLength: 30
+            maxLength: 30,
+            defaultValue: oldData?.selectA || ""
           })}
           {wrapTextFiled({
             id: "selectB",
             label: "選択肢B",
-            maxLength: 30
+            maxLength: 30,
+            defaultValue: oldData?.selectB || ""
           })}
           {wrapTextFiled({
             id: "selectC",
             label: "選択肢C",
-            maxLength: 30
+            maxLength: 30,
+            defaultValue: oldData?.selectC || ""
           })}
           {wrapTextFiled({
             id: "selectD",
             label: "選択肢D",
-            maxLength: 30
+            maxLength: 30,
+            defaultValue: oldData?.selectD || ""
           })}
           <Box className={classes.selectBox}>
             <Controller
@@ -267,7 +297,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
               name="answer"
               rules={{ required: true }}
               control={control}
-              defaultValue="0"
+              defaultValue={oldData?.answer || "0"}
             ></Controller>
             <Controller
               as={
@@ -288,7 +318,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
               name="privacy"
               rules={{ required: true }}
               control={control}
-              defaultValue="0"
+              defaultValue={oldData?.privacy || "0"}
             ></Controller>
           </Box>
           <Box className={classes.thumbnailBox}>
@@ -359,6 +389,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
               setValue("tags", chips.join(","), true)
             }
             error={!!errors.tags}
+            defaultValue={oldData?.tags || []}
           ></ChipInput>
           {wrapTextFiled({
             id: "description",
@@ -366,7 +397,8 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
             maxLength: 200,
             multiline: true,
             nullable: true,
-            rows: 2
+            rows: 2,
+            defaultValue: oldData?.description || ""
           })}
         </DialogContent>
         <DialogActions>
@@ -384,7 +416,7 @@ const ExerciseFormDialog: React.FC<State> = ({ noOnClick, open, setOpen }) => {
             color="primary"
             startIcon={<CheckIcon />}
           >
-            登録
+            {oldData ? "更新" : "登録"}
           </Button>
         </DialogActions>
       </form>

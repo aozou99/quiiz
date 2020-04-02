@@ -14,6 +14,7 @@ import ExerciseFormDialog from "components/main/studio/pc/sub/main/table/dialog/
 import ExerciseService from "services/quiz/ExerciseService";
 import imageUrl from "utils/helper/imageUrl";
 import QuizCell from "components/main/studio/pc/sub/main/table/cell/QuizCell";
+import { ExerciseTableRowData } from "Types";
 
 const useStyles = makeStyles((theme: Theme) => ({
   backdrop: {
@@ -69,7 +70,10 @@ const ExerciseTable = () => {
   const classes = useStyles();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openRegisterFormDialog, setOpenRegisterFormDialog] = useState(false);
-  const [data, setData] = useState<any>([]);
+  const [tableData, setTableData] = useState<any>([]);
+  const [selectedData, setSelectedData] = useState<
+    ExerciseTableRowData | undefined
+  >(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<any>([]);
   const [progressing, setProgressing] = useState(false);
@@ -85,7 +89,8 @@ const ExerciseTable = () => {
             id: doc.id,
             accuracyRate: (data.correctAnswer || 0) / (data.answerCount || 1),
             createdAt: new Date(data.createdAt?.seconds * 1000),
-            privacy: privacyLabel(data.privacy),
+            privacyLabel: privacyLabel(data.privacy),
+            privacy: data.privacy,
             limit: data.limit?.length < 1 ? "なし" : "制限あり",
             thumbnail: data.thumbnail
               ? await imageUrl(data.thumbnail, "256x144")
@@ -93,13 +98,13 @@ const ExerciseTable = () => {
           };
         }
       });
-      setData(await Promise.all(list));
+      setTableData(await Promise.all(list));
       setIsLoading(false);
     };
     ExerciseService.onUpdate(update);
     // cleanup
     return ExerciseService.onUpdate(() => console.log("cleanup"));
-  }, [setData]);
+  }, [setTableData]);
 
   const handleDelete = (_event: any, rowData: any[]) => {
     setDeleteTarget(rowData);
@@ -116,23 +121,33 @@ const ExerciseTable = () => {
           {
             title: "クイズ",
             field: "quiz",
-            render: rowData => (
+            render: (rowData: ExerciseTableRowData) => (
               <QuizCell
-                thumbnail={rowData.thumbnail}
-                question={rowData.question}
-                description={rowData.description}
+                rowData={rowData}
+                handleEdit={() => {
+                  setSelectedData(rowData);
+                  setOpenRegisterFormDialog(true);
+                }}
+                handlePreview={() => alert("プレビューするよ")}
+                handleDelete={() => {
+                  setDeleteTarget([rowData]);
+                  setOpenDeleteDialog(true);
+                }}
+                handleAnalyze={() => alert("分析するよ")}
               />
             ),
             cellStyle: {
-              width: 400,
-              maxWidth: 400
+              width: 340,
+              maxWidth: 340,
+              minWidth: 340
             },
             headerStyle: {
-              width: 400,
-              maxWidth: 400
+              width: 340,
+              maxWidth: 340,
+              minWidth: 340
             }
           },
-          { title: "公開設定", field: "privacy" },
+          { title: "公開設定", field: "privacyLabel" },
           {
             title: "日付",
             field: "createdAt",
@@ -150,7 +165,7 @@ const ExerciseTable = () => {
             type: "numeric"
           }
         ]}
-        data={data}
+        data={tableData}
       ></BasicTable>
       <BasicDialog
         open={openDeleteDialog}
@@ -167,6 +182,8 @@ const ExerciseTable = () => {
       <ExerciseFormDialog
         open={openRegisterFormDialog}
         setOpen={setOpenRegisterFormDialog}
+        oldData={selectedData}
+        setOldData={setSelectedData}
       ></ExerciseFormDialog>
       <Backdrop open={progressing} className={classes.backdrop}>
         <CircularProgress color="inherit" />

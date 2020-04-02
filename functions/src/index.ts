@@ -1,12 +1,10 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
 import searchDisplayName from "./helper/searchDisplayName";
 import { HttpsError } from "firebase-functions/lib/providers/https";
-admin.initializeApp();
-const db = admin.firestore();
-const storage = admin.storage();
+import deleteThumbnail from "./helper/deleteThumbnail";
+import admin from "./core/admin";
 
-const exerciseThumbnailDir = "images/exercise/thumbnails/";
+const db = admin.firestore();
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -18,6 +16,40 @@ export const existDisplayName = functions.https.onCall(
     };
   }
 );
+
+export const updateExercise = functions.https.onCall(async (data, context) => {
+  if (!data.docId)
+    throw new HttpsError("invalid-argument", "Invalid Parameter");
+  return db
+    .collection("exercise")
+    .doc(data.docId)
+    .get()
+    .then(doc => {
+      if (doc.data()?.userId !== context.auth?.uid) {
+        throw new HttpsError(
+          "permission-denied",
+          "Cannot Update Someone's Exercise"
+        );
+      }
+      const oldData = doc.data();
+      // サムネの更新があったら、古いサムネを削除する
+      if (
+        data.thumbnailUpdate &&
+        oldData?.thumbnail &&
+        oldData.thumbnail !== data.thumbnail
+      ) {
+        try {
+          deleteThumbnail(oldData.thumbnail);
+        } catch (error) {
+          console.log(error);
+          return { isSuccess: false };
+        }
+      }
+      return doc.ref.set(data.postData, { merge: true }).then(() => {
+        return { isSuccess: true };
+      });
+    });
+});
 
 export const deleteExercise = functions.https.onCall(async (data, context) => {
   if (!data.ids) throw new HttpsError("invalid-argument", "Invalid Parameter");
@@ -48,17 +80,5 @@ export const autoDeleteExerciseThumbnails = functions.firestore
   .document("exercise/{doc}")
   .onDelete((snapshot, _context) => {
     const thumbnail: string = snapshot.data()?.thumbnail;
-    if (!thumbnail || !thumbnail.match(exerciseThumbnailDir))
-      return console.log({
-        message: `${thumbnail} is not delete target!`
-      });
-    const splited = thumbnail.split(".");
-    // imagedir/userId_timestamp.ext -> imagedir/userId_timestamp, ext
-    if (splited.length !== 2)
-      return console.log({
-        message: `because ivalid path format, not delete file: ${splited}`
-      });
-    return storage.bucket().deleteFiles({
-      prefix: `${splited[0]}`
-    });
+    return deleteThumbnail(thumbnail);
   });

@@ -19,3 +19,12 @@ export type ExerciseFormData = {
   privacy: string;
   tags?: string;
 };
+
+export type ExerciseTableRowData = ExerciseFormData & {
+  id: string;
+  thumbnail: string;
+  tags: string[];
+  accuracyRate: number;
+  createdAt: Date;
+  limit: string;
+};

@@ -4,17 +4,26 @@ import {
   Theme,
   Typography,
   CircularProgress,
-  IconButton
+  IconButton,
+  Grid
 } from "@material-ui/core";
 import React, { useState } from "react";
 import Img from "react-image";
 import ReplayIcon from "@material-ui/icons/Replay";
 import imageUrl from "utils/helper/imageUrl";
+import clsx from "clsx";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
+import AssessmentIcon from "@material-ui/icons/Assessment";
+import { ExerciseTableRowData } from "Types";
 
 type State = {
-  thumbnail: string;
-  question: string;
-  description: string;
+  rowData: ExerciseTableRowData;
+  handleEdit: () => any;
+  handleDelete: () => any;
+  handleAnalyze: () => any;
+  handlePreview: () => any;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,26 +45,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   iconButtonLabel: {
     display: "flex",
     flexDirection: "column"
+  },
+  hoverHidden: {},
+  hoverAppear: {
+    alignItems: "center",
+    width: 200
   }
 }));
 
-const QuizCell: React.FC<State> = ({ thumbnail, question, description }) => {
+const QuizCell: React.FC<State> = ({
+  rowData,
+  handleEdit,
+  handleAnalyze,
+  handleDelete,
+  handlePreview
+}) => {
   const classes = useStyles();
-  const [imgSrc, setImgSrc] = useState(thumbnail);
+  const [imgSrc, setImgSrc] = useState(rowData.thumbnail);
 
   return (
     <Box className={classes.root}>
       <Img
         src={imgSrc}
         className={classes.thumbnail}
-        alt={question}
+        alt={rowData.question}
         loader={<CircularProgress />}
         unloader={
           <IconButton
             className={classes.thumbnail}
             classes={{ label: classes.iconButtonLabel }}
             onClick={async () =>
-              setImgSrc(await imageUrl(thumbnail, "256x144"))
+              setImgSrc(await imageUrl(rowData.thumbnail, "256x144"))
             }
           >
             <ReplayIcon />
@@ -63,12 +83,34 @@ const QuizCell: React.FC<State> = ({ thumbnail, question, description }) => {
           </IconButton>
         }
       />
-      <div className={classes.description}>
+      <div className={clsx(classes.description, classes.hoverHidden)}>
         <Typography variant="subtitle2" gutterBottom>
-          {question}
+          {rowData.question}
         </Typography>
-        <Typography variant="caption">{description}</Typography>
+        <Typography variant="caption">{rowData.description}</Typography>
       </div>
+      <Grid container className={classes.hoverAppear}>
+        <Grid item xs={3}>
+          <IconButton aria-label="edit" onClick={handleEdit}>
+            <EditIcon />
+          </IconButton>
+        </Grid>
+        <Grid item xs={3}>
+          <IconButton aria-label="preview" onClick={handlePreview}>
+            <PlayCircleFilledIcon />
+          </IconButton>
+        </Grid>
+        <Grid item xs={3}>
+          <IconButton aria-label="analyze" onClick={handleAnalyze}>
+            <AssessmentIcon />
+          </IconButton>
+        </Grid>
+        <Grid item xs={3}>
+          <IconButton aria-label="delete" onClick={handleDelete}>
+            <DeleteIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

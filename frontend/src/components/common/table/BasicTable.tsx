@@ -24,6 +24,15 @@ const themeTable = createMuiTheme({
       root: {
         "&:hover": {
           backgroundColor: defaultTheme.palette.action.selected
+        },
+        '&:hover *[class*="hoverHidden-"]': {
+          display: "none"
+        },
+        '& *[class*="hoverAppear-"]': {
+          display: "none"
+        },
+        '&:hover *[class*="hoverAppear-"]': {
+          display: "inherit"
         }
       }
     },
