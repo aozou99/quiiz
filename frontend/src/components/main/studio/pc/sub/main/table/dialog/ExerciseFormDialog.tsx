@@ -18,7 +18,11 @@ import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { useForm, Controller } from "react-hook-form";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
-import { ExerciseFormData, ExerciseTableRowData } from "Types";
+import {
+  ExerciseFormData,
+  ExerciseTableRowData,
+  ExerciseFormTextData
+} from "types/ExerciseTypes";
 import ChipInput from "material-ui-chip-input";
 import ExerciseService from "services/quiz/ExerciseService";
 import CropDialog from "components/common/dialog/CropDialog";
@@ -36,30 +40,30 @@ type State = {
 const answers = [
   {
     label: "選択肢A",
-    value: "0"
+    value: 0
   },
   {
     label: "選択肢B",
-    value: "1"
+    value: 1
   },
   {
     label: "選択肢C",
-    value: "2"
+    value: 2
   },
   {
     label: "選択肢D",
-    value: "3"
+    value: 3
   }
 ];
 
 const privacies = [
   {
     label: "公開",
-    value: "0"
+    value: 0
   },
   {
     label: "非公開",
-    value: "1"
+    value: 1
   }
 ];
 
@@ -200,7 +204,7 @@ const ExerciseFormDialog: React.FC<State> = ({
     nullable,
     rows
   }: {
-    id: keyof ExerciseFormData;
+    id: keyof ExerciseFormTextData;
     label: string;
     defaultValue?: any;
     maxLength: number;

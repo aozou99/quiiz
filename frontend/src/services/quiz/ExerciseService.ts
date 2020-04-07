@@ -3,7 +3,7 @@ import "firebase/firestore";
 import "firebase/functions";
 import "firebase/auth";
 import "firebase/storage";
-import { ExerciseFormData } from "Types";
+import { ExerciseFormData } from "types/ExerciseTypes";
 import hash from "object-hash";
 
 const uploadThumbnailPath = "images/exercise/thumbnails/";

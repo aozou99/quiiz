@@ -5,16 +5,16 @@ import {
   Backdrop,
   CircularProgress
 } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import BasicDialog from "components/common/dialog/BasicConfirmDialog";
 import BasicTable from "components/common/table/BasicTable";
 import ExerciseFormDialog from "components/main/studio/pc/sub/main/table/dialog/ExerciseFormDialog";
 import ExerciseService from "services/quiz/ExerciseService";
-import imageUrl from "utils/helper/imageUrl";
 import QuizCell from "components/main/studio/pc/sub/main/table/cell/QuizCell";
-import { ExerciseTableRowData } from "Types";
+import { ExerciseTableRowData } from "types/ExerciseTypes";
+import ExercisePreviewDialog from "components/main/quiz/preview/ExercisePreviewDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   backdrop: {
@@ -70,6 +70,7 @@ const ExerciseTable = () => {
   const classes = useStyles();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openRegisterFormDialog, setOpenRegisterFormDialog] = useState(false);
+  const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [tableData, setTableData] = useState<any>([]);
   const [selectedData, setSelectedData] = useState<
     ExerciseTableRowData | undefined
@@ -93,8 +94,6 @@ const ExerciseTable = () => {
             privacy: data.privacy,
             limit: data.limit?.length < 1 ? "なし" : "制限あり",
             thumbnail: data.thumbnail
-              ? await imageUrl(data.thumbnail, "256x144")
-              : ""
           };
         }
       });
@@ -121,6 +120,20 @@ const ExerciseTable = () => {
           {
             title: "クイズ",
             field: "quiz",
+            customFilterAndSearch: (
+              filter: string,
+              rowData: ExerciseTableRowData
+            ) => {
+              return (
+                rowData.question.includes(filter) ||
+                !!rowData.description?.includes(filter)
+              );
+            },
+            customSort: (a: ExerciseTableRowData, b: ExerciseTableRowData) => {
+              if (a.question > b.question) return 1;
+              if (a.question < b.question) return -1;
+              return 0;
+            },
             render: (rowData: ExerciseTableRowData) => (
               <QuizCell
                 rowData={rowData}
@@ -128,7 +141,10 @@ const ExerciseTable = () => {
                   setSelectedData(rowData);
                   setOpenRegisterFormDialog(true);
                 }}
-                handlePreview={() => alert("プレビューするよ")}
+                handlePreview={() => {
+                  setSelectedData(rowData);
+                  setOpenPreviewDialog(true);
+                }}
                 handleDelete={() => {
                   setDeleteTarget([rowData]);
                   setOpenDeleteDialog(true);
@@ -185,6 +201,13 @@ const ExerciseTable = () => {
         oldData={selectedData}
         setOldData={setSelectedData}
       ></ExerciseFormDialog>
+      {selectedData && (
+        <ExercisePreviewDialog
+          open={openPreviewDialog}
+          setOpen={setOpenPreviewDialog}
+          exercise={selectedData}
+        ></ExercisePreviewDialog>
+      )}
       <Backdrop open={progressing} className={classes.backdrop}>
         <CircularProgress color="inherit" />
       </Backdrop>

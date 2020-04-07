@@ -3,9 +3,15 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Choice from "components/main/quiz/exercises/sub/Choice";
 import { themeColors } from "components/core/CustomeTheme";
-import { useSelector } from "react-redux";
-import { RootState } from "modules/core/rootReducer";
 import { grey } from "@material-ui/core/colors";
+import { ExerciseResult } from "types/ExerciseTypes";
+
+type State = {
+  choices: [string, string, string, string];
+  answer: 0 | 1 | 2 | 3;
+  result: ExerciseResult;
+  setResult: (result: ExerciseResult) => void;
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,9 +28,8 @@ const labelColorsMap = new Map<string, any>([
   ["D", themeColors.quaternary]
 ]);
 
-const Choices: React.FC = () => {
+const Choices: React.FC<State> = ({ choices, answer, result, setResult }) => {
   const classes = useStyles();
-  const { quiz } = useSelector((state: RootState) => state.quizGame);
 
   return (
     <Grid container className={classes.root}>
@@ -33,8 +38,10 @@ const Choices: React.FC = () => {
           key={label}
           color={labelColorsMap.get(label) ?? grey}
           label={label}
-          text={quiz.choices[i]}
-          isRight={quiz.answer === i}
+          text={choices[i]}
+          isRight={answer === i}
+          result={result}
+          setResult={setResult}
         />
       ))}
     </Grid>

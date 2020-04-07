@@ -1,16 +1,13 @@
-import { Theme, Color, fade } from "@material-ui/core"
+import { Theme, Color, fade } from "@material-ui/core";
 
-export const outlinedStyle = (theme: Theme, color: Color) => {
+export const outlinedStyle = (color: Color) => {
   return {
     border: `1px solid ${fade(color[500], 0.5)}`,
     "&:hover": {
       border: `1px solid ${color[500]}`
-    },
-    "&$disabled": {
-      border: `1px solid ${theme.palette.action.disabled}`
     }
-  }
-}
+  };
+};
 
 export const textStyle = (theme: Theme, color: Color) => {
   return {
@@ -21,15 +18,15 @@ export const textStyle = (theme: Theme, color: Color) => {
         backgroundColor: "transparent"
       }
     }
-  }
-}
+  };
+};
 
 export const outLinedButton = (theme: Theme, color: Color) => {
   return {
-    ...outlinedStyle(theme, color),
-    ...textStyle(theme, color),
+    ...outlinedStyle(color),
+    ...textStyle(theme, color)
   };
-}
+};
 
 export const containedButton = (theme: Theme, color: Color) => {
   return {
@@ -41,5 +38,5 @@ export const containedButton = (theme: Theme, color: Color) => {
         backgroundColor: color[500]
       }
     }
-  }
-}
+  };
+};
