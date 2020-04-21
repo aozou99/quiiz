@@ -35,7 +35,7 @@ class ExerciseService {
       correctAnswer: 0,
       limit: [],
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -47,7 +47,7 @@ class ExerciseService {
     const postData = {
       ...formData,
       tags: formData.tags?.split(",") || [],
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     // 新規サムネのパスを設定する
@@ -58,7 +58,7 @@ class ExerciseService {
     const res = await firebase.functions().httpsCallable("updateExercise")({
       docId,
       thumbnailUpdate,
-      postData
+      postData,
     });
 
     // サムネのアップロード & 更新が成功した場合
@@ -71,7 +71,7 @@ class ExerciseService {
 
   async delete(exerciseIds: string[]) {
     const res = await firebase.functions().httpsCallable("deleteExercise")({
-      ids: exerciseIds
+      ids: exerciseIds,
     });
     return res.data.isSuccess;
   }
@@ -79,7 +79,7 @@ class ExerciseService {
   async getMyExerciseList({
     orderBy,
     orderDirection,
-    format
+    format,
   }: {
     orderBy?: string;
     orderDirection?: "desc" | "asc";
@@ -90,13 +90,13 @@ class ExerciseService {
       .orderBy(orderBy || "createdAt", orderDirection || "desc")
       .get();
 
-    return result.docs.map(doc => (format ? format(doc) : doc));
+    return result.docs.map((doc) => (format ? format(doc) : doc));
   }
 
   onUpdate(callback: () => any) {
     this.db
       .where("userId", "==", firebase.auth().currentUser?.uid)
-      .onSnapshot({ includeMetadataChanges: true }, doc => {
+      .onSnapshot({ includeMetadataChanges: true }, (doc) => {
         // バックエンドへの書き込みが完了した場合
         if (!doc.metadata.hasPendingWrites) {
           callback();
@@ -108,7 +108,7 @@ class ExerciseService {
     // dataURLをBlobに変換する
     const response = await fetch(orgUrl);
     // アップロード
-    response.blob().then(blob => {
+    response.blob().then((blob) => {
       this.storageRef.child(uploadPath).put(blob);
     });
   }

@@ -3,9 +3,9 @@ import {
   Theme,
   Button,
   Backdrop,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import BasicDialog from "components/common/dialog/BasicConfirmDialog";
@@ -18,8 +18,8 @@ import ExercisePreviewDialog from "components/main/quiz/preview/ExercisePreviewD
 
 const useStyles = makeStyles((theme: Theme) => ({
   backdrop: {
-    zIndex: theme.zIndex.modal + 100
-  }
+    zIndex: theme.zIndex.modal + 100,
+  },
 }));
 
 const actions = (handleDelete: any, handleAdd: any) => {
@@ -36,7 +36,7 @@ const actions = (handleDelete: any, handleAdd: any) => {
         </Button>
       ),
       tooltip: "クイズを削除します",
-      onClick: handleDelete
+      onClick: handleDelete,
     },
     {
       icon: () => (
@@ -51,8 +51,8 @@ const actions = (handleDelete: any, handleAdd: any) => {
       ),
       isFreeAction: true,
       tooltip: "クイズを作成します",
-      onClick: handleAdd
-    }
+      onClick: handleAdd,
+    },
   ];
 };
 
@@ -83,7 +83,7 @@ const ExerciseTable = () => {
     const update = async () => {
       setIsLoading(true);
       const list = await ExerciseService.getMyExerciseList({
-        format: async doc => {
+        format: async (doc) => {
           const data = doc.data();
           return {
             ...data,
@@ -93,16 +93,15 @@ const ExerciseTable = () => {
             privacyLabel: privacyLabel(data.privacy),
             privacy: data.privacy,
             limit: data.limit?.length < 1 ? "なし" : "制限あり",
-            thumbnail: data.thumbnail
+            thumbnail: data.thumbnail,
           };
-        }
+        },
       });
       setTableData(await Promise.all(list));
       setIsLoading(false);
     };
     ExerciseService.onUpdate(update);
-    // cleanup
-    return ExerciseService.onUpdate(() => console.log("cleanup"));
+    return ExerciseService.onUpdate(function() {});
   }, [setTableData]);
 
   const handleDelete = (_event: any, rowData: any[]) => {
@@ -111,8 +110,8 @@ const ExerciseTable = () => {
   };
   const handleAdd = () => setOpenRegisterFormDialog(true);
 
-  return (
-    <React.Fragment>
+  const MainTable = useMemo(() => {
+    return (
       <BasicTable
         isLoading={isLoading}
         actions={actions(handleDelete, handleAdd)}
@@ -155,34 +154,39 @@ const ExerciseTable = () => {
             cellStyle: {
               width: 340,
               maxWidth: 340,
-              minWidth: 340
+              minWidth: 340,
             },
             headerStyle: {
               width: 340,
               maxWidth: 340,
-              minWidth: 340
-            }
+              minWidth: 340,
+            },
           },
           { title: "公開設定", field: "privacyLabel" },
           {
             title: "日付",
             field: "createdAt",
-            type: "datetime"
+            type: "datetime",
           },
           { title: "制限", field: "limit" },
           {
             title: "回答数",
             field: "answerCount",
-            type: "numeric"
+            type: "numeric",
           },
           {
             title: "初回正解率",
             field: "accuracyRate",
-            type: "numeric"
-          }
+            type: "numeric",
+          },
         ]}
         data={tableData}
       ></BasicTable>
+    );
+  }, [tableData, isLoading]);
+  return (
+    <React.Fragment>
+      {MainTable}
       <BasicDialog
         open={openDeleteDialog}
         setOpen={setOpenDeleteDialog}

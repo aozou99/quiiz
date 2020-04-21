@@ -5,7 +5,7 @@ import {
   Typography,
   CircularProgress,
   IconButton,
-  Grid
+  Grid,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Img from "react-image";
@@ -28,10 +28,10 @@ type State = {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   thumbnail: {
-    width: 120
+    width: 120,
   },
   description: {
     marginLeft: theme.spacing(2),
@@ -40,18 +40,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
-      display: "block"
-    }
+      display: "block",
+    },
   },
   iconButtonLabel: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   hoverHidden: {},
   hoverAppear: {
     alignItems: "center",
-    width: 200
-  }
+    width: 200,
+    paddingLeft: theme.spacing(1),
+  },
 }));
 
 const QuizCell: React.FC<State> = ({
@@ -59,13 +60,13 @@ const QuizCell: React.FC<State> = ({
   handleEdit,
   handleAnalyze,
   handleDelete,
-  handlePreview
+  handlePreview,
 }) => {
   const classes = useStyles();
   const [imgSrc, setImgSrc] = useState();
   useEffect(() => {
     let unmounted = false;
-    imageUrl(rowData.thumbnail, "256x144").then(path => {
+    imageUrl(rowData.thumbnail, "256x144").then((path) => {
       if (!unmounted) {
         setImgSrc(path);
       }

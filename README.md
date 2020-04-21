@@ -13,11 +13,10 @@
 
 # Requirement
 
-* yarn
-* firebase
+- yarn
+- firebase
 
 # Installation
-
 
 # Usage
 
@@ -44,7 +43,7 @@ cd frontend && yarn install && cd ../
 ```bash
 # firebaseのエミュレータを利用するのに必要
 export GOOGLE_APPLICATION_CREDENTIALS=your_service_account.json
-firebase serve
+firebase emulators:start
 ```
 
 # Note
@@ -53,8 +52,8 @@ comming soon ...
 
 # Author
 
-* aozou99
-* E-mail
+- aozou99
+- E-mail
 
 # License
 
