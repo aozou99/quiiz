@@ -4,22 +4,23 @@ import Header from "./sub/Header";
 import Sidebar from "components/main/studio/pc/sub/SideBar";
 import { useRouteMatch, Route, Switch } from "react-router-dom";
 import QuizEditer from "./sub/main/QuizEditer";
+import ReadyImage from "components/common/meta/Ready";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   toolbar: {
     display: "flex",
     alignItems: "left",
     justifyContent: "start",
     padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   content: {
     flexGrow: 1,
-    paddingTop: theme.spacing(3)
-  }
+    paddingTop: theme.spacing(3),
+  },
 }));
 
 const Main: React.FC = () => {
@@ -39,8 +40,8 @@ const Main: React.FC = () => {
         <div className={classes.toolbar} />
 
         <Switch>
-          <Route exact path={path}>
-            abc
+          <Route exact path={`${path}`}>
+            <ReadyImage />
           </Route>
           <Route path={`${path}/quiz`}>
             <QuizEditer />

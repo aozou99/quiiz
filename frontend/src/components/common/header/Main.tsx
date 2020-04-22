@@ -19,13 +19,13 @@ import { useHistory } from "react-router-dom";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     menuButton: {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     title: {
-      fontFamily: "Chalkboard"
+      fontFamily: "Chalkboard",
     },
     search: {
       flexGrow: 3,
@@ -33,14 +33,14 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.shape.borderRadius,
       backgroundColor: fade(theme.palette.grey[500], 0.15),
       "&:hover": {
-        backgroundColor: fade(theme.palette.grey[500], 0.25)
+        backgroundColor: fade(theme.palette.grey[500], 0.25),
       },
       marginRight: theme.spacing(2),
       marginLeft: 0,
       [theme.breakpoints.down("sm")]: {
         marginLeft: theme.spacing(3),
-        width: 250
-      }
+        width: 250,
+      },
     },
     searchIcon: {
       width: theme.spacing(7),
@@ -49,22 +49,22 @@ const useStyles = makeStyles((theme: Theme) =>
       pointerEvents: "none",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center"
+      justifyContent: "center",
     },
     inputRoot: {
       color: "inherit",
-      width: "100%"
+      width: "100%",
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 7),
       transition: theme.transitions.create("width"),
-      width: "100%"
+      width: "100%",
     },
     smDisplayNone: {
       [theme.breakpoints.down("xs")]: {
-        display: "none"
-      }
-    }
+        display: "none",
+      },
+    },
   })
 );
 
@@ -109,7 +109,7 @@ const Main: React.FC = () => {
               placeholder="検索"
               classes={{
                 root: classes.inputRoot,
-                input: classes.inputInput
+                input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
             />
@@ -137,7 +137,7 @@ const Main: React.FC = () => {
               <Tooltip title="クイズを作成する">
                 <IconButton
                   className={clsx(classes.menuButton, classes.smDisplayNone)}
-                  onClick={() => history.push("/studio")}
+                  onClick={() => history.push("/studio/quiz")}
                 >
                   <PostAddIcon fontSize="large" />
                 </IconButton>
