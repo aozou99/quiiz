@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Typography, makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -19,7 +19,11 @@ const ReadyImage: React.FC = () => {
 
   return (
     <Container maxWidth="sm" className={classes.root}>
-      <img src="images/meta/ready.png" alt="準備中" className={classes.image} />
+      <img
+        src={require("./ready.png")}
+        alt="準備中"
+        className={classes.image}
+      />
       <Typography variant="h4" color="textSecondary">
         準備中
       </Typography>

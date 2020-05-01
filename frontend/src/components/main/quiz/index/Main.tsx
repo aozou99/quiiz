@@ -1,7 +1,5 @@
-import React from 'react';
-import { Container } from '@material-ui/core';
-import ItemListByCategory from 'components/main/quiz/index/ sub/ItemListByCategory';
-
+import React from "react";
+import ItemListByCategory from "components/main/quiz/index/ sub/ItemListByCategory";
 
 const itemList = [
   {
@@ -68,21 +66,15 @@ const itemList = [
     authorImgPath: "/images/mock/avator/favicon512.png",
     size: 10,
   },
-]
+];
 
 const Main: React.FC = () => {
   return (
-    <Container maxWidth="lg">
-      <ItemListByCategory 
-        category="動物シリーズ"
-        itemList={itemList}
-      />
-      <ItemListByCategory 
-        category="動物シリーズ"
-        itemList={itemList}
-      />
-    </Container>
+    <>
+      <ItemListByCategory category="動物シリーズ" itemList={itemList} />
+      <ItemListByCategory category="動物シリーズ" itemList={itemList} />
+    </>
   );
-}
+};
 
 export default Main;

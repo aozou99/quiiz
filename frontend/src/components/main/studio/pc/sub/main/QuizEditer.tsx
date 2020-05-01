@@ -8,6 +8,7 @@ import BookIcon from "@material-ui/icons/Book";
 import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
 import Divider from "@material-ui/core/Divider";
 import ExerciseTable from "components/main/studio/pc/sub/main/table/ExerciseTable";
+import ReadyImage from "components/common/meta/Ready";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -35,18 +36,18 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: any) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   paddingLeft: {
-    paddingLeft: theme.spacing(3)
-  }
+    paddingLeft: theme.spacing(3),
+  },
 }));
 
 const QuizEditer: React.FC = () => {
@@ -80,10 +81,10 @@ const QuizEditer: React.FC = () => {
       </Tabs>
       <Divider variant="fullWidth" />
       <TabPanel value={value} index={0}>
-        <ExerciseTable></ExerciseTable>
+        <ExerciseTable />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ReadyImage />
       </TabPanel>
     </div>
   );

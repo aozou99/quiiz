@@ -6,7 +6,7 @@ import { isLoaded, isEmpty, FirebaseReducer } from "react-redux-firebase";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 
 const Exercises = lazy(() => import("components/main/quiz/exercises/Main"));
-const Index = lazy(() => import("components/main/quiz/index/Main"));
+const Index = lazy(() => import("components/main/quiz/Main"));
 const Workbook = lazy(() => import("components/main/quiz/series/Main"));
 const Signup = lazy(() => import("components/main/auth/signUp/Main"));
 const Signin = lazy(() => import("components/main/auth/signIn/Main"));
@@ -35,7 +35,7 @@ const authRedirect = (
         <Redirect
           to={{
             pathname: redirectTo,
-            state: { from: location }
+            state: { from: location },
           }}
         />
       ) : (
