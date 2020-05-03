@@ -6,7 +6,6 @@ import {
   makeStyles,
   List,
   ListItem,
-  Tooltip,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -71,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   menuButton: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(2),
   },
   list: {
     paddingTop: 0,
@@ -127,12 +126,15 @@ const TemporarySidebar: React.FC<State> = ({ open, setOpen }) => {
                 [classes.selected]: history.location.pathname === item.linkPath,
               })}
             >
-              <Tooltip title={item.name} key={item.name}>
-                <ListItemIcon className={classes.listChild}>
-                  {item.icon}
-                </ListItemIcon>
-              </Tooltip>
-              <ListItemText primary={item.name} />
+              <ListItemIcon className={classes.listChild}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.name}
+                primaryTypographyProps={{
+                  variant: "body2",
+                }}
+              />
             </ListItem>
           ))}
         </List>
