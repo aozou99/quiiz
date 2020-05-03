@@ -181,10 +181,6 @@ const ExerciseFormDialog: React.FC<State> = ({
     }
     try {
       // 登録 or 更新
-      console.log({
-        old: oldThumbnailRef.current,
-        new: data.thumbnail,
-      });
       oldData
         ? await ExerciseService.update(
             oldData.id,
