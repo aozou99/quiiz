@@ -16,8 +16,8 @@ type State = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2, 0)
-    }
+      padding: theme.spacing(2, 0),
+    },
   })
 );
 
@@ -25,7 +25,7 @@ const labelColorsMap = new Map<string, any>([
   ["A", themeColors.primary],
   ["B", themeColors.secondary],
   ["C", themeColors.tertiary],
-  ["D", themeColors.quaternary]
+  ["D", themeColors.quaternary],
 ]);
 
 const Choices: React.FC<State> = ({ choices, answer, result, setResult }) => {

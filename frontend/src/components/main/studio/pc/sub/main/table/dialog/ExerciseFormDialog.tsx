@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,7 +12,7 @@ import {
   Box,
   Typography,
   Backdrop,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -21,7 +21,7 @@ import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import {
   ExerciseFormData,
   ExerciseTableRowData,
-  ExerciseFormTextData
+  ExerciseFormTextData,
 } from "types/ExerciseTypes";
 import ChipInput from "material-ui-chip-input";
 import ExerciseService from "services/quiz/ExerciseService";
@@ -40,38 +40,38 @@ type State = {
 const answers = [
   {
     label: "選択肢A",
-    value: 0
+    value: 0,
   },
   {
     label: "選択肢B",
-    value: 1
+    value: 1,
   },
   {
     label: "選択肢C",
-    value: 2
+    value: 2,
   },
   {
     label: "選択肢D",
-    value: 3
-  }
+    value: 3,
+  },
 ];
 
 const privacies = [
   {
     label: "公開",
-    value: 0
+    value: 0,
   },
   {
     label: "非公開",
-    value: 1
-  }
+    value: 1,
+  },
 ];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   dialogContent: {
     "&:first-child": {
-      paddingTop: 0
-    }
+      paddingTop: 0,
+    },
   },
   thumbnailBox: {
     display: "flex",
@@ -79,49 +79,49 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(2),
     "&>*": {
       height: theme.spacing(9 * 1.5),
-      width: theme.spacing(16 * 1.5)
+      width: theme.spacing(16 * 1.5),
     },
     "& img": {
       height: "inherit",
-      width: "inherit"
-    }
+      width: "inherit",
+    },
   },
   thumbnailPreview: {
     marginLeft: theme.spacing(2),
     borderStyle: "groove",
-    boxSizing: "border-box"
+    boxSizing: "border-box",
   },
   thumbnailButton: {
     borderStyle: "dashed",
     "&>.MuiButton-label": {
-      flexDirection: "column"
+      flexDirection: "column",
     },
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
   },
   inputFileBtnHide: {
     opacity: 0,
     appearance: "none",
-    position: "absolute"
+    position: "absolute",
   },
   helperText: {
-    textAlign: "right"
+    textAlign: "right",
   },
   tagsHelperText: {
     display: "flex",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   selectBox: {
     "&>*": {
-      marginRight: theme.spacing(2)
-    }
+      marginRight: theme.spacing(2),
+    },
   },
   chipInput: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   backdrop: {
-    zIndex: theme.zIndex.modal + 1
-  }
+    zIndex: theme.zIndex.modal + 1,
+  },
 }));
 
 const ExerciseFormDialog: React.FC<State> = ({
@@ -129,7 +129,7 @@ const ExerciseFormDialog: React.FC<State> = ({
   open,
   setOpen,
   oldData,
-  setOldData
+  setOldData,
 }) => {
   const classes = useStyles();
   const [progressing, setProgressing] = useState(false);
@@ -137,17 +137,19 @@ const ExerciseFormDialog: React.FC<State> = ({
   const [croppedImage, setCroppedImage] = useState<string | undefined>(
     undefined
   );
+  const oldThumbnailRef = useRef(null);
 
   useEffect(() => {
-    imageUrl(oldData?.thumbnail || "", "256x144").then(path => {
+    imageUrl(oldData?.thumbnail || "", "256x144").then((path) => {
       setCroppedImage(path);
+      oldThumbnailRef.current = path;
     });
   }, [oldData, open]);
   // 入力フォーム系
   const { register, handleSubmit, setValue, watch, control, errors } = useForm<
     ExerciseFormData
   >({
-    mode: "onBlur"
+    mode: "onBlur",
   });
   const fields = watch();
 
@@ -158,8 +160,8 @@ const ExerciseFormDialog: React.FC<State> = ({
       validate: {
         maxLength: (value: string) =>
           (value?.replace(/,/g, "").length || 0) < 100 ||
-          "合計の文字数が長すぎます"
-      }
+          "合計の文字数が長すぎます",
+      },
     }
   );
   // thumbnailのカスタム登録
@@ -171,7 +173,7 @@ const ExerciseFormDialog: React.FC<State> = ({
     setCroppedImage(undefined);
     setOldData(undefined);
   };
-  const onSubmit = handleSubmit(async data => {
+  const onSubmit = handleSubmit(async (data) => {
     setProgressing(true);
     // サムネを再設定
     if (croppedImage !== undefined) {
@@ -179,10 +181,14 @@ const ExerciseFormDialog: React.FC<State> = ({
     }
     try {
       // 登録 or 更新
+      console.log({
+        old: oldThumbnailRef.current,
+        new: data.thumbnail,
+      });
       oldData
         ? await ExerciseService.update(
             oldData.id,
-            oldData.thumbnail !== data.thumbnail,
+            oldThumbnailRef.current !== data.thumbnail,
             data
           )
         : await ExerciseService.register(data);
@@ -202,7 +208,7 @@ const ExerciseFormDialog: React.FC<State> = ({
     maxLength,
     multiline,
     nullable,
-    rows
+    rows,
   }: {
     id: keyof ExerciseFormTextData;
     label: string;
@@ -227,8 +233,8 @@ const ExerciseFormDialog: React.FC<State> = ({
           required: !nullable && `${label}を入力してください`,
           maxLength: {
             value: maxLength,
-            message: `${label}が長すぎます`
-          }
+            message: `${label}が長すぎます`,
+          },
         })}
         fullWidth
         variant="outlined"
@@ -255,31 +261,31 @@ const ExerciseFormDialog: React.FC<State> = ({
             id: "question",
             label: "問題文",
             maxLength: 100,
-            defaultValue: oldData?.question || ""
+            defaultValue: oldData?.question || "",
           })}
           {wrapTextFiled({
             id: "selectA",
             label: "選択肢A",
             maxLength: 30,
-            defaultValue: oldData?.selectA || ""
+            defaultValue: oldData?.selectA || "",
           })}
           {wrapTextFiled({
             id: "selectB",
             label: "選択肢B",
             maxLength: 30,
-            defaultValue: oldData?.selectB || ""
+            defaultValue: oldData?.selectB || "",
           })}
           {wrapTextFiled({
             id: "selectC",
             label: "選択肢C",
             maxLength: 30,
-            defaultValue: oldData?.selectC || ""
+            defaultValue: oldData?.selectC || "",
           })}
           {wrapTextFiled({
             id: "selectD",
             label: "選択肢D",
             maxLength: 30,
-            defaultValue: oldData?.selectD || ""
+            defaultValue: oldData?.selectD || "",
           })}
           <Box className={classes.selectBox}>
             <Controller
@@ -291,7 +297,7 @@ const ExerciseFormDialog: React.FC<State> = ({
                   label="正解の選択肢"
                   helperText="正解の選択肢を選んでください"
                 >
-                  {answers.map(option => (
+                  {answers.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -301,7 +307,7 @@ const ExerciseFormDialog: React.FC<State> = ({
               name="answer"
               rules={{ required: true }}
               control={control}
-              defaultValue={oldData?.answer || "0"}
+              defaultValue={oldData?.answer || 0}
             ></Controller>
             <Controller
               as={
@@ -312,7 +318,7 @@ const ExerciseFormDialog: React.FC<State> = ({
                   label="公開/非公開"
                   helperText="公開するか選択してください"
                 >
-                  {privacies.map(option => (
+                  {privacies.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -322,7 +328,7 @@ const ExerciseFormDialog: React.FC<State> = ({
               name="privacy"
               rules={{ required: true }}
               control={control}
-              defaultValue={oldData?.privacy || "0"}
+              defaultValue={oldData?.privacy || 0}
             ></Controller>
           </Box>
           <Box className={classes.thumbnailBox}>
@@ -381,7 +387,7 @@ const ExerciseFormDialog: React.FC<State> = ({
               </React.Fragment>
             }
             FormHelperTextProps={{
-              className: classes.tagsHelperText
+              className: classes.tagsHelperText,
             }}
             fullWidth
             label={errors.tags?.message || "タグ"}
@@ -402,7 +408,7 @@ const ExerciseFormDialog: React.FC<State> = ({
             multiline: true,
             nullable: true,
             rows: 2,
-            defaultValue: oldData?.description || ""
+            defaultValue: oldData?.description || "",
           })}
         </DialogContent>
         <DialogActions>
