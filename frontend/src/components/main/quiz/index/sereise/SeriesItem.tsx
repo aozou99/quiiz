@@ -1,11 +1,11 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import { Avatar, Grid, Theme, createStyles } from '@material-ui/core';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Typography from "@material-ui/core/Typography";
+import { Avatar, Grid, Theme, createStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,10 +13,10 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: "250px",
       maxWidth: "300px",
       flexGrow: 1,
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down("xs")]: {
         minWidth: "350px",
         maxWidth: "350px",
-      }
+      },
     },
     media: {
       height: 140,
@@ -25,24 +25,26 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  title: string
-  imgPath: string
-  author: string
-  authorImgPath: string
-  size: Number
-}
+  title: string;
+  imgPath: string;
+  author: string;
+  authorImgPath: string;
+  size: Number;
+};
 
-const Item: React.FC<Props> = ({ title, imgPath, author, authorImgPath, size }) => {
+const SeriesItem: React.FC<Props> = ({
+  title,
+  imgPath,
+  author,
+  authorImgPath,
+  size,
+}) => {
   const classes = useStyles();
 
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={imgPath}
-          title={title}
-        />
+        <CardMedia className={classes.media} image={imgPath} title={title} />
         <CardContent>
           <Grid container spacing={0}>
             <Grid item xs={3}>
@@ -64,6 +66,6 @@ const Item: React.FC<Props> = ({ title, imgPath, author, authorImgPath, size }) 
       </CardActionArea>
     </Card>
   );
-}
+};
 
-export default Item;
+export default SeriesItem;

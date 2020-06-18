@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Choice from "components/main/quiz/exercises/sub/Choice";
+import Choice from "components/main/quiz/preview/sub/Choice";
 import { themeColors } from "components/core/CustomeTheme";
 import { grey } from "@material-ui/core/colors";
 import { ExerciseResult } from "types/ExerciseTypes";

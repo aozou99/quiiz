@@ -1,9 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Sidebar from "components/main/quiz/SideBar";
-import { useRouteMatch, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import ReadyImage from "components/common/meta/Ready";
 import Index from "components/main/quiz/index/Main";
+import Single from "components/main/quiz/single/Main";
 import Header from "components/main/quiz/Header";
 import TemporarySidebar from "components/main/quiz/TemporarySideBar";
 
@@ -27,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 const Main: React.FC = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const { path } = useRouteMatch();
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -42,8 +42,11 @@ const Main: React.FC = () => {
         <div className={classes.toolbar} />
 
         <Switch>
-          <Route exact path={`${path}`}>
+          <Route exact path={`/`}>
             <Index />
+          </Route>
+          <Route path={`/single`}>
+            <Single />
           </Route>
           <Route path={`/trending`}>
             <ReadyImage />

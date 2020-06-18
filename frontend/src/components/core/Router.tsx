@@ -5,7 +5,7 @@ import { RootState } from "modules/core/rootReducer";
 import { isLoaded, isEmpty, FirebaseReducer } from "react-redux-firebase";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 
-const Exercises = lazy(() => import("components/main/quiz/exercises/Main"));
+const Exercises = lazy(() => import("components/main/quiz/single/Main"));
 const Index = lazy(() => import("components/main/quiz/Main"));
 const Workbook = lazy(() => import("components/main/quiz/series/Main"));
 const Signup = lazy(() => import("components/main/auth/signUp/Main"));

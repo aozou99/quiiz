@@ -8,10 +8,10 @@ import {
   Container,
   Divider,
   makeStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
-import Question from "components/main/quiz/exercises/sub/Question";
-import Choices from "components/main/quiz/exercises/sub/Choices";
+import Question from "components/main/quiz/preview/sub/Question";
+import Choices from "components/main/quiz/preview/sub/Choices";
 import CheckIcon from "@material-ui/icons/Check";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { ExerciseData, ExerciseResult } from "types/ExerciseTypes";
@@ -19,8 +19,8 @@ import { ExerciseData, ExerciseResult } from "types/ExerciseTypes";
 const useStyles = makeStyles((theme: Theme) => ({
   actionButton: {
     float: "right",
-    marginLeft: theme.spacing(2)
-  }
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 type State = {
@@ -32,7 +32,7 @@ type State = {
 const ExercisePreviewDialog: React.FC<State> = ({
   open,
   setOpen,
-  exercise
+  exercise,
 }) => {
   const classes = useStyles();
   const [result, setResult] = useState<ExerciseResult>(undefined);
@@ -41,7 +41,7 @@ const ExercisePreviewDialog: React.FC<State> = ({
     e.selectA,
     e.selectB,
     e.selectC,
-    e.selectD
+    e.selectD,
   ];
   return (
     <Dialog

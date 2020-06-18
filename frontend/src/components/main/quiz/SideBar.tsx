@@ -11,12 +11,18 @@ import HomeIcon from "@material-ui/icons/Home";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import { Typography } from "@material-ui/core";
+import BookIcon from "@material-ui/icons/Book";
 
 const listItems = [
   {
     name: "ホーム",
     linkPath: "/",
     icon: <HomeIcon />,
+  },
+  {
+    name: "シングル",
+    linkPath: "/single",
+    icon: <BookIcon />,
   },
   {
     name: "急上昇",
