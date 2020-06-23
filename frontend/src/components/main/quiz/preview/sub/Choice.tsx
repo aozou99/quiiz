@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import { Typography, Color } from "@material-ui/core";
 import {
   outLinedButton,
-  containedButton
+  containedButton,
 } from "utils/materialUi/customizeHelper";
 import ClearIcon from "@material-ui/icons/Clear";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
@@ -24,7 +24,7 @@ const labelCol = (theme: Theme, color: Color) => {
   return {
     padding: theme.spacing(1, 0),
     ...containedButton(theme, color),
-    lineHeight: "inherit"
+    lineHeight: "inherit",
   };
 };
 
@@ -34,27 +34,28 @@ const Choice: React.FC<State> = ({
   text,
   isRight,
   result,
-  setResult
+  setResult,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       button: {
         width: "100%",
-        marginBottom: theme.spacing(2),
-        padding: theme.spacing(0)
+        margin: theme.spacing(1, 0),
+        padding: theme.spacing(0),
+        alignItems: "stretch",
       },
       labelCol: labelCol(theme, color),
       outLinedButton: outLinedButton(theme, color),
       mainCol: {
         backgroundColor: () => (isClicked ? color[100] : undefined),
         padding: theme.spacing(1),
-        display: "flex"
+        display: "flex",
       },
       icon: {
-        fontSize: "2.6rem",
-        marginRight: theme.spacing(1)
-      }
+        fontSize: "1.7rem",
+        marginRight: theme.spacing(1),
+      },
     })
   );
   const classes = useStyles();
@@ -77,7 +78,7 @@ const Choice: React.FC<State> = ({
         onClick={handleClick}
       >
         <Grid xs={2} item className={classes.labelCol}>
-          <Typography variant="h5" style={{ lineHeight: "inherit" }}>
+          <Typography variant="subtitle1" style={{ lineHeight: "inherit" }}>
             {label}
           </Typography>
         </Grid>
@@ -95,7 +96,7 @@ const Choice: React.FC<State> = ({
             <RadioButtonUncheckedIcon color="error" className={classes.icon} />
           )}
           <Typography
-            variant="h5"
+            variant="subtitle1"
             color="textPrimary"
             style={{ lineHeight: "inherit" }}
           >

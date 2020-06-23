@@ -16,7 +16,7 @@ type State = {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2, 0),
+      paddingTop: theme.spacing(0),
     },
   })
 );
