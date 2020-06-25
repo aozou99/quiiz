@@ -223,6 +223,7 @@ const ExerciseFormDialog: React.FC<State> = ({
         name={id}
         defaultValue={defaultValue || ""}
         rows={rows}
+        rowsMax={rows ? rows + 10 : undefined}
         label={errors[id]?.message || label}
         type="text"
         inputRef={register({
@@ -400,7 +401,7 @@ const ExerciseFormDialog: React.FC<State> = ({
           {wrapTextFiled({
             id: "description",
             label: "解説",
-            maxLength: 200,
+            maxLength: 500,
             multiline: true,
             nullable: true,
             rows: 2,

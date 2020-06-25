@@ -43,7 +43,13 @@ cd frontend && yarn install && cd ../
 ```bash
 # firebaseのエミュレータを利用するのに必要
 export GOOGLE_APPLICATION_CREDENTIALS=your_service_account.json
-firebase emulators:start
+firebase emulators:start --import=./data
+```
+
+### Export FireStore Data
+
+```
+firebase emulators:export --force ./data/
 ```
 
 # Note

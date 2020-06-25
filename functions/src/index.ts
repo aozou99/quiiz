@@ -12,7 +12,7 @@ const db = admin.firestore();
 export const existDisplayName = functions.https.onCall(
   async (data, _context) => {
     return {
-      isExist: await searchDisplayName(data.displayName, undefined)
+      isExist: await searchDisplayName(data.displayName, undefined),
     };
   }
 );
@@ -24,7 +24,7 @@ export const updateExercise = functions.https.onCall(async (data, context) => {
     .collection("exercise")
     .doc(data.docId)
     .get()
-    .then(doc => {
+    .then((doc) => {
       if (doc.data()?.userId !== context.auth?.uid) {
         throw new HttpsError(
           "permission-denied",
@@ -45,7 +45,7 @@ export const updateExercise = functions.https.onCall(async (data, context) => {
           return { isSuccess: false };
         }
       }
-      return doc.ref.set(data.postData, { merge: true }).then(() => {
+      return doc.ref.update(data.postData, { merge: true }).then(() => {
         return { isSuccess: true };
       });
     });
@@ -59,7 +59,7 @@ export const deleteExercise = functions.https.onCall(async (data, context) => {
       .collection("exercise")
       .doc(id)
       .get()
-      .then(doc => {
+      .then((doc) => {
         if (doc.data()?.userId !== context.auth?.uid) {
           throw new HttpsError(
             "permission-denied",
@@ -71,8 +71,8 @@ export const deleteExercise = functions.https.onCall(async (data, context) => {
       });
     rs.push(result);
   }
-  return Promise.all(rs).then(vals => {
-    return { isSuccess: vals.every(val => val) };
+  return Promise.all(rs).then((vals) => {
+    return { isSuccess: vals.every((val) => val) };
   });
 });
 

@@ -58,9 +58,9 @@ const actions = (handleDelete: any, handleAdd: any) => {
 
 const privacyLabel = (privacy: any) => {
   switch (privacy) {
-    case "0":
+    case 0:
       return "公開";
-    case "1":
+    case 1:
     default:
       return "非公開";
   }
