@@ -37,4 +37,8 @@ export type ExerciseTableRowData = ExerciseData & {
   limit: string;
 };
 
+export type ExerciseFullData = ExerciseTableRowData & {
+  userId: string;
+};
+
 export type ExerciseResult = "right" | "wrong" | undefined;

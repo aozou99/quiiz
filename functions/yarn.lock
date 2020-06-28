@@ -287,6 +287,13 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.59.tgz#9e34261f30183f9777017a13d185dfac6b899e04"
   integrity sha512-8RkBivJrDCyPpBXhVZcjh7cQxVBSmRk9QM7hOketZzp6Tg79c0N8kkpAIito9bnJ3HCVCHVYz+KHTEbfQNfeVQ==
 
+"@types/path-parse@^1.0.19":
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/@types/path-parse/-/path-parse-1.0.19.tgz#8c8e4829a56c6fba498745079b7c3fc9c040647c"
+  integrity sha1-jI5IKaVsb7pJh0UHm3w/ycBAZHw=
+  dependencies:
+    "@types/node" "*"
+
 "@types/range-parser@*":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"

@@ -34,19 +34,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  title: string;
-  imgPath: string;
-  author: string;
-  authorImgPath: string;
+  question: string;
+  thumbnail: string;
+  authorName: string;
+  authorImageUrl: string;
   handleClick: () => any;
   isSelected: boolean;
 };
 
 const Item: React.FC<Props> = ({
-  title,
-  imgPath,
-  author,
-  authorImgPath,
+  question,
+  thumbnail,
+  authorName,
+  authorImageUrl,
   handleClick,
   isSelected,
 }) => {
@@ -58,18 +58,22 @@ const Item: React.FC<Props> = ({
       onClick={handleClick}
     >
       <CardActionArea>
-        <CardMedia className={classes.media} image={imgPath} title={title} />
+        <CardMedia
+          className={classes.media}
+          image={thumbnail}
+          title={question}
+        />
         <CardContent>
           <Grid container spacing={0}>
             <Grid item xs={3}>
-              <Avatar alt={author} src={authorImgPath} />
+              <Avatar alt={authorName} src={authorImageUrl} />
             </Grid>
             <Grid item xs={9}>
               <Typography gutterBottom variant="subtitle2" component="h4">
-                {title}
+                {question}
               </Typography>
               <Typography variant="body2" color="textSecondary" component="p">
-                {author}
+                {authorName}
               </Typography>
             </Grid>
           </Grid>

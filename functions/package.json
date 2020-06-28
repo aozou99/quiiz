@@ -19,6 +19,7 @@
     "firebase-functions": "^3.5.0"
   },
   "devDependencies": {
+    "@types/path-parse": "^1.0.19",
     "firebase-functions-test": "^0.2.0",
     "tslint": "^6.1.0",
     "typescript": "^3.2.2"
