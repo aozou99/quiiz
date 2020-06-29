@@ -3,7 +3,7 @@ import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
 import "firebase/functions";
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import imageUrl from "utils/helper/imageUrl";
 
 export const useFetchFirstDocuments = () => {
@@ -41,7 +41,28 @@ export const useFetchThumbnailUrl = (
     return () => {
       mounted = false;
     };
-  }, [uri]);
+  }, [uri, size]);
 
   return { imgSrc, loaded };
+};
+
+export const useFetchGood = (exerciseId: string, goodClick: boolean) => {
+  const [isGood, setIsGood] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [goodCount, setGoodCount] = useState(0);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("exercise")
+      .doc(exerciseId)
+      .get()
+      .then((snapshot) => {
+        setIsGood(
+          snapshot.data()?.good.includes(firebase.auth().currentUser?.uid)
+        );
+        setGoodCount(snapshot.data()?.good.length);
+        setLoaded(true);
+      });
+  }, [exerciseId, goodClick]);
+  return { isGood, loaded, goodCount };
 };

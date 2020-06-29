@@ -4,10 +4,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Box, Theme, createStyles } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import clsx from "clsx";
-import Item from "components/main/quiz/single/sub/Item";
-import AnswerPanel from "components/main/quiz/single/sub/AnswerPanel";
+import Item from "components/main/quiz/home/sub/Item";
+import AnswerPanel from "components/main/quiz/home/sub/AnswerPanel";
 import { ExerciseResult } from "types/ExerciseTypes";
-import DummyItem from "components/main/quiz/single/sub/DummyItem";
+import DummyItem from "components/main/quiz/home/sub/DummyItem";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type quiz = {
-  id: number;
+  id: string;
   thumbnail: { "256x144": string; "640x360": string };
   question: string;
   authorName: string;
@@ -60,7 +60,7 @@ const Main: React.FC = () => {
           ? firstDocuments.map((item: quiz) => (
               <Item
                 key={item.id}
-                thumbnail={item.thumbnail["256x144"]}
+                thumbnail={item.thumbnail["640x360"]}
                 question={item.question}
                 authorName={item.authorName}
                 authorImageUrl={item.authorImageUrl}
@@ -75,7 +75,9 @@ const Main: React.FC = () => {
                 isSelected={selected === item}
               />
             ))
-          : Array.from({ length: 32 }).map(() => <DummyItem />)}
+          : Array.from({ length: 32 })
+              .fill(null)
+              .map((_, i) => <DummyItem key={i} />)}
       </Box>
       {selected && (
         <AnswerPanel

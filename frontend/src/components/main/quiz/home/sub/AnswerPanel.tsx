@@ -1,9 +1,8 @@
 import {
   Paper,
+  Box,
   Typography,
   Divider,
-  BottomNavigation,
-  BottomNavigationAction,
   Tooltip,
   Collapse,
   Card,
@@ -13,16 +12,20 @@ import {
   makeStyles,
   createStyles,
   Theme,
+  IconButton,
 } from "@material-ui/core";
-import React from "react";
+import clsx from "clsx";
+import React, { useState } from "react";
 import Choices from "components/main/quiz/preview/sub/Choices";
 import { themeColors } from "components/core/CustomeTheme";
 import FolderIcon from "@material-ui/icons/Folder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { ExerciseResult } from "types/ExerciseTypes";
+import ExerciseService from "services/quiz/ExerciseService";
+import { useFetchGood } from "services/quiz/ExerciseHooks";
 
 type quiz = {
-  id: number;
+  id: string;
   thumbnail: { "256x144": string; "640x360": string };
   question: string;
   authorName: string;
@@ -67,15 +70,18 @@ const useStyles = makeStyles((theme: Theme) =>
         margin: theme.spacing(1),
       },
     },
+    icons: {
+      display: "flex",
+      justifyContent: "space-evenly",
+    },
     iconSelectedPink: {
-      "&.Mui-selected": {
-        color: themeColors.secondary[500],
-      },
+      color: themeColors.secondary[500],
     },
     iconSelectedYellow: {
-      "&.Mui-selected": {
-        color: themeColors.quaternary[500],
-      },
+      color: themeColors.quaternary[500],
+    },
+    goodCount: {
+      marginLeft: theme.spacing(1),
     },
     description: {
       whiteSpace: "pre-line",
@@ -107,15 +113,18 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   const classes = useStyles();
+  const [goodClick, setGoodClick] = useState(false);
+  const { loaded, isGood, goodCount } = useFetchGood(selected.id, goodClick);
   const choices = (e: quiz): [string, string, string, string] => [
     e.selectA,
     e.selectB,
     e.selectC,
     e.selectD,
   ];
-  const [value, setValue] = React.useState("");
-  const handleChange = (_event: React.ChangeEvent<{}>, newValue: string) => {
-    setValue(newValue);
+  const handleGood = () => {
+    ExerciseService.goodOrCancel(selected.id, () => {
+      setGoodClick(!goodClick);
+    });
   };
 
   return (
@@ -131,29 +140,6 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
         choices={choices(selected)}
         answer={selected.answer}
       />
-      <BottomNavigation value={value} onChange={handleChange}>
-        <BottomNavigationAction
-          value="good"
-          icon={
-            <Tooltip title="いいね">
-              <FavoriteIcon />
-            </Tooltip>
-          }
-          showLabel={false}
-          className={classes.iconSelectedPink}
-        />
-        <BottomNavigationAction
-          value="folder"
-          icon={
-            <Tooltip title="リストに追加">
-              <FolderIcon />
-            </Tooltip>
-          }
-          showLabel={false}
-          className={classes.iconSelectedYellow}
-        />
-      </BottomNavigation>
-
       <Collapse
         in={!!result && (selected?.description?.length || 0) > 0}
         timeout="auto"
@@ -175,6 +161,25 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
           </CardContent>
         </Card>
       </Collapse>
+      <Box className={classes.icons}>
+        <Tooltip title="いいね">
+          <IconButton aria-label="good" onClick={handleGood}>
+            <FavoriteIcon
+              className={clsx(loaded && isGood && classes.iconSelectedPink)}
+            />
+            {loaded && (
+              <Typography variant={"subtitle1"} className={classes.goodCount}>
+                {goodCount}
+              </Typography>
+            )}
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="リストに追加">
+          <IconButton aria-label="good">
+            <FolderIcon className={clsx(classes.iconSelectedYellow)} />
+          </IconButton>
+        </Tooltip>
+      </Box>
     </Paper>
   );
 };

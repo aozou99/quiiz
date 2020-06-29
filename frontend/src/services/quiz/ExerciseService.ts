@@ -34,6 +34,7 @@ class ExerciseService {
       answerCount: 0,
       correctAnswer: 0,
       limit: [],
+      good: [],
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
@@ -116,6 +117,23 @@ class ExerciseService {
   private genThumbnailPath() {
     const userHash = hash({ id: firebase.auth().currentUser?.uid });
     return `${uploadThumbnailPath}${userHash}_${new Date().getTime()}.jpg`;
+  }
+
+  public goodOrCancel(exerciseId: string, callback: () => void) {
+    const uid = firebase.auth().currentUser?.uid;
+    if (!uid) return;
+    const docRef = this.db.doc(exerciseId);
+    docRef.get().then((snapshot) => {
+      const isGood = snapshot.data()?.good.includes(uid);
+      const fv = firebase.firestore.FieldValue;
+      docRef
+        .update({
+          good: isGood ? fv.arrayRemove(uid) : fv.arrayUnion(uid),
+        })
+        .then(() => {
+          callback();
+        });
+    });
   }
 }
 

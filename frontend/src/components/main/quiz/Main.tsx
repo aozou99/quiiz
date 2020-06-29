@@ -3,8 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Sidebar from "components/main/quiz/SideBar";
 import { Route, Switch } from "react-router-dom";
 import ReadyImage from "components/common/meta/Ready";
-import Index from "components/main/quiz/index/Main";
-import Single from "components/main/quiz/single/Main";
+import Single from "components/main/quiz/home/Main";
 import Header from "components/main/quiz/Header";
 import TemporarySidebar from "components/main/quiz/TemporarySideBar";
 
@@ -43,9 +42,6 @@ const Main: React.FC = () => {
 
         <Switch>
           <Route exact path={`/`}>
-            <Index />
-          </Route>
-          <Route path={`/single`}>
             <Single />
           </Route>
           <Route path={`/trending`}>

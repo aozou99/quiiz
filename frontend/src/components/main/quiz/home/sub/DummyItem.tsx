@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const DummyItem: React.FC = ({}) => {
+const DummyItem: React.FC = () => {
   const classes = useStyles();
 
   return (
