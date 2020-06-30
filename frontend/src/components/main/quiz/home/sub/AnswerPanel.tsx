@@ -20,9 +20,9 @@ import Choices from "components/main/quiz/preview/sub/Choices";
 import { themeColors } from "components/core/CustomeTheme";
 import FolderIcon from "@material-ui/icons/Folder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { ExerciseResult } from "types/ExerciseTypes";
-import ExerciseService from "services/quiz/ExerciseService";
-import { useFetchGood } from "services/quiz/ExerciseHooks";
+import { QuizResult } from "types/QuizTypes";
+import QuizService from "services/quiz/QuizService";
+import { useFetchGood } from "services/quiz/QuizHooks";
 
 type quiz = {
   id: string;
@@ -40,8 +40,8 @@ type quiz = {
 
 type Props = {
   selected: quiz;
-  result: ExerciseResult;
-  setResult: React.Dispatch<React.SetStateAction<ExerciseResult>>;
+  result: QuizResult;
+  setResult: React.Dispatch<React.SetStateAction<QuizResult>>;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -122,7 +122,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     e.selectD,
   ];
   const handleGood = () => {
-    ExerciseService.goodOrCancel(selected.id, () => {
+    QuizService.goodOrCancel(selected.id, () => {
       setGoodClick(!goodClick);
     });
   };

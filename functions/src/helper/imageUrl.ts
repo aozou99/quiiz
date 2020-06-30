@@ -6,12 +6,14 @@ const storageRef = admin.storage();
 const imageUrl = async (filePath: string, size: size) => {
   if (!filePath) return undefined;
   let path = "";
-  const { ext, name } = pathParse(filePath);
+  const { ext, name, dir } = pathParse(filePath);
   // nameを分解
   const parts = name.split("_");
-  if (parts.length > 2) {
+  if (parts.length >= 2) {
     // basename_createdDate_size.ext
-    path = `${parts[0]}_${parts[1]}_${size}${ext.replace(/\?.+/, "")}`;
+    path = `${dir}/${parts[0]}_${parts[1]}_${size}${ext.replace(/\?.+/, "")}`;
+  } else {
+    path = `${dir}/${name}_${size}${ext}`;
   }
   // 有効期限を設定
   const expires = new Date();

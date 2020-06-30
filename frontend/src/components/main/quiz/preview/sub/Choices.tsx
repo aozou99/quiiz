@@ -4,13 +4,13 @@ import Grid from "@material-ui/core/Grid";
 import Choice from "components/main/quiz/preview/sub/Choice";
 import { themeColors } from "components/core/CustomeTheme";
 import { grey } from "@material-ui/core/colors";
-import { ExerciseResult } from "types/ExerciseTypes";
+import { QuizResult } from "types/QuizTypes";
 
 type State = {
   choices: [string, string, string, string];
   answer: 0 | 1 | 2 | 3;
-  result: ExerciseResult;
-  setResult: (result: ExerciseResult) => void;
+  result: QuizResult;
+  setResult: (result: QuizResult) => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -13,7 +13,7 @@ export const useFetchFirstDocuments = () => {
   useEffect(() => {
     firebase
       .functions()
-      .httpsCallable("pagingExercise")()
+      .httpsCallable("pagingQuiz")()
       .then((res) => {
         setFirstDocuments(res.data);
         setLoaded(true);

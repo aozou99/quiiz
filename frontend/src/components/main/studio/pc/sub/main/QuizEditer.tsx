@@ -7,7 +7,7 @@ import Box from "@material-ui/core/Box";
 import BookIcon from "@material-ui/icons/Book";
 import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
 import Divider from "@material-ui/core/Divider";
-import ExerciseTable from "components/main/studio/pc/sub/main/table/ExerciseTable";
+import QuizTable from "components/main/studio/pc/sub/main/table/QuizTable";
 import ReadyImage from "components/common/meta/Ready";
 
 interface TabPanelProps {
@@ -72,7 +72,7 @@ const QuizEditer: React.FC = () => {
         textColor="primary"
         className={classes.paddingLeft}
       >
-        <Tab label="エクササイズ" icon={<BookIcon />} {...a11yProps(0)} />
+        <Tab label="クイズ" icon={<BookIcon />} {...a11yProps(0)} />
         <Tab
           label="シリーズ"
           icon={<CollectionsBookmarkIcon />}
@@ -81,7 +81,7 @@ const QuizEditer: React.FC = () => {
       </Tabs>
       <Divider variant="fullWidth" />
       <TabPanel value={value} index={0}>
-        <ExerciseTable />
+        <QuizTable />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ReadyImage />

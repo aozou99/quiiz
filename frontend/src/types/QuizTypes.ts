@@ -7,7 +7,7 @@ export type Quiz = {
   authorId: string;
 };
 
-export type ExerciseFormTextData = {
+export type QuizFormTextData = {
   question: string;
   thumbnail?: string;
   selectA: string;
@@ -18,27 +18,27 @@ export type ExerciseFormTextData = {
   tags?: string;
 };
 
-export type ExerciseFormSelectData = {
+export type QuizFormSelectData = {
   answer: 0 | 1 | 2 | 3;
   privacy: 0 | 1;
 };
 
-export type ExerciseFormData = ExerciseFormTextData & ExerciseFormSelectData;
+export type QuizFormData = QuizFormTextData & QuizFormSelectData;
 
-export type ExerciseData = ExerciseFormData & {
+export type QuizData = QuizFormData & {
   id: string;
   thumbnail: string;
   tags: string[];
 };
 
-export type ExerciseTableRowData = ExerciseData & {
+export type QuizTableRowData = QuizData & {
   accuracyRate: number;
   createdAt: Date;
   limit: string;
 };
 
-export type ExerciseFullData = ExerciseTableRowData & {
+export type QuizFullData = QuizTableRowData & {
   userId: string;
 };
 
-export type ExerciseResult = "right" | "wrong" | undefined;
+export type QuizResult = "right" | "wrong" | undefined;

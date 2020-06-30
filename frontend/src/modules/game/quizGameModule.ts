@@ -1,4 +1,4 @@
-import { Quiz } from "types/ExerciseTypes";
+import { Quiz } from "types/QuizTypes";
 import { createSlice } from "@reduxjs/toolkit";
 
 type State = {
@@ -15,9 +15,9 @@ const initialState: State = {
     question: "ハリネズミの針は何本ある？",
     choices: ["1000~3000本", "3000~5000本", "5000~7000本", "7000~9000本"],
     answer: 2,
-    authorId: "1"
+    authorId: "1",
   },
-  result: null
+  result: null,
 };
 
 const quizGameModule = createSlice({
@@ -32,8 +32,8 @@ const quizGameModule = createSlice({
     },
     gameClear(state: State) {
       state.result = "right";
-    }
-  }
+    },
+  },
 });
 
 export const { gameStart, gameOver, gameClear } = quizGameModule.actions;

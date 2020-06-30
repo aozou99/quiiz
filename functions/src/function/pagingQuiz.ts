@@ -5,7 +5,7 @@ import imgUrl from "../helper/imageUrl";
 const db = admin.firestore();
 
 module.exports = functions.https.onCall(async (data, _context) => {
-  const baseQuery = db.collection("exercise").orderBy("createdAt").limit(8);
+  const baseQuery = db.collectionGroup("quizzes").orderBy("createdAt").limit(8);
 
   if (data && data.date) {
     baseQuery.startAfter(data.date);
@@ -13,15 +13,15 @@ module.exports = functions.https.onCall(async (data, _context) => {
 
   const snapshot = await baseQuery.get();
 
-  const rs = snapshot.docs.map(async (exercise) => {
+  const rs = snapshot.docs.map(async (quiz) => {
     const [user, url256, url640] = await Promise.all([
-      admin.auth().getUser(exercise.data().userId),
-      imgUrl(exercise.data().thumbnail, "256x144"),
-      imgUrl(exercise.data().thumbnail, "640x360"),
+      admin.auth().getUser(quiz.data().authorId),
+      imgUrl(quiz.data().thumbnail, "256x144"),
+      imgUrl(quiz.data().thumbnail, "640x360"),
     ]);
     return {
-      id: exercise.id,
-      ...exercise.data(),
+      id: quiz.id,
+      ...quiz.data(),
       thumbnail: {
         "256x144": url256,
         "640x360": url640,

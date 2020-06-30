@@ -10,15 +10,15 @@ import {
 import ClearIcon from "@material-ui/icons/Clear";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import CheckCircleOutlineTwoToneIcon from "@material-ui/icons/CheckCircleOutlineTwoTone";
-import { ExerciseResult } from "types/ExerciseTypes";
+import { QuizResult } from "types/QuizTypes";
 
 type State = {
   color: Color;
   label: string;
   text: string;
   isRight: boolean;
-  result: ExerciseResult;
-  setResult: (result: ExerciseResult) => void;
+  result: QuizResult;
+  setResult: (result: QuizResult) => void;
 };
 const labelCol = (theme: Theme, color: Color) => {
   return {

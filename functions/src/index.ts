@@ -4,9 +4,9 @@
 // エンドポイント
 const endpoints = [
   "existDisplayName",
-  "updateExercise",
-  "deleteExercise",
-  "pagingExercise",
+  "updateQuiz",
+  "deleteQuiz",
+  "pagingQuiz",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {
@@ -25,4 +25,5 @@ if (
 }
 
 // トリガー
-exports.autoDeleteExerciseThumbnails = require("./function/autoDeleteExerciseThumbnails");
+exports.autoDeleteQuizThumbnails = require("./function/autoDeleteQuizThumbnails");
+exports.onUserCraete = require("./function/onUserCreate");

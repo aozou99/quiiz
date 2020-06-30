@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useFetchFirstDocuments } from "services/quiz/ExerciseHooks";
+import { useFetchFirstDocuments } from "services/quiz/QuizHooks";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Theme, createStyles } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import clsx from "clsx";
 import Item from "components/main/quiz/home/sub/Item";
 import AnswerPanel from "components/main/quiz/home/sub/AnswerPanel";
-import { ExerciseResult } from "types/ExerciseTypes";
+import { QuizResult } from "types/QuizTypes";
 import DummyItem from "components/main/quiz/home/sub/DummyItem";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -51,7 +51,7 @@ const Main: React.FC = () => {
   const { firstDocuments, loaded } = useFetchFirstDocuments();
   const classes = useStyles();
   const [selected, setSelected] = useState<quiz>();
-  const [result, setResult] = useState<ExerciseResult>(undefined);
+  const [result, setResult] = useState<QuizResult>(undefined);
 
   return (
     <Box className={clsx(classes.root)}>

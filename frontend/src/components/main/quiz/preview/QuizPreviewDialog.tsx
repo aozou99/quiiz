@@ -14,7 +14,7 @@ import Question from "components/main/quiz/preview/sub/Question";
 import Choices from "components/main/quiz/preview/sub/Choices";
 import CheckIcon from "@material-ui/icons/Check";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import { ExerciseData, ExerciseResult } from "types/ExerciseTypes";
+import { QuizData, QuizResult } from "types/QuizTypes";
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionButton: {
@@ -26,18 +26,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 type State = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  exercise: ExerciseData;
+  quiz: QuizData;
 };
 
-const ExercisePreviewDialog: React.FC<State> = ({
-  open,
-  setOpen,
-  exercise,
-}) => {
+const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
   const classes = useStyles();
-  const [result, setResult] = useState<ExerciseResult>(undefined);
-  const answerLabel = (e: ExerciseData) => choices(e)[e.answer];
-  const choices = (e: ExerciseData): [string, string, string, string] => [
+  const [result, setResult] = useState<QuizResult>(undefined);
+  const answerLabel = (e: QuizData) => choices(e)[e.answer];
+  const choices = (e: QuizData): [string, string, string, string] => [
     e.selectA,
     e.selectB,
     e.selectC,
@@ -79,17 +75,17 @@ const ExercisePreviewDialog: React.FC<State> = ({
             <Grid item xs={12} sm={6}>
               <Question
                 result={result}
-                thumbnail={exercise.thumbnail}
-                question={exercise.question}
-                answerLabel={answerLabel(exercise)}
+                thumbnail={quiz.thumbnail}
+                question={quiz.question}
+                answerLabel={answerLabel(quiz)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <Choices
                 result={result}
                 setResult={setResult}
-                choices={choices(exercise)}
-                answer={exercise.answer}
+                choices={choices(quiz)}
+                answer={quiz.answer}
               />
             </Grid>
           </Grid>
@@ -99,4 +95,4 @@ const ExercisePreviewDialog: React.FC<State> = ({
   );
 };
 
-export default ExercisePreviewDialog;
+export default QuizPreviewDialog;

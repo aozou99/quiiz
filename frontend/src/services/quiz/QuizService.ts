@@ -3,19 +3,21 @@ import "firebase/firestore";
 import "firebase/functions";
 import "firebase/auth";
 import "firebase/storage";
-import { ExerciseFormData } from "types/ExerciseTypes";
+import { QuizFormData } from "types/QuizTypes";
 import hash from "object-hash";
 
-const uploadThumbnailPath = "images/exercise/thumbnails/";
+const uploadThumbnailPath = "images/quiz/thumbnails/";
 const defaultThumbnailPath = "images/default/quiiz-thumbnail.png";
 
-class ExerciseService {
-  db: firebase.firestore.CollectionReference = firebase
-    .firestore()
-    .collection("exercise");
-  storageRef: firebase.storage.Reference = firebase.storage().ref();
+class QuizService {
+  userRef = firebase.firestore().collection("users");
+  storageRef = firebase.storage().ref();
 
-  async register(formData: ExerciseFormData) {
+  async register(formData: QuizFormData) {
+    if (!firebase.auth().currentUser) {
+      return;
+    }
+
     let filepath = defaultThumbnailPath;
 
     // 画像のアップロードを行う
@@ -26,24 +28,27 @@ class ExerciseService {
     }
 
     // FireStoreに登録
-    return this.db.add({
-      ...formData,
-      tags: formData.tags?.split(",") || [],
-      thumbnail: filepath,
-      userId: firebase.auth().currentUser?.uid,
-      answerCount: 0,
-      correctAnswer: 0,
-      limit: [],
-      good: [],
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    return this.quizzesCollection()
+      .doc()
+      .set({
+        ...formData,
+        tags: formData.tags?.split(",") || [],
+        thumbnail: filepath,
+        authorId: firebase.auth().currentUser?.uid,
+        answerCount: 0,
+        correctAnswer: 0,
+        limit: [],
+        likeQuizCount: 0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then((user) => console.log(user));
   }
 
   async update(
     docId: string,
     thumbnailUpdate: boolean,
-    formData: ExerciseFormData
+    formData: QuizFormData
   ) {
     const postData = {
       ...formData,
@@ -52,11 +57,14 @@ class ExerciseService {
     };
 
     // 新規サムネのパスを設定する
-    if (thumbnailUpdate && formData.thumbnail) {
+    const isUpdate = thumbnailUpdate && formData.thumbnail;
+    if (isUpdate) {
       postData.thumbnail = this.genThumbnailPath();
+    } else {
+      delete postData.thumbnail;
     }
 
-    const res = await firebase.functions().httpsCallable("updateExercise")({
+    const res = await firebase.functions().httpsCallable("updateQuiz")({
       docId,
       thumbnailUpdate,
       postData,
@@ -70,14 +78,20 @@ class ExerciseService {
     return true;
   }
 
-  async delete(exerciseIds: string[]) {
-    const res = await firebase.functions().httpsCallable("deleteExercise")({
-      ids: exerciseIds,
+  async delete(quizId: string[]) {
+    const res = await firebase.functions().httpsCallable("deleteQuiz")({
+      ids: quizId,
     });
     return res.data.isSuccess;
   }
 
-  async getMyExerciseList({
+  private quizzesCollection() {
+    return this.userRef
+      .doc(firebase.auth().currentUser?.uid)
+      .collection("quizzes");
+  }
+
+  async getMyQuizList({
     orderBy,
     orderDirection,
     format,
@@ -86,8 +100,7 @@ class ExerciseService {
     orderDirection?: "desc" | "asc";
     format?: (data: any) => any;
   } = {}) {
-    const result = await this.db
-      .where("userId", "==", firebase.auth().currentUser?.uid)
+    const result = await this.quizzesCollection()
       .orderBy(orderBy || "createdAt", orderDirection || "desc")
       .get();
 
@@ -95,14 +108,15 @@ class ExerciseService {
   }
 
   onUpdate(callback: () => any) {
-    this.db
-      .where("userId", "==", firebase.auth().currentUser?.uid)
-      .onSnapshot({ includeMetadataChanges: true }, (doc) => {
+    this.quizzesCollection().onSnapshot(
+      { includeMetadataChanges: true },
+      (doc) => {
         // バックエンドへの書き込みが完了した場合
         if (!doc.metadata.hasPendingWrites) {
           callback();
         }
-      });
+      }
+    );
   }
 
   private async uploadThumbnail(orgUrl: string, uploadPath: string) {
@@ -122,19 +136,19 @@ class ExerciseService {
   public goodOrCancel(exerciseId: string, callback: () => void) {
     const uid = firebase.auth().currentUser?.uid;
     if (!uid) return;
-    const docRef = this.db.doc(exerciseId);
-    docRef.get().then((snapshot) => {
-      const isGood = snapshot.data()?.good.includes(uid);
-      const fv = firebase.firestore.FieldValue;
-      docRef
-        .update({
-          good: isGood ? fv.arrayRemove(uid) : fv.arrayUnion(uid),
-        })
-        .then(() => {
-          callback();
-        });
-    });
+    // const docRef = this.db.doc(exerciseId);
+    // docRef.get().then((snapshot) => {
+    //   const isGood = snapshot.data()?.good.includes(uid);
+    //   const fv = firebase.firestore.FieldValue;
+    //   docRef
+    //     .update({
+    //       good: isGood ? fv.arrayRemove(uid) : fv.arrayUnion(uid),
+    //     })
+    //     .then(() => {
+    //       callback();
+    //     });
+    // });
   }
 }
 
-export default new ExerciseService();
+export default new QuizService();

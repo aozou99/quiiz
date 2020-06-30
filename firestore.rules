@@ -16,7 +16,26 @@ service cloud.firestore {
     }
     match /exercise/{exercise} {
       allow read;
-      allow write: if request.auth.uid != null;
+      allow write: if isAuthenticated();
+    }
+    match /users/{userID} {
+      allow read: if isAuthenticated();
+      allow create:
+        if isUserAuthenticated(userID);
+
+      match /quizzes/{quizID} {
+        allow read: if isAuthenticated();
+        allow create:
+        if isUserAuthenticated(userID)
+      }
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUserAuthenticated(userID) {
+      return request.auth.uid == userID;
     }
   }
 }

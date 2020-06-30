@@ -16,10 +16,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import { ExerciseTableRowData } from "types/ExerciseTypes";
+import { QuizTableRowData } from "types/QuizTypes";
 
 type State = {
-  rowData: ExerciseTableRowData;
+  rowData: QuizTableRowData;
   handleEdit: () => any;
   handleDelete: () => any;
   handleAnalyze: () => any;

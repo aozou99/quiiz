@@ -10,11 +10,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
 import BasicDialog from "components/common/dialog/BasicConfirmDialog";
 import BasicTable from "components/common/table/BasicTable";
-import ExerciseFormDialog from "components/main/studio/pc/sub/main/table/dialog/ExerciseFormDialog";
-import ExerciseService from "services/quiz/ExerciseService";
+import QuizFormDialog from "components/main/studio/pc/sub/main/table/dialog/QuizFormDialog";
+import QuizService from "services/quiz/QuizService";
 import QuizCell from "components/main/studio/pc/sub/main/table/cell/QuizCell";
-import { ExerciseTableRowData } from "types/ExerciseTypes";
-import ExercisePreviewDialog from "components/main/quiz/preview/ExercisePreviewDialog";
+import { QuizTableRowData } from "types/QuizTypes";
+import QuizPreviewDialog from "components/main/quiz/preview/QuizPreviewDialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   backdrop: {
@@ -66,14 +66,14 @@ const privacyLabel = (privacy: any) => {
   }
 };
 
-const ExerciseTable = () => {
+const QuizTable = () => {
   const classes = useStyles();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openRegisterFormDialog, setOpenRegisterFormDialog] = useState(false);
   const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
   const [tableData, setTableData] = useState<any>([]);
   const [selectedData, setSelectedData] = useState<
-    ExerciseTableRowData | undefined
+    QuizTableRowData | undefined
   >(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<any>([]);
@@ -82,7 +82,7 @@ const ExerciseTable = () => {
   useEffect(() => {
     const update = async () => {
       setIsLoading(true);
-      const list = await ExerciseService.getMyExerciseList({
+      const list = await QuizService.getMyQuizList({
         format: async (doc) => {
           const data = doc.data();
           return {
@@ -100,8 +100,8 @@ const ExerciseTable = () => {
       setTableData(await Promise.all(list));
       setIsLoading(false);
     };
-    ExerciseService.onUpdate(update);
-    return ExerciseService.onUpdate(function() {});
+    QuizService.onUpdate(update);
+    return QuizService.onUpdate(function() {});
   }, [setTableData]);
 
   const handleDelete = (_event: any, rowData: any[]) => {
@@ -121,19 +121,19 @@ const ExerciseTable = () => {
             field: "quiz",
             customFilterAndSearch: (
               filter: string,
-              rowData: ExerciseTableRowData
+              rowData: QuizTableRowData
             ) => {
               return (
                 rowData.question.includes(filter) ||
                 !!rowData.description?.includes(filter)
               );
             },
-            customSort: (a: ExerciseTableRowData, b: ExerciseTableRowData) => {
+            customSort: (a: QuizTableRowData, b: QuizTableRowData) => {
               if (a.question > b.question) return 1;
               if (a.question < b.question) return -1;
               return 0;
             },
-            render: (rowData: ExerciseTableRowData) => (
+            render: (rowData: QuizTableRowData) => (
               <QuizCell
                 rowData={rowData}
                 handleEdit={() => {
@@ -195,22 +195,22 @@ const ExerciseTable = () => {
         yesOnClick={async () => {
           setOpenDeleteDialog(false);
           setProgressing(true);
-          await ExerciseService.delete(deleteTarget.map((t: any) => t.id));
+          await QuizService.delete(deleteTarget.map((t: any) => t.id));
           setProgressing(false);
         }}
       ></BasicDialog>
-      <ExerciseFormDialog
+      <QuizFormDialog
         open={openRegisterFormDialog}
         setOpen={setOpenRegisterFormDialog}
         oldData={selectedData}
         setOldData={setSelectedData}
-      ></ExerciseFormDialog>
+      ></QuizFormDialog>
       {selectedData && (
-        <ExercisePreviewDialog
+        <QuizPreviewDialog
           open={openPreviewDialog}
           setOpen={setOpenPreviewDialog}
-          exercise={selectedData}
-        ></ExercisePreviewDialog>
+          quiz={selectedData}
+        ></QuizPreviewDialog>
       )}
       <Backdrop open={progressing} className={classes.backdrop}>
         <CircularProgress color="inherit" />
@@ -219,4 +219,4 @@ const ExerciseTable = () => {
   );
 };
 
-export default ExerciseTable;
+export default QuizTable;

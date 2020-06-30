@@ -19,12 +19,12 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import { useForm, Controller } from "react-hook-form";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import {
-  ExerciseFormData,
-  ExerciseTableRowData,
-  ExerciseFormTextData,
-} from "types/ExerciseTypes";
+  QuizFormData,
+  QuizTableRowData,
+  QuizFormTextData,
+} from "types/QuizTypes";
 import ChipInput from "material-ui-chip-input";
-import ExerciseService from "services/quiz/ExerciseService";
+import QuizService from "services/quiz/QuizService";
 import CropDialog from "components/common/dialog/CropDialog";
 import is16to9 from "utils/helper/is16to9";
 import imageUrl from "utils/helper/imageUrl";
@@ -33,8 +33,8 @@ type State = {
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   open: boolean;
   setOpen: (open: boolean) => any;
-  oldData?: ExerciseTableRowData;
-  setOldData: (oldData: ExerciseTableRowData | undefined) => any;
+  oldData?: QuizTableRowData;
+  setOldData: (oldData: QuizTableRowData | undefined) => any;
 };
 
 const answers = [
@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ExerciseFormDialog: React.FC<State> = ({
+const QuizFormDialog: React.FC<State> = ({
   noOnClick,
   open,
   setOpen,
@@ -147,7 +147,7 @@ const ExerciseFormDialog: React.FC<State> = ({
   }, [oldData, open]);
   // 入力フォーム系
   const { register, handleSubmit, setValue, watch, control, errors } = useForm<
-    ExerciseFormData
+    QuizFormData
   >({
     mode: "onBlur",
   });
@@ -182,12 +182,12 @@ const ExerciseFormDialog: React.FC<State> = ({
     try {
       // 登録 or 更新
       oldData
-        ? await ExerciseService.update(
+        ? await QuizService.update(
             oldData.id,
             oldThumbnailRef.current !== data.thumbnail,
             data
           )
-        : await ExerciseService.register(data);
+        : await QuizService.register(data);
       handleClose();
     } catch (error) {
       console.log(error);
@@ -206,7 +206,7 @@ const ExerciseFormDialog: React.FC<State> = ({
     nullable,
     rows,
   }: {
-    id: keyof ExerciseFormTextData;
+    id: keyof QuizFormTextData;
     label: string;
     defaultValue?: any;
     maxLength: number;
@@ -434,4 +434,4 @@ const ExerciseFormDialog: React.FC<State> = ({
   );
 };
 
-export default ExerciseFormDialog;
+export default QuizFormDialog;

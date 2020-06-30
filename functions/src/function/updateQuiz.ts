@@ -5,19 +5,15 @@ import admin from "../core/admin";
 const db = admin.firestore();
 
 module.exports = functions.https.onCall(async (data, context) => {
-  if (!data.docId)
+  if (!context.auth || !data.docId)
     throw new HttpsError("invalid-argument", "Invalid Parameter");
   return db
-    .collection("exercise")
+    .collection("users")
+    .doc(context.auth.uid)
+    .collection("quizzes")
     .doc(data.docId)
     .get()
     .then((doc) => {
-      if (doc.data()?.userId !== context.auth?.uid) {
-        throw new HttpsError(
-          "permission-denied",
-          "Cannot Update Someone's Exercise"
-        );
-      }
       const oldData = doc.data();
       // サムネの更新があったら、古いサムネを削除する
       if (
