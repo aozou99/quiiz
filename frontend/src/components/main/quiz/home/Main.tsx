@@ -37,6 +37,7 @@ type quiz = {
   id: string;
   thumbnail: { "256x144": string; "640x360": string };
   question: string;
+  authorId: string;
   authorName: string;
   authorImageUrl: string;
   selectA: string;

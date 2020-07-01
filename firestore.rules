@@ -14,19 +14,35 @@ service cloud.firestore {
       allow read;
       allow write: if false;
     }
-    match /exercise/{exercise} {
-      allow read;
-      allow write: if isAuthenticated();
-    }
     match /users/{userID} {
-      allow read: if isAuthenticated();
+      allow read;
       allow create:
         if isUserAuthenticated(userID);
 
       match /quizzes/{quizID} {
         allow read: if isAuthenticated();
         allow create:
-        if isUserAuthenticated(userID)
+          if isUserAuthenticated(userID)
+
+        match /likedUsers/{likedUserID} {
+          allow read: if isAuthenticated();
+          allow create:
+            if isUserAuthenticated(likedUserID)  
+          allow delete:
+            if isUserAuthenticated(likedUserID)
+          allow update:
+            if isUserAuthenticated(likedUserID)
+        }
+      }
+
+      match /likedQuizzes/{likedQuizID} {
+        allow read;
+        allow create:
+          if isUserAuthenticated(userID)
+        allow delete:
+          if isUserAuthenticated(userID)
+        allow update:
+          if isUserAuthenticated(userID)
       }
     }
 

@@ -26,12 +26,12 @@ class QuizService {
       // dataURLをBlobに変換する
       this.uploadThumbnail(formData.thumbnail, filepath);
     }
-
+    const newDoc = this.quizzesCollection().doc();
     // FireStoreに登録
-    return this.quizzesCollection()
-      .doc()
+    return newDoc
       .set({
         ...formData,
+        id: newDoc.id,
         tags: formData.tags?.split(",") || [],
         thumbnail: filepath,
         authorId: firebase.auth().currentUser?.uid,
@@ -85,9 +85,9 @@ class QuizService {
     return res.data.isSuccess;
   }
 
-  private quizzesCollection() {
+  private quizzesCollection(userId?: string) {
     return this.userRef
-      .doc(firebase.auth().currentUser?.uid)
+      .doc(userId || firebase.auth().currentUser?.uid)
       .collection("quizzes");
   }
 
@@ -133,21 +133,48 @@ class QuizService {
     return `${uploadThumbnailPath}${userHash}_${new Date().getTime()}.jpg`;
   }
 
-  public goodOrCancel(exerciseId: string, callback: () => void) {
+  public likeOrCancel(
+    { quizId, authorId }: { quizId: string; authorId: string },
+    callback: () => void
+  ) {
     const uid = firebase.auth().currentUser?.uid;
     if (!uid) return;
-    // const docRef = this.db.doc(exerciseId);
-    // docRef.get().then((snapshot) => {
-    //   const isGood = snapshot.data()?.good.includes(uid);
-    //   const fv = firebase.firestore.FieldValue;
-    //   docRef
-    //     .update({
-    //       good: isGood ? fv.arrayRemove(uid) : fv.arrayUnion(uid),
-    //     })
-    //     .then(() => {
-    //       callback();
-    //     });
-    // });
+    const likedQuizRef = this.quizzesCollection(authorId).doc(quizId);
+    firebase
+      .firestore()
+      .runTransaction(async (transaction) => {
+        const doc = await transaction.get(
+          likedQuizRef.collection("likedUsers").doc(uid)
+        );
+        // お気に入り解除
+        if (doc.exists) {
+          transaction.delete(doc.ref);
+          transaction.delete(
+            this.userRef
+              .doc(uid)
+              .collection("likedQuizzes")
+              .doc(quizId)
+          );
+          return;
+        }
+        // お気に入り追加
+        transaction.set(doc.ref, {
+          id: uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        transaction.set(
+          this.userRef
+            .doc(uid)
+            .collection("likedQuizzes")
+            .doc(quizId),
+          {
+            id: quizId,
+            quizRef: likedQuizRef,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          }
+        );
+      })
+      .then(() => callback());
   }
 }
 

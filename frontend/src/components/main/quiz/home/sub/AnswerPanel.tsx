@@ -22,12 +22,13 @@ import FolderIcon from "@material-ui/icons/Folder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { QuizResult } from "types/QuizTypes";
 import QuizService from "services/quiz/QuizService";
-import { useFetchGood } from "services/quiz/QuizHooks";
+import { useFetchLike } from "services/quiz/QuizHooks";
 
 type quiz = {
   id: string;
   thumbnail: { "256x144": string; "640x360": string };
   question: string;
+  authorId: string;
   authorName: string;
   authorImageUrl: string;
   selectA: string;
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) =>
     iconSelectedYellow: {
       color: themeColors.quaternary[500],
     },
-    goodCount: {
+    likeCount: {
       marginLeft: theme.spacing(1),
     },
     description: {
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   const classes = useStyles();
   const [goodClick, setGoodClick] = useState(false);
-  const { loaded, isGood, goodCount } = useFetchGood(selected.id, goodClick);
+  const { loaded, isLike, likeCount } = useFetchLike(selected.id, goodClick);
   const choices = (e: quiz): [string, string, string, string] => [
     e.selectA,
     e.selectB,
@@ -122,9 +123,12 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     e.selectD,
   ];
   const handleGood = () => {
-    QuizService.goodOrCancel(selected.id, () => {
-      setGoodClick(!goodClick);
-    });
+    QuizService.likeOrCancel(
+      { quizId: selected.id, authorId: selected.authorId },
+      () => {
+        setGoodClick(!goodClick);
+      }
+    );
   };
 
   return (
@@ -165,11 +169,11 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
         <Tooltip title="いいね">
           <IconButton aria-label="good" onClick={handleGood}>
             <FavoriteIcon
-              className={clsx(loaded && isGood && classes.iconSelectedPink)}
+              className={clsx(loaded && isLike && classes.iconSelectedPink)}
             />
             {loaded && (
-              <Typography variant={"subtitle1"} className={classes.goodCount}>
-                {goodCount}
+              <Typography variant={"subtitle1"} className={classes.likeCount}>
+                {likeCount}
               </Typography>
             )}
           </IconButton>

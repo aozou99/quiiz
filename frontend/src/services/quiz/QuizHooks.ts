@@ -46,23 +46,39 @@ export const useFetchThumbnailUrl = (
   return { imgSrc, loaded };
 };
 
-export const useFetchGood = (exerciseId: string, goodClick: boolean) => {
-  const [isGood, setIsGood] = useState(false);
+export const useFetchLike = (quizId: string, goodClick: boolean) => {
+  const [isLike, setIsLike] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [goodCount, setGoodCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
   useEffect(() => {
+    const uid = firebase.auth().currentUser?.uid;
+    if (!uid) return;
     firebase
       .firestore()
-      .collection("exercise")
-      .doc(exerciseId)
+      .collection("users")
+      .doc(uid)
+      .collection("likedQuizzes")
+      .doc(quizId);
+
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .collection("likedQuizzes")
+      .doc(quizId)
       .get()
       .then((snapshot) => {
-        setIsGood(
-          snapshot.data()?.good.includes(firebase.auth().currentUser?.uid)
-        );
-        setGoodCount(snapshot.data()?.good.length);
-        setLoaded(true);
-      });
-  }, [exerciseId, goodClick]);
-  return { isGood, loaded, goodCount };
+        // いいね状態を反映
+        setIsLike(snapshot.exists);
+        return snapshot.data()?.quizRef.get() as Promise<
+          firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
+        >;
+      })
+      .then((snapshot) => {
+        if (!snapshot || !snapshot.exists) return;
+        setLikeCount(snapshot.data()?.likedQuizCount || 0);
+      })
+      .then(() => setLoaded(true));
+  }, [quizId, goodClick]);
+  return { isLike, loaded, likeCount };
 };

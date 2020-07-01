@@ -6,7 +6,6 @@ const db = admin.firestore();
 
 module.exports = functions.https.onCall(async (data, _context) => {
   const baseQuery = db.collectionGroup("quizzes").orderBy("createdAt").limit(8);
-
   if (data && data.date) {
     baseQuery.startAfter(data.date);
   }
@@ -20,7 +19,6 @@ module.exports = functions.https.onCall(async (data, _context) => {
       imgUrl(quiz.data().thumbnail, "640x360"),
     ]);
     return {
-      id: quiz.id,
       ...quiz.data(),
       thumbnail: {
         "256x144": url256,
