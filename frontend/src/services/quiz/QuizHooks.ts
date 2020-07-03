@@ -58,13 +58,6 @@ export const useFetchLike = (quizId: string, goodClick: boolean) => {
       .collection("users")
       .doc(uid)
       .collection("likedQuizzes")
-      .doc(quizId);
-
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .collection("likedQuizzes")
       .doc(quizId)
       .get()
       .then((snapshot) => {
@@ -75,8 +68,9 @@ export const useFetchLike = (quizId: string, goodClick: boolean) => {
         >;
       })
       .then((snapshot) => {
-        if (!snapshot || !snapshot.exists) return;
-        setLikeCount(snapshot.data()?.likedQuizCount || 0);
+        const conunt =
+          snapshot && snapshot.exists ? snapshot.data()?.likeQuizCount || 0 : 0;
+        setLikeCount(conunt);
       })
       .then(() => setLoaded(true));
   }, [quizId, goodClick]);

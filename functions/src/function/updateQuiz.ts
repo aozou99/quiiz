@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import { HttpsError } from "firebase-functions/lib/providers/https";
 import deleteThumbnail from "../helper/deleteThumbnail";
 import admin from "../core/admin";
+import { firestore } from "firebase-admin";
 const db = admin.firestore();
 
 module.exports = functions.https.onCall(async (data, context) => {
@@ -28,8 +29,16 @@ module.exports = functions.https.onCall(async (data, context) => {
           return { isSuccess: false };
         }
       }
-      return doc.ref.update(data.postData, { merge: true }).then(() => {
-        return { isSuccess: true };
-      });
+      return doc.ref
+        .update(
+          {
+            ...data.postData,
+            updatedAt: firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        )
+        .then(() => {
+          return { isSuccess: true };
+        });
     });
 });

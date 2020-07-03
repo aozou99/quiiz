@@ -20,28 +20,28 @@ type FormData = {
   user: boolean;
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    color: "white"
+    color: "white",
   },
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1
+    zIndex: theme.zIndex.drawer + 1,
   },
   input: {
-    WebkitBoxShadow: "0 0 0 1000px white inset"
-  }
+    WebkitBoxShadow: "0 0 0 1000px white inset",
+  },
 }));
 
 const SignInForm = () => {
   const classes = useStyles();
   const history = useHistory();
   const [progressing, setProgressing] = useState(false);
-  const { register, handleSubmit, setError, errors, clearError } = useForm<
+  const { register, handleSubmit, setError, errors, clearErrors } = useForm<
     FormData
   >();
   const onSubmit = handleSubmit(async ({ password, email }) => {
@@ -53,18 +53,23 @@ const SignInForm = () => {
       setProgressing(false);
       switch (error.code) {
         case "auth/invalid-email":
-          setError("email", error.code, "メールアドレスの形式が誤っています");
+          setError("email", {
+            type: error.code,
+            message: "メールアドレスの形式が誤っています",
+          });
           break;
 
         case "auth/user-not-found":
-          setError(
-            "user",
-            error.code,
-            "メールアドレス/パスワードのいずれかが誤っています"
-          );
+          setError("user", {
+            type: error.code,
+            message: "メールアドレス/パスワードのいずれかが誤っています",
+          });
           break;
         default:
-          setError("user", error.code, "不明なエラーが発生しました");
+          setError("user", {
+            type: error.code,
+            message: "不明なエラーが発生しました",
+          });
           console.error(error);
           break;
       }
@@ -83,7 +88,7 @@ const SignInForm = () => {
         name="email"
         autoComplete="email"
         inputRef={register({
-          required: "メールアドレスを入力してください"
+          required: "メールアドレスを入力してください",
         })}
         error={!!errors.email}
         inputProps={{ className: classes.input }}
@@ -99,7 +104,7 @@ const SignInForm = () => {
         id="password"
         autoComplete="password"
         inputRef={register({
-          required: "パスワードを入力してください"
+          required: "パスワードを入力してください",
         })}
         error={!!errors.password}
         inputProps={{ className: classes.input }}
@@ -133,10 +138,10 @@ const SignInForm = () => {
       </Grid>
       <Snackbar
         open={!!errors.user}
-        onClose={() => clearError("user")}
+        onClose={() => clearErrors("user")}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={() => clearError("user")} severity="error">
+        <Alert onClose={() => clearErrors("user")} severity="error">
           {errors.user?.message}
         </Alert>
       </Snackbar>

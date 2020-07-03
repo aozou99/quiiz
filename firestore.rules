@@ -12,17 +12,21 @@ service cloud.firestore {
     // your app will lose access to your Firestore database
     match /{document=**} {
       allow read;
-      allow write: if false;
+      allow write;
     }
     match /users/{userID} {
       allow read;
       allow create:
         if isUserAuthenticated(userID);
+      allow update:
+        if isUserAuthenticated(userID)
 
       match /quizzes/{quizID} {
         allow read: if isAuthenticated();
         allow create:
           if isUserAuthenticated(userID)
+        allow update:
+          if isAuthenticated()
 
         match /likedUsers/{likedUserID} {
           allow read: if isAuthenticated();

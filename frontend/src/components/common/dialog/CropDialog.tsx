@@ -6,7 +6,7 @@ import {
   DialogActions,
   Button,
   makeStyles,
-  Theme
+  Theme,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 200,
     background: "#333",
     [theme.breakpoints.up("sm")]: {
-      height: 400
-    }
+      height: 400,
+    },
   },
   cropButton: {
     flexShrink: 0,
-    marginLeft: 16
+    marginLeft: 16,
   },
   controls: {
     padding: 16,
@@ -43,18 +43,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: "stretch",
     [theme.breakpoints.up("sm")]: {
       flexDirection: "row",
-      alignItems: "center"
-    }
+      alignItems: "center",
+    },
   },
   sliderContainer: {
     display: "flex",
     flex: "1",
-    alignItems: "center"
+    alignItems: "center",
   },
   sliderLabel: {
     [theme.breakpoints.down("xs")]: {
-      minWidth: 65
-    }
+      minWidth: 65,
+    },
   },
   slider: {
     padding: "22px 0px",
@@ -62,16 +62,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up("sm")]: {
       flexDirection: "row",
       alignItems: "center",
-      margin: "0 16px"
-    }
-  }
+      margin: "0 16px",
+    },
+  },
 }));
 
 const CropDialog: React.FC<State> = ({
   open,
   setOpen,
   setCroppedImage,
-  imgUrl
+  imgUrl,
 }) => {
   const handleClose = () => {
     setOpen(false);
@@ -84,7 +84,7 @@ const CropDialog: React.FC<State> = ({
     width: 0,
     height: 0,
     x: 0,
-    y: 0
+    y: 0,
   });
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
@@ -93,6 +93,7 @@ const CropDialog: React.FC<State> = ({
 
   const showCroppedImage = useCallback(async () => {
     try {
+      console.log(imgUrl);
       const croppedImage = await getCroppedImg(
         imgUrl,
         croppedAreaPixels,

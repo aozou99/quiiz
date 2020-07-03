@@ -16,10 +16,7 @@ const imageUrl = async (filePath: string, size: size) => {
   } else {
     path = `${dir}/${name}_${size}${ext}`;
   }
-  return storageRef
-    .child(decodeURIComponent(path))
-    .getDownloadURL()
-    .catch((_err) => filePath);
+  return storageRef.child(decodeURIComponent(path)).getDownloadURL();
 };
 
 export default imageUrl;

@@ -8,7 +8,7 @@ import {
   Grid,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
-import Img from "react-image";
+import { Img } from "react-image";
 import ReplayIcon from "@material-ui/icons/Replay";
 import imageUrl from "utils/helper/imageUrl";
 import clsx from "clsx";
@@ -66,21 +66,25 @@ const QuizCell: React.FC<State> = ({
   const [imgSrc, setImgSrc] = useState();
   useEffect(() => {
     let unmounted = false;
-    imageUrl(rowData.thumbnail, "256x144").then((path) => {
+    const loadUrl = async () => {
+      const path = await imageUrl(rowData.thumbnail, "256x144");
       if (!unmounted) {
         setImgSrc(path);
       }
+    };
+    loadUrl().catch(() => {
+      setTimeout(loadUrl, 1000);
     });
     return () => {
       unmounted = true;
     };
-  });
+  }, [rowData.thumbnail]);
 
   return (
     <Box className={classes.root}>
       {imgSrc ? (
         <Img
-          src={imgSrc}
+          src={imgSrc || ""}
           className={classes.thumbnail}
           alt={rowData.question}
           loader={<CircularProgress />}
@@ -88,9 +92,13 @@ const QuizCell: React.FC<State> = ({
             <IconButton
               className={classes.thumbnail}
               classes={{ label: classes.iconButtonLabel }}
-              onClick={async () =>
-                setImgSrc(await imageUrl(rowData.thumbnail, "256x144"))
-              }
+              onClick={() => {
+                imageUrl(rowData.thumbnail, "256x144")
+                  .then((path) => {
+                    setImgSrc(path);
+                  })
+                  .catch((e) => console.error(e));
+              }}
             >
               <ReplayIcon />
               <Typography variant={"caption"}>再読み込み</Typography>

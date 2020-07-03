@@ -138,13 +138,6 @@ const QuizFormDialog: React.FC<State> = ({
     undefined
   );
   const oldThumbnailRef = useRef(null);
-
-  useEffect(() => {
-    imageUrl(oldData?.thumbnail || "", "256x144").then((path) => {
-      setCroppedImage(path);
-      oldThumbnailRef.current = path;
-    });
-  }, [oldData, open]);
   // 入力フォーム系
   const { register, handleSubmit, setValue, watch, control, errors } = useForm<
     QuizFormData
@@ -153,19 +146,27 @@ const QuizFormDialog: React.FC<State> = ({
   });
   const fields = watch();
 
-  // tagsのカスタム登録
-  register(
-    { name: "tags", type: "text" },
-    {
-      validate: {
-        maxLength: (value: string) =>
-          (value?.replace(/,/g, "").length || 0) < 100 ||
-          "合計の文字数が長すぎます",
-      },
-    }
-  );
-  // thumbnailのカスタム登録
-  register({ name: "thumbnail" });
+  useEffect(() => {
+    imageUrl(oldData?.thumbnail || "", "256x144").then((path) => {
+      setCroppedImage(path);
+      oldThumbnailRef.current = path;
+    });
+  }, [oldData, open]);
+  useEffect(() => {
+    // tagsのカスタム登録
+    register(
+      { name: "tags", type: "text" },
+      {
+        validate: {
+          maxLength: (value: string) =>
+            (value?.replace(/,/g, "").length || 0) < 100 ||
+            "合計の文字数が長すぎます",
+        },
+      }
+    );
+    // thumbnailのカスタム登録
+    register({ name: "thumbnail" });
+  }, [register]);
 
   // handler
   const handleClose = () => {
@@ -342,15 +343,14 @@ const QuizFormDialog: React.FC<State> = ({
                 type="file"
                 className={classes.inputFileBtnHide}
                 accept="image/*"
-                id="thumbnail"
-                name="thumbnail"
+                // id="thumbnail"
                 onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
                   if (
                     e.target.files !== null &&
                     (e.target.files?.length || 0) > 0
                   ) {
                     const url = URL.createObjectURL(e.target.files[0]);
-                    setValue("thumbnail", url, true);
+                    setValue("thumbnail", url);
                     if (!(await is16to9(url))) {
                       setCropOpen(true);
                     } else {
@@ -393,7 +393,7 @@ const QuizFormDialog: React.FC<State> = ({
             newChipKeys={[",", "<"]}
             className={classes.chipInput}
             onChange={(chips: string[]) =>
-              setValue("tags", chips.join(","), true)
+              setValue("tags", chips.join(","), { shouldValidate: true })
             }
             error={!!errors.tags}
             defaultValue={oldData?.tags || []}

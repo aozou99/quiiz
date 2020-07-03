@@ -38,7 +38,7 @@ class QuizService {
         answerCount: 0,
         correctAnswer: 0,
         limit: [],
-        likeQuizCount: 0,
+        likeCount: 0,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
@@ -53,7 +53,6 @@ class QuizService {
     const postData = {
       ...formData,
       tags: formData.tags?.split(",") || [],
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
     // 新規サムネのパスを設定する
@@ -139,42 +138,56 @@ class QuizService {
   ) {
     const uid = firebase.auth().currentUser?.uid;
     if (!uid) return;
-    const likedQuizRef = this.quizzesCollection(authorId).doc(quizId);
+    // const likedQuizRef = this.quizzesCollection(authorId).doc(quizId);
     firebase
       .firestore()
       .runTransaction(async (transaction) => {
         const doc = await transaction.get(
-          likedQuizRef.collection("likedUsers").doc(uid)
+          // likedQuizRef.collection("likedUsers").doc(uid)
+          firebase
+            .firestore()
+            .doc(`users/${authorId}/quizzes/${quizId}/likedUsers/${uid}`)
         );
         // お気に入り解除
-        if (doc.exists) {
-          transaction.delete(doc.ref);
-          transaction.delete(
-            this.userRef
-              .doc(uid)
-              .collection("likedQuizzes")
-              .doc(quizId)
-          );
-          return;
-        }
-        // お気に入り追加
-        transaction.set(doc.ref, {
-          id: uid,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        transaction.set(
+        const myLikedQuiz = await transaction.get(
           this.userRef
             .doc(uid)
             .collection("likedQuizzes")
-            .doc(quizId),
-          {
-            id: quizId,
-            quizRef: likedQuizRef,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          }
+            .doc(quizId)
         );
+        if (doc.exists) {
+          // お気に入り情報削除
+          transaction.delete(doc.ref);
+          // transaction.delete(myLikedQuiz.ref);
+          // お気に入り数を減らす
+          // transaction.update(likedQuizRef, {
+          //   likeCount: firebase.firestore.FieldValue.increment(-1),
+          // });
+          // transaction.update(this.userRef.doc(uid), {
+          //   likeQuizCount: firebase.firestore.FieldValue.increment(-1),
+          // });
+          return;
+        }
+        // お気に入り情報追加
+        transaction.set(doc.ref, {
+          id: uid,
+          // createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        // transaction.set(myLikedQuiz.ref, {
+        //   id: quizId,
+        //   quizRef: likedQuizRef,
+        //   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        // });
+        // お気に入り数を増やす
+        // transaction.update(likedQuizRef, {
+        //   likeQuizCount: firebase.firestore.FieldValue.increment(1),
+        // });
+        // transaction.update(this.userRef.doc(uid), {
+        //   likeQuizCount: firebase.firestore.FieldValue.increment(1),
+        // });
       })
-      .then(() => callback());
+      .then(() => callback())
+      .catch((e) => console.error("Transaction failed: ", e));
   }
 }
 
