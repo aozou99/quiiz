@@ -14,7 +14,7 @@ module.exports = functions.https.onCall(async (data, context) => {
     .collection("quizzes")
     .doc(data.docId)
     .get()
-    .then((doc) => {
+    .then(async (doc) => {
       const oldData = doc.data();
       // サムネの更新があったら、古いサムネを削除する
       if (
@@ -23,22 +23,19 @@ module.exports = functions.https.onCall(async (data, context) => {
         oldData.thumbnail !== data.thumbnail
       ) {
         try {
-          deleteThumbnail(oldData.thumbnail);
-        } catch (error) {
-          console.log(error);
+          await deleteThumbnail(oldData.thumbnail);
+          return { isSuccess: true };
+        } catch (e) {
           return { isSuccess: false };
         }
       }
-      return doc.ref
-        .update(
-          {
-            ...data.postData,
-            updatedAt: firestore.FieldValue.serverTimestamp(),
-          },
-          { merge: true }
-        )
-        .then(() => {
-          return { isSuccess: true };
-        });
+      await doc.ref.update(
+        {
+          ...data.postData,
+          updatedAt: firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+      return { isSuccess: true };
     });
 });

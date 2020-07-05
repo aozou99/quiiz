@@ -9,16 +9,16 @@ const searchDisplayName = async (
   await admin
     .auth()
     .listUsers(1000, nextPageToken)
-    .then(async listUsersResult => {
-      listUsersResult.users.some(userRecord => {
+    .then(async (listUsersResult) => {
+      listUsersResult.users.some((userRecord) => {
         console.log(userRecord);
-        return (exist = userRecord.displayName == displayName);
+        return (exist = userRecord.displayName === displayName);
       });
       if (!exist && listUsersResult.pageToken) {
         exist = await searchDisplayName(displayName, listUsersResult.pageToken);
       }
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log("Error listing users:", error);
     });
   return exist;
