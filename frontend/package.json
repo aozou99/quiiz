@@ -47,7 +47,18 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "browserslist": [],
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ]
+  },
   "devDependencies": {
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",
