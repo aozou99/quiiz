@@ -3,13 +3,13 @@ import {
   MuiThemeProvider,
   Paper,
   createMuiTheme,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import MaterialTable, {
   Query,
   QueryResult,
   Action,
-  Column
+  Column,
 } from "material-table";
 import { themeColors } from "components/core/CustomeTheme";
 
@@ -17,33 +17,33 @@ const defaultTheme = createMuiTheme();
 const themeTable = createMuiTheme({
   palette: {
     primary: themeColors.primary,
-    secondary: themeColors.secondary
+    secondary: themeColors.secondary,
   },
   overrides: {
     MuiTableRow: {
       root: {
         "&:hover": {
-          backgroundColor: defaultTheme.palette.action.selected
+          backgroundColor: defaultTheme.palette.action.selected,
         },
-        '&:hover *[class*="hoverHidden-"]': {
-          display: "none"
+        '&:hover *[class*="hoverHidden"]': {
+          display: "none",
         },
-        '& *[class*="hoverAppear-"]': {
-          display: "none"
+        '& *[class*="hoverAppear"]': {
+          display: "none",
         },
-        '&:hover *[class*="hoverAppear-"]': {
-          display: "inherit"
-        }
-      }
+        '&:hover *[class*="hoverAppear"]': {
+          display: "inherit",
+        },
+      },
     },
     MuiTableFooter: {
       root: {
         "& tr:hover": {
-          backgroundColor: "inherit"
-        }
-      }
-    }
-  }
+          backgroundColor: "inherit",
+        },
+      },
+    },
+  },
 });
 
 type State = {
@@ -61,27 +61,27 @@ const BasicTable: React.FC<State> = ({ actions, columns, data, isLoading }) => {
         isLoading={isLoading}
         actions={actions}
         components={{
-          Container: props => <Paper {...props} elevation={0} />
+          Container: (props) => <Paper {...props} elevation={0} />,
         }}
         columns={columns}
         data={data}
         localization={{
           body: {
-            emptyDataSourceMessage: "データが登録されてません"
+            emptyDataSourceMessage: "データが登録されてません",
           },
           pagination: {
             labelRowsSelect: "行を表示",
             firstTooltip: "最初のページ",
             previousTooltip: "前のページ",
             nextTooltip: "次のページ",
-            lastTooltip: "最後のページ"
+            lastTooltip: "最後のページ",
           },
           toolbar: {
-            searchPlaceholder: "検索"
+            searchPlaceholder: "検索",
           },
           header: {
-            actions: "操作"
-          }
+            actions: "操作",
+          },
         }}
         options={{
           showTitle: false,
@@ -89,10 +89,10 @@ const BasicTable: React.FC<State> = ({ actions, columns, data, isLoading }) => {
           selection: true,
           showTextRowsSelected: false,
           headerStyle: {
-            color: theme.palette.text.secondary
+            color: theme.palette.text.secondary,
           },
           emptyRowsWhenPaging: false,
-          toolbarButtonAlignment: "left"
+          toolbarButtonAlignment: "left",
         }}
       ></MaterialTable>
     </MuiThemeProvider>

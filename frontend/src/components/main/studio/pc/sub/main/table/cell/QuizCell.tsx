@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
   },
-  hoverHidden: {},
   hoverAppear: {
     alignItems: "center",
     width: 200,
@@ -108,13 +107,13 @@ const QuizCell: React.FC<State> = ({
       ) : (
         <CircularProgress />
       )}
-      <div className={clsx(classes.description, classes.hoverHidden)}>
+      <div className={clsx(classes.description, "hoverHidden")}>
         <Typography variant="subtitle2" gutterBottom>
           {rowData.question}
         </Typography>
         <Typography variant="caption">{rowData.description}</Typography>
       </div>
-      <Grid container className={classes.hoverAppear}>
+      <Grid container className={clsx(classes.hoverAppear, "hoverAppear")}>
         <Grid item xs={3}>
           <IconButton aria-label="edit" onClick={handleEdit}>
             <EditIcon />
