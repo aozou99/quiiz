@@ -53,11 +53,9 @@ class QuizService {
     const postData = {
       ...formData,
       tags: formData.tags?.split(",") || [],
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
-
     // 新規サムネのパスを設定する
-    const isUpdate = thumbnailUpdate && formData.thumbnail;
+    const isUpdate = !!(thumbnailUpdate && formData.thumbnail);
     if (isUpdate) {
       postData.thumbnail = this.genThumbnailPath();
     } else {
@@ -66,7 +64,7 @@ class QuizService {
 
     const res = await firebase.functions().httpsCallable("updateQuiz")({
       docId,
-      thumbnailUpdate,
+      isUpdate,
       postData,
     });
 

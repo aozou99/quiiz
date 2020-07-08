@@ -23,10 +23,9 @@ module.exports = functions.https.onCall(async (data, context) => {
         oldData.thumbnail !== data.thumbnail
       ) {
         try {
-          await deleteThumbnail(oldData.thumbnail);
-          return { isSuccess: true };
+          deleteThumbnail(oldData.thumbnail);
         } catch (e) {
-          return { isSuccess: false };
+          console.error(e);
         }
       }
       await doc.ref.update(
