@@ -1,0 +1,32 @@
+
+name: quiz_pipeline
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-deply:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Frontend Build
+        run: |
+          cd ./frontend
+          npm install
+          npm run build
+          cd ../
+      - name: Deploy To Firebase
+        uses: w9jds/firebase-action@master
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+    
