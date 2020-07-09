@@ -25,5 +25,7 @@ jobs:
           cd ../
       - name: Deploy To Firebase
         uses: w9jds/firebase-action@master
+        with:
+          args: deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
