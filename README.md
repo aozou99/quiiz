@@ -1,5 +1,7 @@
 # Quiiz
 
+![quiz_pipeline](https://github.com/aozou99/quiiz/workflows/quiz_pipeline/badge.svg)
+
 誰でも自由にクイズを解いたり作ったりできるサイトだよ
 
 # DEMO
