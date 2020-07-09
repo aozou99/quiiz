@@ -138,23 +138,22 @@ class QuizService {
     const uid = firebase.auth().currentUser?.uid;
     if (!uid) return;
     const likedQuizRef = this.quizzesCollection(authorId).doc(quizId);
+    const likedUserRef = likedQuizRef.collection("likedUsers").doc(uid);
+    const myLikedQuizRef = this.userRef
+      .doc(uid)
+      .collection("likedQuizzes")
+      .doc(quizId);
+
     firebase
       .firestore()
       .runTransaction(async (transaction) => {
-        const doc = await transaction.get(
-          likedQuizRef.collection("likedUsers").doc(uid)
-        );
+        const likedUserDoc = await transaction.get(likedUserRef);
         // お気に入り解除
-        if (doc.exists) {
+        if (likedUserDoc.exists) {
           // お気に入り情報削除
-          transaction.delete(doc.ref);
-          const myLikedQuiz = await transaction.get(
-            this.userRef
-              .doc(uid)
-              .collection("likedQuizzes")
-              .doc(quizId)
-          );
-          transaction.delete(myLikedQuiz.ref);
+          transaction.delete(likedUserRef);
+          const myLikedQuiz = await transaction.get(myLikedQuizRef);
+          if (myLikedQuiz.exists) transaction.delete(myLikedQuiz.ref);
           // お気に入り数を減らす
           transaction.update(likedQuizRef, {
             likeCount: firebase.firestore.FieldValue.increment(-1),
@@ -165,7 +164,7 @@ class QuizService {
           return;
         }
         // お気に入り情報追加
-        transaction.set(doc.ref, {
+        transaction.set(likedUserDoc.ref, {
           id: uid,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
