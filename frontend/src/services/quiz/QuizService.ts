@@ -147,13 +147,14 @@ class QuizService {
     firebase
       .firestore()
       .runTransaction(async (transaction) => {
+        // トランザクション読み込み
         const likedUserDoc = await transaction.get(likedUserRef);
+        const myLikedQuizDoc = await transaction.get(myLikedQuizRef);
         // お気に入り解除
         if (likedUserDoc.exists) {
           // お気に入り情報削除
-          transaction.delete(likedUserRef);
-          const myLikedQuiz = await transaction.get(myLikedQuizRef);
-          if (myLikedQuiz.exists) transaction.delete(myLikedQuiz.ref);
+          transaction.delete(likedUserDoc.ref);
+          if (myLikedQuizDoc.exists) transaction.delete(myLikedQuizDoc.ref);
           // お気に入り数を減らす
           transaction.update(likedQuizRef, {
             likeCount: firebase.firestore.FieldValue.increment(-1),
