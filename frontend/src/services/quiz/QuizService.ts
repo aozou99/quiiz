@@ -182,7 +182,7 @@ class QuizService {
         );
         // お気に入り数を増やす
         transaction.update(likedQuizRef, {
-          likeQuizCount: firebase.firestore.FieldValue.increment(1),
+          likeCount: firebase.firestore.FieldValue.increment(1),
         });
         transaction.update(this.userRef.doc(uid), {
           likeQuizCount: firebase.firestore.FieldValue.increment(1),

@@ -69,7 +69,7 @@ export const useFetchLike = (quizId: string, goodClick: boolean) => {
       })
       .then((snapshot) => {
         const conunt =
-          snapshot && snapshot.exists ? snapshot.data()?.likeQuizCount || 0 : 0;
+          snapshot && snapshot.exists ? snapshot.data()?.likeCount || 0 : 0;
         setLikeCount(conunt);
       })
       .then(() => setLoaded(true));
