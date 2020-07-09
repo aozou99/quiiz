@@ -1,13 +1,12 @@
-
 name: quiz_pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build-deply:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.x]
@@ -28,5 +27,3 @@ jobs:
         uses: w9jds/firebase-action@master
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-
-    
