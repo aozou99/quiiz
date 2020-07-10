@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import functions from "../core/functions";
 import { HttpsError } from "firebase-functions/lib/providers/https";
 import deleteThumbnail from "../helper/deleteThumbnail";
 import admin from "../core/admin";

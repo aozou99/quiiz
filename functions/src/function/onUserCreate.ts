@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import functions from "../core/functions";
 import admin from "../core/admin";
 
 module.exports = functions.auth.user().onCreate((user) => {

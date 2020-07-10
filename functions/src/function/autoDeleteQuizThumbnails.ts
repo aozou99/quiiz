@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import functions from "../core/functions";
 import deleteThumbnail from "../helper/deleteThumbnail";
 
 module.exports = functions.firestore

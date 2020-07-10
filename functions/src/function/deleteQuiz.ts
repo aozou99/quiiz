@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import functions from "../core/functions";
 import { HttpsError } from "firebase-functions/lib/providers/https";
 import admin from "../core/admin";
 const db = admin.firestore();

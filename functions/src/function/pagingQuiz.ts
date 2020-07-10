@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import functions from "../core/functions";
 import admin from "../core/admin";
 import imgUrl from "../helper/imageUrl";
 
