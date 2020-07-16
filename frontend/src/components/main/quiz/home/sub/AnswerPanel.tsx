@@ -23,6 +23,8 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import { QuizResult } from "types/QuizTypes";
 import QuizService from "services/quiz/QuizService";
 import { useFetchLike } from "services/quiz/QuizHooks";
+import PlayListDialog from "components/common/dialog/PlayListDialog";
+import { useCheckList } from "services/playList/PlayListHooks";
 
 type quiz = {
   id: string;
@@ -115,7 +117,15 @@ const useStyles = makeStyles((theme: Theme) =>
 const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   const classes = useStyles();
   const [goodClick, setGoodClick] = useState(false);
-  const { loaded, isLike, likeCount } = useFetchLike(selected.id, goodClick);
+  const [isOpenList, setIsOpenList] = useState(false);
+  const { loaded: likeLoaded, isLike, likeCount } = useFetchLike(
+    selected.id,
+    goodClick
+  );
+  const { checked, loaded: checkListLoaded, update } = useCheckList(
+    selected.id
+  );
+
   const choices = (e: quiz): [string, string, string, string] => [
     e.selectA,
     e.selectB,
@@ -169,9 +179,9 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
         <Tooltip title="いいね">
           <IconButton aria-label="good" onClick={handleGood}>
             <FavoriteIcon
-              className={clsx(loaded && isLike && classes.iconSelectedPink)}
+              className={clsx(likeLoaded && isLike && classes.iconSelectedPink)}
             />
-            {loaded && (
+            {likeLoaded && (
               <Typography variant={"subtitle1"} className={classes.likeCount}>
                 {likeCount}
               </Typography>
@@ -179,11 +189,26 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="リストに追加">
-          <IconButton aria-label="good">
-            <FolderIcon className={clsx(classes.iconSelectedYellow)} />
+          <IconButton
+            aria-label="good"
+            onClick={() => setIsOpenList(!isOpenList)}
+          >
+            <FolderIcon
+              className={clsx(
+                checkListLoaded &&
+                  checked.length > 0 &&
+                  classes.iconSelectedYellow
+              )}
+            />
           </IconButton>
         </Tooltip>
       </Box>
+      <PlayListDialog
+        open={isOpenList}
+        onClose={() => setIsOpenList(false)}
+        quiz={{ id: selected.id, authorId: selected.authorId }}
+        afterChecked={update}
+      />
     </Paper>
   );
 };

@@ -131,6 +131,12 @@ class QuizService {
     return `${uploadThumbnailPath}${userHash}_${new Date().getTime()}.jpg`;
   }
 
+  public async quizRef(authorId: string, quizId: string) {
+    const doc = await this.quizzesCollection(authorId)
+      .doc(quizId)
+      .get();
+    return doc.ref;
+  }
   public likeOrCancel(
     { quizId, authorId }: { quizId: string; authorId: string },
     callback: () => void

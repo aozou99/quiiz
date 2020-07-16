@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   Button,
   TextField,
@@ -254,7 +253,6 @@ const QuizFormDialog: React.FC<State> = ({
       <DialogTitle id="alert-dialog-title">クイズの作成</DialogTitle>
       <form onSubmit={onSubmit} noValidate>
         <DialogContent dividers className={classes.dialogContent}>
-          <DialogContentText id="alert-dialog-description"></DialogContentText>
           {wrapTextFiled({
             id: "question",
             label: "問題文",
