@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -15,11 +15,17 @@ import Choices from "components/main/quiz/preview/sub/Choices";
 import CheckIcon from "@material-ui/icons/Check";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { QuizData, QuizResult } from "types/QuizTypes";
+import AnswerPanel from "components/main/quiz/home/sub/AnswerPanel";
+import { useFetchThumbnailUrl } from "services/quiz/QuizHooks";
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionButton: {
     float: "right",
     marginLeft: theme.spacing(2),
+  },
+  container: {
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 
@@ -32,13 +38,22 @@ type State = {
 const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
   const classes = useStyles();
   const [result, setResult] = useState<QuizResult>(undefined);
-  const answerLabel = (e: QuizData) => choices(e)[e.answer];
-  const choices = (e: QuizData): [string, string, string, string] => [
-    e.selectA,
-    e.selectB,
-    e.selectC,
-    e.selectD,
-  ];
+  const [selectedQuiz, setSelectedQuiz] = useState<any>(undefined);
+  const { imgSrc, loaded } = useFetchThumbnailUrl(quiz.thumbnail, "256x144");
+
+  useEffect(() => {
+    setSelectedQuiz({
+      ...quiz,
+      authorId: "",
+      authorName: "",
+      authorImageUrl: "",
+      thumbnail: {
+        "256x144": imgSrc,
+        "640x360": imgSrc,
+      },
+    });
+  }, [loaded]);
+
   return (
     <Dialog
       open={open}
@@ -70,25 +85,14 @@ const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
       </DialogTitle>
       <Divider />
       <DialogContent>
-        <Container maxWidth="md">
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <Question
-                result={result}
-                thumbnail={quiz.thumbnail}
-                question={quiz.question}
-                answerLabel={answerLabel(quiz)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Choices
-                result={result}
-                setResult={setResult}
-                choices={choices(quiz)}
-                answer={quiz.answer}
-              />
-            </Grid>
-          </Grid>
+        <Container maxWidth="md" className={classes.container}>
+          {loaded && (
+            <AnswerPanel
+              selected={selectedQuiz}
+              result={result}
+              setResult={setResult}
+            />
+          )}
         </Container>
       </DialogContent>
     </Dialog>

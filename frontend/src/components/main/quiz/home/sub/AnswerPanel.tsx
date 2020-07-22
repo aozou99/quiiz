@@ -38,7 +38,7 @@ type quiz = {
   selectC: string;
   selectD: string;
   answer: 0 | 1 | 2 | 3;
-  description: string;
+  description?: string;
 };
 
 type Props = {
