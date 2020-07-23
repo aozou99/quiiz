@@ -93,7 +93,6 @@ const CropDialog: React.FC<State> = ({
 
   const showCroppedImage = useCallback(async () => {
     try {
-      console.log(imgUrl);
       const croppedImage = await getCroppedImg(
         imgUrl,
         croppedAreaPixels,

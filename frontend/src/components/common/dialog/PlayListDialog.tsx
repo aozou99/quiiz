@@ -132,7 +132,6 @@ const PlayListDialog: React.FC<State> = ({
           {loaded &&
             playLists.map((playList, index) => {
               const labelId = `checkbox-list-label-${index}`;
-              console.log("in map", checked[0], checked[1], checked.length);
               return (
                 <ListItem
                   button

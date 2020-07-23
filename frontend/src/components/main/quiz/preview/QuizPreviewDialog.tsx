@@ -4,24 +4,29 @@ import {
   DialogTitle,
   DialogContent,
   Button,
-  Grid,
   Container,
   Divider,
   makeStyles,
   Theme,
 } from "@material-ui/core";
-import Question from "components/main/quiz/preview/sub/Question";
-import Choices from "components/main/quiz/preview/sub/Choices";
 import CheckIcon from "@material-ui/icons/Check";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { QuizData, QuizResult } from "types/QuizTypes";
 import AnswerPanel from "components/main/quiz/home/sub/AnswerPanel";
 import { useFetchThumbnailUrl } from "services/quiz/QuizHooks";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme: Theme) => ({
+  header: {
+    padding: theme.spacing(1, 3),
+  },
   actionButton: {
     float: "right",
     marginLeft: theme.spacing(2),
+  },
+  content: {
+    backgroundColor: grey[100],
+    padding: theme.spacing(0, 3),
   },
   container: {
     display: "flex",
@@ -52,7 +57,7 @@ const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
         "640x360": imgSrc,
       },
     });
-  }, [loaded]);
+  }, [imgSrc, quiz]);
 
   return (
     <Dialog
@@ -62,7 +67,7 @@ const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
       aria-labelledby="preview-dialog-title"
       aria-describedby="preview-dialog-description"
     >
-      <DialogTitle id="preview-dialog-title">
+      <DialogTitle id="preview-dialog-title" className={classes.header}>
         プレビュー
         <Button
           className={classes.actionButton}
@@ -84,7 +89,7 @@ const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
         </Button>
       </DialogTitle>
       <Divider />
-      <DialogContent>
+      <DialogContent className={classes.content}>
         <Container maxWidth="md" className={classes.container}>
           {loaded && (
             <AnswerPanel
