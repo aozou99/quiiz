@@ -19,6 +19,12 @@ const useStyles = makeStyles((theme: Theme) =>
         flexBasis: "250px",
         maxWidth: "350px",
       },
+      "& .MuiCardActionArea-focusHighlight": {
+        height: "25.5vh",
+      },
+      "& .MuiTouchRipple-root": {
+        height: "25.5vh",
+      },
     },
     media: {
       height: 140,
