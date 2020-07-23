@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
         maxWidth: "350px",
       },
       "& .MuiCardActionArea-focusHighlight": {
-        height: "25.5vh",
+        height: "130%",
       },
       "& .MuiTouchRipple-root": {
-        height: "25.5vh",
+        height: "130%",
       },
     },
     media: {
