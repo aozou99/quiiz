@@ -1,22 +1,22 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import AddToQueueIcon from '@material-ui/icons/AddToQueue';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { themeColors } from 'components/core/CustomeTheme';
-import Tooltip from '@material-ui/core/Tooltip';
+import React from "react";
+import clsx from "clsx";
+import { makeStyles } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import AddToQueueIcon from "@material-ui/icons/AddToQueue";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { themeColors } from "components/core/CustomeTheme";
+import Tooltip from "@material-ui/core/Tooltip";
 
 type State = {
-  open: boolean
-}
+  open: boolean;
+};
 
 const drawerWidth = 240;
 
@@ -33,50 +33,50 @@ const listItems = [
   },
 ];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   drawer: {
     flexShrink: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   },
   drawerOpen: {
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerClose: {
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: 'hidden',
+    overflowX: "hidden",
     width: theme.spacing(9) + 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: theme.spacing(9) + 1,
     },
   },
   toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
   },
   selected: {
     backgroundColor: theme.palette.action.selected,
-    '& $listChild': {
+    "& $listChild": {
       color: themeColors.primary[400],
-    }
+    },
   },
   list: {
-    paddingTop: 0,
+    padding: 0,
   },
   listRoot: {
     paddingLeft: theme.spacing(3),
-    '&:hover $listChild': {
+    "&:hover $listChild": {
       color: themeColors.secondary[400],
-    }
+    },
   },
   listChild: {},
 }));
@@ -102,13 +102,14 @@ const Sidebar: React.FC<State> = ({ open }) => {
     >
       <div className={classes.toolbar} />
       <List className={classes.list}>
-        {listItems.map(item => (
+        {listItems.map((item) => (
           <ListItem
             button
             key={item.name}
             onClick={() => history.push(url + item.linkPath)}
             className={clsx(classes.listRoot, {
-              [classes.selected]: history.location.pathname === (url + item.linkPath)
+              [classes.selected]:
+                history.location.pathname === url + item.linkPath,
             })}
           >
             <Tooltip title={item.name} key={item.name}>
@@ -122,7 +123,12 @@ const Sidebar: React.FC<State> = ({ open }) => {
       </List>
       <Divider />
       <List>
-        <ListItem button key="トップに戻る" onClick={() => history.push("/")} className={classes.listRoot}>
+        <ListItem
+          button
+          key="トップに戻る"
+          onClick={() => history.push("/")}
+          className={classes.listRoot}
+        >
           <Tooltip title="トップに戻る">
             <ListItemIcon>
               <ArrowBackIcon />
@@ -133,6 +139,6 @@ const Sidebar: React.FC<State> = ({ open }) => {
       </List>
     </Drawer>
   );
-}
+};
 
 export default Sidebar;
