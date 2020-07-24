@@ -31,7 +31,7 @@ const listItems = [
   },
   {
     name: "ライブラリ",
-    linkPath: "/subscriptions",
+    linkPath: "/library",
     icon: <LocalLibraryIcon />,
   },
 ];

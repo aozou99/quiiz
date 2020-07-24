@@ -6,6 +6,7 @@ import ReadyImage from "components/common/meta/Ready";
 import Single from "components/main/quiz/home/Main";
 import Header from "components/main/quiz/Header";
 import TemporarySidebar from "components/main/quiz/TemporarySideBar";
+import Library from "components/main/quiz/library/Main";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     paddingTop: theme.spacing(3),
     zIndex: 1200,
+    height: "calc(100vh - 80px)",
   },
 }));
 
@@ -50,6 +52,9 @@ const Main: React.FC = () => {
           </Route>
           <Route path={`/subscriptions`}>
             <ReadyImage />
+          </Route>
+          <Route path={`/library`}>
+            <Library />
           </Route>
         </Switch>
       </main>

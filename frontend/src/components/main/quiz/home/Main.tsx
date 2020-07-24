@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexWrap: "nowrap",
       alignItems: "start",
+      height: "inherit",
     },
     list: {
       display: "flex",
