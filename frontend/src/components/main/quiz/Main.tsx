@@ -7,6 +7,7 @@ import Single from "components/main/quiz/home/Main";
 import Header from "components/main/quiz/Header";
 import TemporarySidebar from "components/main/quiz/TemporarySideBar";
 import Library from "components/main/quiz/library/Main";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     paddingTop: theme.spacing(3),
     zIndex: 1200,
-    height: "calc(100vh - 80px)",
+    height: "100vh",
+    backgroundColor: grey[100],
   },
 }));
 

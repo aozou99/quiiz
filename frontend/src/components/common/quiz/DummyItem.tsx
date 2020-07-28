@@ -3,8 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
-import { Avatar, Grid, Theme, createStyles } from "@material-ui/core";
+import { Grid, Theme, createStyles } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,17 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 140,
       backgroundColor: grey["A100"],
     },
-    title: {
-      backgroundColor: grey["A100"],
-      width: "100%",
-      height: "20px",
-      marginBottom: theme.spacing(1),
-    },
-    subTitle: {
-      backgroundColor: grey["A100"],
-      width: "60%",
-      height: "20px",
-    },
   })
 );
 
@@ -42,15 +32,25 @@ const DummyItem: React.FC = () => {
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <div className={classes.media} />
+        <Skeleton animation="wave" variant="rect" className={classes.media} />
         <CardContent>
           <Grid container spacing={0}>
             <Grid item xs={3}>
-              <Avatar />
+              <Skeleton
+                animation="wave"
+                variant="circle"
+                width={40}
+                height={40}
+              />
             </Grid>
             <Grid item xs={9}>
-              <div className={classes.title} />
-              <div className={classes.subTitle} />
+              <Skeleton
+                animation="wave"
+                height={18}
+                width="100%"
+                style={{ marginBottom: 6 }}
+              />
+              <Skeleton animation="wave" height={18} width="60%" />
             </Grid>
           </Grid>
         </CardContent>

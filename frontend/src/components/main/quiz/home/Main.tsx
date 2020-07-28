@@ -2,22 +2,19 @@ import React, { useState } from "react";
 import { useFetchFirstDocuments } from "services/quiz/QuizHooks";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Theme, createStyles } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
 import clsx from "clsx";
-import Item from "components/main/quiz/home/sub/Item";
+import Item from "components/common/quiz/Item";
 import AnswerPanel from "components/main/quiz/home/sub/AnswerPanel";
-import { QuizResult } from "types/QuizTypes";
-import DummyItem from "components/main/quiz/home/sub/DummyItem";
+import { QuizResult, QuizDisplay } from "types/QuizTypes";
+import DummyItem from "components/common/quiz/DummyItem";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: grey[100],
       padding: theme.spacing(1),
       display: "flex",
       flexWrap: "nowrap",
       alignItems: "start",
-      height: "inherit",
     },
     list: {
       display: "flex",
@@ -34,32 +31,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type quiz = {
-  id: string;
-  thumbnail: { "256x144": string; "640x360": string };
-  question: string;
-  authorId: string;
-  authorName: string;
-  authorImageUrl: string;
-  selectA: string;
-  selectB: string;
-  selectC: string;
-  selectD: string;
-  answer: 0 | 1 | 2 | 3;
-  description: string;
-};
-
 const Main: React.FC = () => {
   const { firstDocuments, loaded } = useFetchFirstDocuments();
   const classes = useStyles();
-  const [selected, setSelected] = useState<quiz>();
+  const [selected, setSelected] = useState<QuizDisplay>();
   const [result, setResult] = useState<QuizResult>(undefined);
-
+  console.log(firstDocuments);
   return (
     <Box className={clsx(classes.root)}>
       <Box className={classes.list}>
         {loaded
-          ? firstDocuments.map((item: quiz) => (
+          ? firstDocuments.map((item: QuizDisplay) => (
               <Item
                 key={item.id}
                 thumbnail={item.thumbnail["640x360"]}

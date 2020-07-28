@@ -76,3 +76,18 @@ export const useFetchLike = (quizId: string, goodClick: boolean) => {
   }, [quizId, goodClick]);
   return { isLike, loaded, likeCount };
 };
+
+export const useFetchLikeQuizzes = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [likedQuizzes, setLikedQuizzes] = useState<any>();
+  useEffect(() => {
+    firebase
+      .functions()
+      .httpsCallable("pagingMyLikeQuiz")()
+      .then((res) => {
+        setLikedQuizzes(res.data);
+        setLoaded(true);
+      });
+  }, []);
+  return { loaded, likedQuizzes };
+};

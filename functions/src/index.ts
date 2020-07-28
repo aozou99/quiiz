@@ -7,6 +7,7 @@ const endpoints = [
   "updateQuiz",
   "deleteQuiz",
   "pagingQuiz",
+  "pagingMyLikeQuiz",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {

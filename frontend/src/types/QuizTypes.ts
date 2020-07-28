@@ -42,3 +42,18 @@ export type QuizFullData = QuizTableRowData & {
 };
 
 export type QuizResult = "right" | "wrong" | undefined;
+
+export type QuizDisplay = {
+  id: string;
+  thumbnail: { "256x144": string; "640x360": string };
+  question: string;
+  authorId: string;
+  authorName: string;
+  authorImageUrl: string;
+  selectA: string;
+  selectB: string;
+  selectC: string;
+  selectD: string;
+  answer: 0 | 1 | 2 | 3;
+  description: string;
+};

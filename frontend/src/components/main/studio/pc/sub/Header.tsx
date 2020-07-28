@@ -1,23 +1,23 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 type State = {
-  handleDrawer: (event: {}) => void
-}
+  handleDrawer: (event: {}) => void;
+};
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Chalkboard",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -48,14 +48,14 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
         >
           <MenuIcon />
         </IconButton>
-        <IconButton onClick={()=>history.push(url)}>
-          <Typography variant="h5" color="primary">
+        <IconButton onClick={() => history.push(url)}>
+          <Typography variant="h5" color="primary" className={classes.title}>
             Quiiz Studio
           </Typography>
         </IconButton>
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 export default Header;

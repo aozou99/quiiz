@@ -111,7 +111,7 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
           <MenuIcon />
         </IconButton>
         <IconButton onClick={() => history.push(url)}>
-          <Typography variant="h5" color="primary">
+          <Typography variant="h5" color="primary" className={classes.title}>
             Quiiz
           </Typography>
         </IconButton>

@@ -33,6 +33,7 @@ export const useFetchPlayLists = (userId?: string) => {
               id: doc.id,
               name: doc.data().listName,
               public: doc.data().privacy === 0,
+              count: doc.data().quizCount,
             };
           })
         );
