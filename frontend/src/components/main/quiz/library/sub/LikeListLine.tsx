@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme: Theme) =>
     subTitle: {
       display: "flex",
       alignItems: "center",
-      marginBottom: theme.spacing(1),
       "& svg.MuiSvgIcon-root": {
         marginRight: theme.spacing(1),
         color: grey[500],
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: "wrap",
       justifyContent: "start",
       "& > *": {
-        marginRight: theme.spacing(2),
+        margin: theme.spacing(2),
       },
       flex: "5",
       [theme.breakpoints.down("xs")]: {
@@ -39,7 +38,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const LikeListLine: React.FC = () => {
+type Props = {
+  setSelected: (arg0: any) => any;
+  setResult: (arg0: any) => any;
+  selected: QuizDisplay | undefined;
+};
+
+const LikeListLine: React.FC<Props> = ({
+  setSelected,
+  setResult,
+  selected,
+}) => {
   const classes = useStyles();
   const { loaded, likedQuizzes } = useFetchLikeQuizzes();
 
@@ -47,7 +56,7 @@ const LikeListLine: React.FC = () => {
     <>
       <Box className={classes.subTitle}>
         <FavoriteBorderOutlinedIcon />
-        <Typography variant="subtitle1">再生リスト</Typography>
+        <Typography variant="subtitle1">いいねしたクイズ</Typography>
       </Box>
       <Box className={classes.list}>
         {loaded
@@ -59,12 +68,12 @@ const LikeListLine: React.FC = () => {
                 authorName={item.authorName}
                 authorImageUrl={item.authorImageUrl}
                 handleClick={() => {
-                  // if (selected === item) {
-                  //   setSelected(undefined);
-                  // } else {
-                  //   setSelected(item);
-                  //   setResult(undefined);
-                  // }
+                  if (selected === item) {
+                    setSelected(undefined);
+                  } else {
+                    setSelected(item);
+                    setResult(undefined);
+                  }
                 }}
                 isSelected={false}
               />

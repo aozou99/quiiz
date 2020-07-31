@@ -76,3 +76,18 @@ export const useCheckList = (quizId: string) => {
   }, [loaded, playLists, quizId, click]);
   return { checked, playLists, loaded, update: () => setClick(!click) };
 };
+
+export const useFetchMyPlayList = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [myPlayLists, setMyPlayLists] = useState<any>();
+  useEffect(() => {
+    firebase
+      .functions()
+      .httpsCallable("pagingMyPlayList")()
+      .then((res) => {
+        setMyPlayLists(res.data);
+        setLoaded(true);
+      });
+  }, []);
+  return { loaded, myPlayLists };
+};

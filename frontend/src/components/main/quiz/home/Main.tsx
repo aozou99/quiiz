@@ -36,7 +36,7 @@ const Main: React.FC = () => {
   const classes = useStyles();
   const [selected, setSelected] = useState<QuizDisplay>();
   const [result, setResult] = useState<QuizResult>(undefined);
-  console.log(firstDocuments);
+
   return (
     <Box className={clsx(classes.root)}>
       <Box className={classes.list}>
