@@ -11,13 +11,19 @@ export const useFetchFirstDocuments = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     firebase
       .functions()
       .httpsCallable("pagingQuiz")()
       .then((res) => {
-        setFirstDocuments(res.data);
-        setLoaded(true);
+        if (mounted) {
+          setFirstDocuments(res.data);
+          setLoaded(true);
+        }
       });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return { firstDocuments, loaded };
@@ -35,8 +41,8 @@ export const useFetchThumbnailUrl = (
     imageUrl(uri, size).then((path) => {
       if (mounted) {
         setImgSrc(path);
+        setLoaded(true);
       }
-      setLoaded(true);
     });
     return () => {
       mounted = false;
@@ -51,6 +57,7 @@ export const useFetchLike = (quizId: string, goodClick: boolean) => {
   const [loaded, setLoaded] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   useEffect(() => {
+    let mounted = true;
     const uid = firebase.auth().currentUser?.uid;
     if (!uid) return;
     firebase
@@ -62,17 +69,28 @@ export const useFetchLike = (quizId: string, goodClick: boolean) => {
       .get()
       .then((snapshot) => {
         // いいね状態を反映
-        setIsLike(snapshot.exists);
+        if (mounted) {
+          setIsLike(snapshot.exists);
+        }
         return snapshot.data()?.quizRef.get() as Promise<
           firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
         >;
       })
       .then((snapshot) => {
-        const conunt =
-          snapshot && snapshot.exists ? snapshot.data()?.likeCount || 0 : 0;
-        setLikeCount(conunt);
+        if (mounted) {
+          const conunt =
+            snapshot && snapshot.exists ? snapshot.data()?.likeCount || 0 : 0;
+          setLikeCount(conunt);
+        }
       })
-      .then(() => setLoaded(true));
+      .then(() => {
+        if (mounted) {
+          setLoaded(true);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
   }, [quizId, goodClick]);
   return { isLike, loaded, likeCount };
 };
@@ -81,13 +99,19 @@ export const useFetchLikeQuizzes = () => {
   const [loaded, setLoaded] = useState(false);
   const [likedQuizzes, setLikedQuizzes] = useState<any>();
   useEffect(() => {
+    let mounted = true;
     firebase
       .functions()
       .httpsCallable("pagingMyLikeQuiz")()
       .then((res) => {
-        setLikedQuizzes(res.data);
-        setLoaded(true);
+        if (mounted) {
+          setLikedQuizzes(res.data);
+          setLoaded(true);
+        }
       });
+    return () => {
+      mounted = false;
+    };
   }, []);
   return { loaded, likedQuizzes };
 };

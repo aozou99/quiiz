@@ -19,26 +19,35 @@ export const useFetchPlayLists = (userId?: string) => {
     userId = firebase.auth().currentUser?.uid;
   }
   useEffect(() => {
+    let mounted = true;
+
     if (!userId) {
-      setPlayLists([]);
-      setLoaded(true);
-      return;
-    }
-    playListRef(userId)
-      .get()
-      .then((snapshot) => {
-        setPlayLists(
-          snapshot.docs.map((doc) => {
-            return {
-              id: doc.id,
-              name: doc.data().listName,
-              public: doc.data().privacy === 0,
-              count: doc.data().quizCount,
-            };
-          })
-        );
+      if (mounted) {
+        setPlayLists([]);
         setLoaded(true);
-      });
+      }
+    } else {
+      playListRef(userId)
+        .get()
+        .then((snapshot) => {
+          if (mounted) {
+            setPlayLists(
+              snapshot.docs.map((doc) => {
+                return {
+                  id: doc.id,
+                  name: doc.data().listName,
+                  public: doc.data().privacy === 0,
+                  count: doc.data().quizCount,
+                };
+              })
+            );
+            setLoaded(true);
+          }
+        });
+    }
+    return () => {
+      mounted = false;
+    };
   }, [userId]);
 
   return { playLists, loaded };
@@ -49,6 +58,7 @@ export const useCheckList = (quizId: string) => {
   const { playLists, loaded } = useFetchPlayLists();
   const [click, setClick] = useState(false);
   useEffect(() => {
+    let mounted = true;
     if (loaded) {
       const newChecked: number[] = [];
       const userId = firebase.auth().currentUser?.uid;
@@ -70,9 +80,14 @@ export const useCheckList = (quizId: string) => {
         );
       }
       Promise.all(promises).then(() => {
-        setChecked(newChecked);
+        if (mounted) {
+          setChecked(newChecked);
+        }
       });
     }
+    return () => {
+      mounted = false;
+    };
   }, [loaded, playLists, quizId, click]);
   return { checked, playLists, loaded, update: () => setClick(!click) };
 };
@@ -81,13 +96,19 @@ export const useFetchMyPlayList = () => {
   const [loaded, setLoaded] = useState(false);
   const [myPlayLists, setMyPlayLists] = useState<any>();
   useEffect(() => {
+    let mounted = true;
     firebase
       .functions()
       .httpsCallable("pagingMyPlayList")()
       .then((res) => {
-        setMyPlayLists(res.data);
-        setLoaded(true);
+        if (mounted) {
+          setMyPlayLists(res.data);
+          setLoaded(true);
+        }
       });
+    return () => {
+      mounted = false;
+    };
   }, []);
   return { loaded, myPlayLists };
 };
