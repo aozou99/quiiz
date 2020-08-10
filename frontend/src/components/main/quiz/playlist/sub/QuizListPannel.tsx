@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const QuizListPannel: React.FC<{
-  setSelected: (quiz: QuizDisplay) => void;
+  setSelected: (quiz?: QuizDisplay) => void;
   setResult: (result: undefined) => void;
 }> = ({ setSelected, setResult }) => {
   const theme = createMuiTheme();
@@ -282,7 +282,10 @@ const QuizListPannel: React.FC<{
                       <IconButton
                         edge="end"
                         aria-label="delete"
-                        onClick={() => handleRemoveQuiz(quiz)}
+                        onClick={() => {
+                          handleRemoveQuiz(quiz);
+                          setSelected(undefined);
+                        }}
                       >
                         <DeleteIcon />
                       </IconButton>
