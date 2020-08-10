@@ -8,6 +8,7 @@ import Header from "components/main/quiz/Header";
 import TemporarySidebar from "components/main/quiz/TemporarySideBar";
 import Library from "components/main/quiz/library/Main";
 import { grey } from "@material-ui/core/colors";
+import PlayList from "components/main/quiz/playlist/Main";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     paddingTop: theme.spacing(3),
     zIndex: 1200,
-    height: "100vh",
+    minHeight: `calc(100vh - ${theme.spacing(3)}px)`,
     backgroundColor: grey[100],
   },
 }));
@@ -57,6 +58,9 @@ const Main: React.FC = () => {
           </Route>
           <Route path={`/library`}>
             <Library />
+          </Route>
+          <Route path={`/playlist/:id`}>
+            <PlayList />
           </Route>
         </Switch>
       </main>

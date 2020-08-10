@@ -112,3 +112,64 @@ export const useFetchMyPlayList = () => {
   }, []);
   return { loaded, myPlayLists };
 };
+
+export const useFetchPlayListContents = (playListId: string) => {
+  const [loaded, setLoaded] = useState(false);
+  const [playList, setPlayList] = useState<any>();
+  const [quizzes, setQuizzes] = useState<any>();
+  const [refresh, setRefresh] = useState(false);
+  const [editable, setEditable] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    firebase
+      .functions()
+      .httpsCallable("pagingPlayListContents")({ id: playListId })
+      .then((res) => {
+        if (mounted) {
+          setEditable(
+            firebase.auth().currentUser?.uid === res.data.playList.authorId
+          );
+          setPlayList(res.data.playList);
+          setQuizzes(res.data.quizzes);
+          setLoaded(true);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [playListId, refresh]);
+  return {
+    loaded,
+    playList,
+    quizzes,
+    editable,
+    refresh: () => {
+      setRefresh(!refresh);
+    },
+  };
+};
+
+export const useFetchPlayList = (playListId: string) => {
+  const [loaded, setLoaded] = useState(false);
+  const [playList, setPlayList] = useState<any>();
+
+  useEffect(() => {
+    let mounted = true;
+    firebase
+      .firestore()
+      .collectionGroup("playLists")
+      .where("id", "==", playListId)
+      .get()
+      .then((snapshot) => {
+        if (mounted && snapshot.size > 0) {
+          setPlayList(snapshot.docs[0].data());
+          setLoaded(true);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [playListId]);
+  return { loaded, playList };
+};

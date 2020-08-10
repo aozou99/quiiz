@@ -1,18 +1,18 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button
+  Button,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
 
 type State = {
   title: string;
-  body: string;
+  body: string | ReactNode;
   yesOnClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   open: boolean;
@@ -25,7 +25,7 @@ const BasicConfirmDialog: React.FC<State> = ({
   yesOnClick,
   noOnClick,
   open,
-  setOpen
+  setOpen,
 }) => {
   const handleClose = () => {
     setOpen(false);

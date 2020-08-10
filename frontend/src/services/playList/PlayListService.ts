@@ -17,6 +17,7 @@ class PlayListService {
     const newPlayListDoc = this.playListCollection(user.uid).doc();
     return newPlayListDoc
       .set({
+        id: newPlayListDoc.id,
         ...formData,
         authorId: user.uid,
         quizCount: 0,
@@ -27,12 +28,11 @@ class PlayListService {
   }
 
   async addToList(listId: string, authorId: string, quizId: string) {
-    const user = firebase.auth().currentUser;
-    if (!user) {
+    const { playListDoc, userId } = this.getMyPlayListDoc(listId);
+    if (!(playListDoc && userId)) {
       return;
     }
     const quizRef = await QuizService.quizRef(authorId, quizId);
-    const playListDoc = this.playListCollection(user.uid).doc(listId);
     return playListDoc
       .collection("playListQuiz")
       .doc(quizId)
@@ -42,7 +42,7 @@ class PlayListService {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
-        this.playListCollection(user.uid)
+        this.playListCollection(userId)
           .doc(listId)
           .update({
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -51,18 +51,36 @@ class PlayListService {
       });
   }
 
-  removeFromList(listId: string, quizId: string) {
-    const userId = firebase.auth().currentUser?.uid;
-    if (!userId) {
+  update(listId: string, formData: Partial<PlayListFormData>) {
+    const { playListDoc } = this.getMyPlayListDoc(listId);
+    if (!playListDoc) {
       return;
     }
-    const targetListRef = this.playListCollection(userId).doc(listId);
-    return targetListRef
+    return playListDoc.update({
+      ...formData,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+  }
+
+  delete(playListId: string) {
+    const { playListDoc } = this.getMyPlayListDoc(playListId);
+    if (!playListDoc) {
+      return;
+    }
+    return playListDoc.delete();
+  }
+
+  removeFromList(listId: string, quizId: string) {
+    const { playListDoc } = this.getMyPlayListDoc(listId);
+    if (!playListDoc) {
+      return;
+    }
+    return playListDoc
       .collection("playListQuiz")
       .doc(quizId)
       .delete()
       .then(() => {
-        targetListRef.update({
+        playListDoc.update({
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           quizCount: firebase.firestore.FieldValue.increment(-1),
         });
@@ -71,6 +89,19 @@ class PlayListService {
 
   private playListCollection(userId: string) {
     return this.userRef.doc(userId).collection("playLists");
+  }
+  private getMyPlayListDoc(listId: string) {
+    const userId = firebase.auth().currentUser?.uid;
+    if (!userId) {
+      return {
+        playListDoc: undefined,
+        userId,
+      };
+    }
+    return {
+      playListDoc: this.playListCollection(userId).doc(listId),
+      userId,
+    };
   }
 }
 

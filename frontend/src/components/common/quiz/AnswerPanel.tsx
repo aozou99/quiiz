@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "sticky",
       top: theme.spacing(10),
       overflowY: "auto",
-      height: "85vh",
+      height: `calc(100vh - ${theme.spacing(16)}px)`,
       "& > img": {
         display: "block",
         margin: "auto",
@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     iconSelectedPink: {
       color: themeColors.secondary[500],
+      animation: `$rotate 1.5s`,
     },
     iconSelectedYellow: {
       color: themeColors.quaternary[500],
@@ -110,6 +111,10 @@ const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(3),
       height: theme.spacing(3),
       backgroundColor: themeColors.primary[400],
+    },
+    "@keyframes rotate": {
+      "0%": { transform: "rotateY(0deg)" },
+      "100%": { transform: "rotateY(360deg)" },
     },
   })
 );

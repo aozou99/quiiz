@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Box, Theme, createStyles } from "@material-ui/core";
 import clsx from "clsx";
 import Item from "components/common/quiz/Item";
-import AnswerPanel from "components/main/quiz/home/sub/AnswerPanel";
+import AnswerPanel from "components/common/quiz/AnswerPanel";
 import { QuizResult, QuizDisplay } from "types/QuizTypes";
 import DummyItem from "components/common/quiz/DummyItem";
 
@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexWrap: "nowrap",
       alignItems: "start",
+      backgroundColor: "inherit",
     },
     list: {
       display: "flex",

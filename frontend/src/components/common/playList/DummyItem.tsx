@@ -2,8 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import { Grid, Theme, createStyles } from "@material-ui/core";
+import { Theme, createStyles } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import Skeleton from "@material-ui/lab/Skeleton";
 

@@ -9,6 +9,7 @@ const endpoints = [
   "pagingQuiz",
   "pagingMyLikeQuiz",
   "pagingMyPlayList",
+  "pagingPlayListContents",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {
@@ -29,3 +30,4 @@ if (
 // トリガー
 exports.autoDeleteQuizThumbnails = require("./function/autoDeleteQuizThumbnails");
 exports.onUserCraete = require("./function/onUserCreate");
+exports.onDeletePlayList = require("./function/onDeletePlayList");

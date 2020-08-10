@@ -11,6 +11,7 @@ import React from "react";
 import { useFetchMyPlayList } from "services/playList/PlayListHooks";
 import Item from "components/common/playList/Item";
 import DummyItem from "components/common/playList/DummyItem";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: "wrap",
       justifyContent: "start",
       "& > *": {
-        margin: theme.spacing(2),
+        margin: theme.spacing(1),
       },
       flex: "5",
       [theme.breakpoints.down("xs")]: {
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const PlayListLine: React.FC = () => {
   const classes = useStyles();
   const { myPlayLists, loaded } = useFetchMyPlayList();
+  const history = useHistory();
 
   return (
     <>
@@ -57,12 +59,7 @@ const PlayListLine: React.FC = () => {
                 count={item.quizCount}
                 description={item.description}
                 handleClick={() => {
-                  // if (selected === item) {
-                  //   setSelected(undefined);
-                  // } else {
-                  //   setSelected(item);
-                  //   setResult(undefined);
-                  // }
+                  history.push(`/playlist/${item.id}`);
                 }}
               />
             ))

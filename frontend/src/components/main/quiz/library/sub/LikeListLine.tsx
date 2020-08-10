@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: "wrap",
       justifyContent: "start",
       "& > *": {
-        margin: theme.spacing(2),
+        margin: theme.spacing(1),
       },
       flex: "5",
       [theme.breakpoints.down("xs")]: {
@@ -75,7 +75,7 @@ const LikeListLine: React.FC<Props> = ({
                     setResult(undefined);
                   }
                 }}
-                isSelected={false}
+                isSelected={selected === item}
               />
             ))
           : Array.from({ length: 4 })
