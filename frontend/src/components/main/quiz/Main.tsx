@@ -9,6 +9,7 @@ import TemporarySidebar from "components/main/quiz/TemporarySideBar";
 import Library from "components/main/quiz/library/Main";
 import { grey } from "@material-ui/core/colors";
 import PlayList from "components/main/quiz/playlist/Main";
+import Channel from "components/main/quiz/channel/Main";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +62,9 @@ const Main: React.FC = () => {
           </Route>
           <Route path={`/playlist/:id`}>
             <PlayList />
+          </Route>
+          <Route path={`/channel/:id`}>
+            <Channel />
           </Route>
         </Switch>
       </main>

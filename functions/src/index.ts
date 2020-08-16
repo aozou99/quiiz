@@ -10,6 +10,7 @@ const endpoints = [
   "pagingMyLikeQuiz",
   "pagingMyPlayList",
   "pagingPlayListContents",
+  "getChannelHeader",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {
@@ -31,3 +32,5 @@ if (
 exports.autoDeleteQuizThumbnails = require("./function/autoDeleteQuizThumbnails");
 exports.onUserCraete = require("./function/onUserCreate");
 exports.onDeletePlayList = require("./function/onDeletePlayList");
+exports.onSubscribeChannel = require("./function/onSubscribeChannel");
+exports.onUnSubscribeChannel = require("./function/onUnSubscribeChannel");

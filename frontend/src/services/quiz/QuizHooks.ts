@@ -1,7 +1,5 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/auth";
-import "firebase/storage";
 import "firebase/functions";
 import { useState, useEffect } from "react";
 import imageUrl from "utils/helper/imageUrl";

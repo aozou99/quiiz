@@ -8,6 +8,7 @@ module.exports = functions.auth.user().onCreate((user) => {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       likeQuizCount: 0,
+      subscribedChannel: 0,
     })
     .then(() => console.log("success update"))
     .catch((e) => console.error(e));

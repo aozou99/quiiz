@@ -5,10 +5,9 @@ import "firebase/auth";
 import "firebase/storage";
 import { PlayListFormData } from "types/PlayListTypes";
 import QuizService from "services/quiz/QuizService";
+import Service from "services/Service";
 
-class PlayListService {
-  userRef = firebase.firestore().collection("users");
-
+class PlayListService extends Service {
   async create(formData: PlayListFormData) {
     const user = firebase.auth().currentUser;
     if (!user) {

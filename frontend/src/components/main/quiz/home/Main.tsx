@@ -47,6 +47,7 @@ const Main: React.FC = () => {
                 key={item.id}
                 thumbnail={item.thumbnail["640x360"]}
                 question={item.question}
+                authorId={item.authorId}
                 authorName={item.authorName}
                 authorImageUrl={item.authorImageUrl}
                 handleClick={() => {

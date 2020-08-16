@@ -13,9 +13,16 @@ service cloud.firestore {
     match /users/{userID} {
       allow read;
       allow create:
-        if isUserAuthenticated(userID);
+        if isUserAuthenticated(userID)
       allow update:
         if isUserAuthenticated(userID)
+
+      match /counters/{couterID} {
+        allow read;
+        match /shards/{index} {
+          allow read;
+        }
+      }
 
       match /playLists/{playListID} {
         allow read;
@@ -35,6 +42,25 @@ service cloud.firestore {
           allow update:
             if isUserAuthenticated(userID)
         }
+      }
+
+      match /subscribedUser/{subscribedUserID} {
+        allow read: if isAuthenticated();
+        allow create:
+          if isUserAuthenticated(subscribedUserID)
+        allow update:
+          if isUserAuthenticated(subscribedUserID)
+        allow delete:
+          if isUserAuthenticated(subscribedUserID)
+      }
+      match /subscribedChannel/{channelID} {
+        allow read: if isAuthenticated();
+        allow create:
+          if isUserAuthenticated(userID)
+        allow update:
+          if isUserAuthenticated(userID)
+        allow delete:
+          if isUserAuthenticated(userID)
       }
 
       match /quizzes/{quizID} {

@@ -145,7 +145,7 @@ const QuizListPannel: React.FC<{
       setPrivacy(playList.privacy);
       setQuizList(quizzes);
     }
-  }, [loaded, playList]);
+  }, [loaded, playList, quizzes]);
 
   return (
     <>

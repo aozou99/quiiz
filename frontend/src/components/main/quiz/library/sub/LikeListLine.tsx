@@ -65,6 +65,7 @@ const LikeListLine: React.FC<Props> = ({
                 key={item.id}
                 thumbnail={item.thumbnail["640x360"]}
                 question={item.question}
+                authorId={item.authorId}
                 authorName={item.authorName}
                 authorImageUrl={item.authorImageUrl}
                 handleClick={() => {

@@ -21,16 +21,16 @@ class AuthService {
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(user => user.user);
+      .then((user) => user.user);
   }
 
   async signUp({ displayName, email, password }: AuthArgs) {
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(user => {
+      .then((user) => {
         user.user?.updateProfile({
-          displayName
+          displayName,
         });
         return user.user;
       });
@@ -38,7 +38,7 @@ class AuthService {
 
   async existDisplayName(displayName: string) {
     const res = await firebase.functions().httpsCallable("existDisplayName")({
-      displayName
+      displayName,
     });
     return res.data.isExist;
   }
@@ -50,10 +50,10 @@ class AuthService {
     this.ui.start("#firebaseui-auth-container", {
       signInOptions: [
         // List of OAuth providers supported.
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       ],
       signInFlow: "popup",
-      signInSuccessUrl: "/"
+      signInSuccessUrl: "/",
     });
   }
 }

@@ -5,16 +5,14 @@ import "firebase/auth";
 import "firebase/storage";
 import { QuizFormData } from "types/QuizTypes";
 import hash from "object-hash";
+import Service from "services/Service";
 
 const uploadThumbnailPath = "images/quiz/thumbnails/";
 const defaultThumbnailPath = "images/default/quiiz-thumbnail.png";
 
-class QuizService {
-  userRef = firebase.firestore().collection("users");
-  storageRef = firebase.storage().ref();
-
+class QuizService extends Service {
   async register(formData: QuizFormData) {
-    if (!firebase.auth().currentUser) {
+    if (!this.currentUser()) {
       return;
     }
 

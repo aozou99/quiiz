@@ -7,6 +7,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { Avatar, Grid, Theme, createStyles } from "@material-ui/core";
 import clsx from "clsx";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
 type Props = {
   question: string;
   thumbnail: string;
+  authorId: string;
   authorName: string;
   authorImageUrl: string;
   handleClick: () => any;
@@ -51,13 +53,17 @@ type Props = {
 const Item: React.FC<Props> = ({
   question,
   thumbnail,
+  authorId,
   authorName,
   authorImageUrl,
   handleClick,
   isSelected,
 }) => {
   const classes = useStyles();
-
+  const history = useHistory();
+  const handleClickChannelLink = () => {
+    history.push(`/channel/${authorId}`);
+  };
   return (
     <Card
       className={clsx(classes.root, isSelected && classes.selected)}
@@ -72,13 +78,22 @@ const Item: React.FC<Props> = ({
         <CardContent>
           <Grid container spacing={0}>
             <Grid item xs={3}>
-              <Avatar alt={authorName} src={authorImageUrl} />
+              <Avatar
+                alt={authorName}
+                src={authorImageUrl}
+                onClick={handleClickChannelLink}
+              />
             </Grid>
             <Grid item xs={9}>
               <Typography gutterBottom variant="subtitle2" component="h4">
                 {question}
               </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="p"
+                onClick={handleClickChannelLink}
+              >
                 {authorName}
               </Typography>
             </Grid>
