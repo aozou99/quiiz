@@ -13,6 +13,7 @@ import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import UnsubscribeIcon from "@material-ui/icons/Unsubscribe";
 import { Redirect } from "react-router-dom";
 import ChannelService from "services/channel/ChannelService";
+import { DummyChannelHeader } from "components/main/quiz/channel/sub/DummyChannelHeader";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,43 +49,48 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
     hasError,
   } = useFetchChannelHeader(channelId);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [subscribedUsers, setSubscribedUsers] = useState(0);
 
   useEffect(() => {
-    setIsSubscribed(initialSubscState);
-  }, [initialSubscState]);
+    if (loaded) {
+      setIsSubscribed(initialSubscState);
+      setSubscribedUsers(channelHeader.subscribedCount);
+    }
+  }, [initialSubscState, loaded]);
 
   return loaded && hasError ? (
     <Redirect to={"/error?src=404"} />
-  ) : (
+  ) : loaded ? (
     <Box className={classes.root}>
-      {loaded && (
-        <Box className={classes.container}>
-          <Avatar src={channelHeader.channelLogo} className={classes.avator} />
-          <Box>
-            <Typography variant={"h6"}>{channelHeader.channelName}</Typography>
-            <Typography variant={"subtitle2"}>
-              チャンネル登録者数 {channelHeader.subscribedCount}人
-            </Typography>
-          </Box>
-          <Button
-            variant="outlined"
-            color={isSubscribed ? "secondary" : "primary"}
-            endIcon={isSubscribed ? <UnsubscribeIcon /> : <SubscriptionsIcon />}
-            size="large"
-            className={classes.subscribeButton}
-            onClick={() => {
-              ChannelService.subscribeOrCancel(channelId).then(
-                (latestIsSubscribed) => {
-                  setIsSubscribed(latestIsSubscribed);
-                  refresh();
-                }
-              );
-            }}
-          >
-            {isSubscribed ? "チャンネル解除" : "チャンネル登録"}
-          </Button>
+      <Box className={classes.container}>
+        <Avatar src={channelHeader.channelLogo} className={classes.avator} />
+        <Box>
+          <Typography variant={"h6"}>{channelHeader.channelName}</Typography>
+          <Typography variant={"subtitle2"}>
+            チャンネル登録者数 {subscribedUsers}人
+          </Typography>
         </Box>
-      )}
+        <Button
+          variant="outlined"
+          color={isSubscribed ? "secondary" : "primary"}
+          endIcon={isSubscribed ? <UnsubscribeIcon /> : <SubscriptionsIcon />}
+          size="large"
+          className={classes.subscribeButton}
+          onClick={() => {
+            ChannelService.subscribeOrCancel(channelId).then(
+              (latestIsSubscribed) => {
+                setIsSubscribed(latestIsSubscribed);
+                setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a));
+                setTimeout(refresh, 1000);
+              }
+            );
+          }}
+        >
+          {isSubscribed ? "チャンネル解除" : "チャンネル登録"}
+        </Button>
+      </Box>
     </Box>
+  ) : (
+    <DummyChannelHeader />
   );
 };

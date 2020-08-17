@@ -34,3 +34,5 @@ exports.onUserCraete = require("./function/onUserCreate");
 exports.onDeletePlayList = require("./function/onDeletePlayList");
 exports.onSubscribeChannel = require("./function/onSubscribeChannel");
 exports.onUnSubscribeChannel = require("./function/onUnSubscribeChannel");
+exports.onLikeQuiz = require("./function/onLikeQuiz");
+exports.onUnLikeQuiz = require("./function/onUnLikeQuiz");

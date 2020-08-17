@@ -3,6 +3,7 @@ import "firebase/firestore";
 import "firebase/functions";
 import { useState, useEffect } from "react";
 import imageUrl from "utils/helper/imageUrl";
+import { getCounter } from "utils/helper/counter";
 
 export const useFetchFirstDocuments = () => {
   const [firstDocuments, setFirstDocuments] = useState<any>();
@@ -50,7 +51,7 @@ export const useFetchThumbnailUrl = (
   return { imgSrc, loaded };
 };
 
-export const useFetchLike = (quizId: string, goodClick: boolean) => {
+export const useFetchLike = (quizId: string, likeClick: boolean) => {
   const [isLike, setIsLike] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -58,38 +59,44 @@ export const useFetchLike = (quizId: string, goodClick: boolean) => {
     let mounted = true;
     const uid = firebase.auth().currentUser?.uid;
     if (!uid) return;
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .collection("likedQuizzes")
-      .doc(quizId)
-      .get()
-      .then((snapshot) => {
-        // いいね状態を反映
+    Promise.all([
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .collection("likedQuizzes")
+        .doc(quizId)
+        .get()
+        .then((snapshot) => {
+          // いいね状態を反映
+          if (mounted) {
+            setIsLike(snapshot.exists);
+          }
+        }),
+      getCounter(
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(uid)
+          .collection("quizzes")
+          .doc(quizId)
+          .collection("counters")
+          .doc("likedUsers")
+      ).then((conunt) => {
         if (mounted) {
-          setIsLike(snapshot.exists);
-        }
-        return snapshot.data()?.quizRef.get() as Promise<
-          firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
-        >;
-      })
-      .then((snapshot) => {
-        if (mounted) {
-          const conunt =
-            snapshot && snapshot.exists ? snapshot.data()?.likeCount || 0 : 0;
           setLikeCount(conunt);
         }
-      })
-      .then(() => {
-        if (mounted) {
-          setLoaded(true);
-        }
-      });
+      }),
+    ]).finally(() => {
+      if (mounted) {
+        setLoaded(true);
+      }
+    });
+
     return () => {
       mounted = false;
     };
-  }, [quizId, goodClick]);
+  }, [quizId, likeClick]);
   return { isLike, loaded, likeCount };
 };
 

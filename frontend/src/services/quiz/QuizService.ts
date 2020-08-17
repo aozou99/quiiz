@@ -135,65 +135,58 @@ class QuizService extends Service {
       .get();
     return doc.ref;
   }
-  public likeOrCancel(
-    { quizId, authorId }: { quizId: string; authorId: string },
-    callback: () => void
-  ) {
-    const uid = firebase.auth().currentUser?.uid;
-    if (!uid) return;
+  public async likeOrCancel({
+    quizId,
+    authorId,
+  }: {
+    quizId: string;
+    authorId: string;
+  }) {
+    const me = this.logInUserOrFailed();
+    const batch = firebase.firestore().batch();
     const likedQuizRef = this.quizzesCollection(authorId).doc(quizId);
-    const likedUserRef = likedQuizRef.collection("likedUsers").doc(uid);
+    const likedUserRef = likedQuizRef.collection("likedUsers").doc(me.uid);
     const myLikedQuizRef = this.userRef
-      .doc(uid)
+      .doc(me.uid)
       .collection("likedQuizzes")
       .doc(quizId);
 
-    firebase
-      .firestore()
-      .runTransaction(async (transaction) => {
-        // トランザクション読み込み
-        const likedUserDoc = await transaction.get(likedUserRef);
-        const myLikedQuizDoc = await transaction.get(myLikedQuizRef);
-        // お気に入り解除
-        if (likedUserDoc.exists) {
-          // お気に入り情報削除
-          transaction.delete(likedUserDoc.ref);
-          if (myLikedQuizDoc.exists) transaction.delete(myLikedQuizDoc.ref);
-          // お気に入り数を減らす
-          transaction.update(likedQuizRef, {
-            likeCount: firebase.firestore.FieldValue.increment(-1),
-          });
-          transaction.update(this.userRef.doc(uid), {
-            likeQuizCount: firebase.firestore.FieldValue.increment(-1),
-          });
-          return;
-        }
-        // お気に入り情報追加
-        transaction.set(likedUserDoc.ref, {
-          id: uid,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        transaction.set(
-          this.userRef
-            .doc(uid)
-            .collection("likedQuizzes")
-            .doc(quizId),
-          {
-            id: quizId,
-            quizRef: likedQuizRef,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          }
-        );
-        // お気に入り数を増やす
-        transaction.update(likedQuizRef, {
-          likeCount: firebase.firestore.FieldValue.increment(1),
-        });
-        transaction.update(this.userRef.doc(uid), {
-          likeQuizCount: firebase.firestore.FieldValue.increment(1),
-        });
-      })
-      .then(() => callback())
-      .catch((e) => console.error("Transaction failed: ", e));
+    const [likedQuiz, likedUser, myLikedQuiz] = await Promise.all([
+      likedQuizRef.get(),
+      likedUserRef.get(),
+      myLikedQuizRef.get(),
+    ]);
+    if (!likedQuiz.exists) {
+      throw new Error("QuizNotExists");
+    }
+    if (likedUser.exists && myLikedQuiz.exists) {
+      // 削除
+      batch.delete(likedUser.ref);
+      batch.delete(myLikedQuiz.ref);
+      // カウントダウン
+      batch.update(this.userRef.doc(me.uid), {
+        likeQuizCount: firebase.firestore.FieldValue.increment(-1),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    } else if (!likedUser.exists && !myLikedQuiz.exists) {
+      // 登録
+      batch.set(likedUser.ref, {
+        id: me.uid,
+        ref: this.userRef.doc(me.uid),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      batch.set(myLikedQuiz.ref, {
+        id: quizId,
+        ref: likedQuizRef,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+      // カウントアップ
+      batch.update(this.userRef.doc(me.uid), {
+        likeQuizCount: firebase.firestore.FieldValue.increment(1),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+    return batch.commit().then(() => !(likedUser.exists && myLikedQuiz.exists));
   }
 }
 

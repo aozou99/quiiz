@@ -79,6 +79,13 @@ service cloud.firestore {
           allow update:
             if isUserAuthenticated(likedUserID)
         }
+
+        match /counters/{couterID} {
+          allow read;
+          match /shards/{index} {
+            allow read;
+          }
+        }
       }
 
       match /likedQuizzes/{likedQuizID} {

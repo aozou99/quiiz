@@ -121,11 +121,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   const classes = useStyles();
-  const [goodClick, setGoodClick] = useState(false);
+  const [likeClick, setLikeClick] = useState(false);
   const [isOpenList, setIsOpenList] = useState(false);
   const { loaded: likeLoaded, isLike, likeCount } = useFetchLike(
     selected.id,
-    goodClick
+    likeClick
   );
   const { checked, loaded: checkListLoaded, update } = useCheckList(
     selected.id
@@ -138,12 +138,12 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     e.selectD,
   ];
   const handleGood = () => {
-    QuizService.likeOrCancel(
-      { quizId: selected.id, authorId: selected.authorId },
-      () => {
-        setGoodClick(!goodClick);
-      }
-    );
+    QuizService.likeOrCancel({
+      quizId: selected.id,
+      authorId: selected.authorId,
+    }).then(() => {
+      setTimeout(() => setLikeClick(!likeClick), 100);
+    });
   };
 
   return (
@@ -186,11 +186,9 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
             <FavoriteIcon
               className={clsx(likeLoaded && isLike && classes.iconSelectedPink)}
             />
-            {likeLoaded && (
-              <Typography variant={"subtitle1"} className={classes.likeCount}>
-                {likeCount}
-              </Typography>
-            )}
+            <Typography variant={"subtitle1"} className={classes.likeCount}>
+              {likeLoaded ? likeCount : 0}
+            </Typography>
           </IconButton>
         </Tooltip>
         <Tooltip title="リストに追加">
