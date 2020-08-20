@@ -92,25 +92,28 @@ export const useCheckList = (quizId: string) => {
   return { checked, playLists, loaded, update: () => setClick(!click) };
 };
 
-export const useFetchMyPlayList = () => {
+export const useFetchPlayListsWithThumbnail = (parameters?: {
+  channelId?: string;
+}) => {
   const [loaded, setLoaded] = useState(false);
-  const [myPlayLists, setMyPlayLists] = useState<any>();
+  const [playLists, setPlayLists] = useState<any>();
+  const [apiOptions] = useState(parameters);
   useEffect(() => {
     let mounted = true;
     firebase
       .functions()
-      .httpsCallable("pagingMyPlayList")()
+      .httpsCallable("pagingPlayList")({ ...apiOptions })
       .then((res) => {
         if (mounted) {
-          setMyPlayLists(res.data);
+          setPlayLists(res.data);
           setLoaded(true);
         }
       });
     return () => {
       mounted = false;
     };
-  }, []);
-  return { loaded, myPlayLists };
+  }, [apiOptions]);
+  return { loaded, playLists };
 };
 
 export const useFetchPlayListContents = (playListId: string) => {

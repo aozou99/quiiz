@@ -10,7 +10,6 @@ export const useFetchChannelHeader = (channelId: string) => {
   const [hasError, setHasError] = useState(false);
   const { loaded: subscLoaded, isSubscribed } = useIsSubscribed(channelId);
   const [headerLoaded, setHeaderLoaded] = useState(false);
-  const [refreshCount, setRefreshCount] = useState(0);
 
   useEffect(() => {
     let mounted = true;
@@ -29,7 +28,7 @@ export const useFetchChannelHeader = (channelId: string) => {
     return () => {
       mounted = false;
     };
-  }, [channelId, refreshCount]);
+  }, [channelId]);
 
   useEffect(() => {
     setLoaded(headerLoaded && subscLoaded);
@@ -39,9 +38,6 @@ export const useFetchChannelHeader = (channelId: string) => {
     loaded,
     channelHeader,
     isSubscribed,
-    refresh: () => {
-      setRefreshCount((a) => ++a);
-    },
     hasError,
   };
 };

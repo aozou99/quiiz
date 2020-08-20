@@ -5,7 +5,11 @@ import { useState, useEffect } from "react";
 import imageUrl from "utils/helper/imageUrl";
 import { getCounter } from "utils/helper/counter";
 
-export const useFetchFirstDocuments = () => {
+type parameters = {
+  channelId?: string;
+};
+export const useFetchFirstDocuments = (parameters?: parameters) => {
+  const [apiOptions] = useState(parameters);
   const [firstDocuments, setFirstDocuments] = useState<any>();
   const [loaded, setLoaded] = useState(false);
 
@@ -13,7 +17,7 @@ export const useFetchFirstDocuments = () => {
     let mounted = true;
     firebase
       .functions()
-      .httpsCallable("pagingQuiz")()
+      .httpsCallable("pagingQuiz")({ ...apiOptions })
       .then((res) => {
         if (mounted) {
           setFirstDocuments(res.data);
@@ -23,7 +27,7 @@ export const useFetchFirstDocuments = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [apiOptions]);
 
   return { firstDocuments, loaded };
 };

@@ -10,16 +10,22 @@ import {
 import React, { useState, useEffect } from "react";
 import { useFetchChannelHeader } from "services/channel/ChannelHooks";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
-import UnsubscribeIcon from "@material-ui/icons/Unsubscribe";
+import SentimentVerySatisfiedIcon from "@material-ui/icons/SentimentVerySatisfied";
 import { Redirect } from "react-router-dom";
 import ChannelService from "services/channel/ChannelService";
-import { DummyChannelHeader } from "components/main/quiz/channel/sub/DummyChannelHeader";
+import { DummyChannelHeader } from "components/main/quiz/channel/sub/header/DummyChannelHeader";
+import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: "white",
-      padding: theme.spacing(3, 20, 1),
+      backgroundColor: theme.palette.background.default,
+      [theme.breakpoints.up("sm")]: {
+        padding: theme.spacing(3, 20, 1),
+      },
+      [theme.breakpoints.down("sm")]: {
+        padding: theme.spacing(3, 8, 1),
+      },
     },
     avator: {
       width: theme.spacing(10),
@@ -45,18 +51,26 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
     loaded,
     channelHeader,
     isSubscribed: initialSubscState,
-    refresh,
     hasError,
   } = useFetchChannelHeader(channelId);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedUsers, setSubscribedUsers] = useState(0);
+  const [unsubscDialogOpen, setUnsubscDialogOpen] = useState(false);
+
+  const handleSubscribeOrCancel = () => {
+    ChannelService.subscribeOrCancel(channelId).then((latestIsSubscribed) => {
+      setIsSubscribed(latestIsSubscribed);
+      setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a));
+      setUnsubscDialogOpen(false);
+    });
+  };
 
   useEffect(() => {
     if (loaded) {
       setIsSubscribed(initialSubscState);
       setSubscribedUsers(channelHeader.subscribedCount);
     }
-  }, [initialSubscState, loaded]);
+  }, [initialSubscState, loaded, channelHeader]);
 
   return loaded && hasError ? (
     <Redirect to={"/error?src=404"} />
@@ -71,24 +85,33 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
           </Typography>
         </Box>
         <Button
-          variant="outlined"
-          color={isSubscribed ? "secondary" : "primary"}
-          endIcon={isSubscribed ? <UnsubscribeIcon /> : <SubscriptionsIcon />}
+          variant={isSubscribed ? "contained" : "outlined"}
+          color={isSubscribed ? "default" : "primary"}
+          endIcon={
+            isSubscribed ? (
+              <SentimentVerySatisfiedIcon />
+            ) : (
+              <SubscriptionsIcon />
+            )
+          }
           size="large"
+          disableElevation
           className={classes.subscribeButton}
-          onClick={() => {
-            ChannelService.subscribeOrCancel(channelId).then(
-              (latestIsSubscribed) => {
-                setIsSubscribed(latestIsSubscribed);
-                setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a));
-                setTimeout(refresh, 1000);
-              }
-            );
-          }}
+          onClick={
+            isSubscribed
+              ? () => setUnsubscDialogOpen(true)
+              : handleSubscribeOrCancel
+          }
         >
-          {isSubscribed ? "チャンネル解除" : "チャンネル登録"}
+          {isSubscribed ? "登録済み" : "チャンネル登録"}
         </Button>
       </Box>
+      <BasicConfirmDialog
+        body={`${channelHeader.channelName}のチャンネル登録を解除しますか？`}
+        yesOnClick={handleSubscribeOrCancel}
+        open={unsubscDialogOpen}
+        setOpen={setUnsubscDialogOpen}
+      />
     </Box>
   ) : (
     <DummyChannelHeader />

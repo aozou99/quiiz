@@ -6,18 +6,30 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  Divider,
+  makeStyles,
+  Theme,
+  createStyles,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
 
 type State = {
-  title: string;
+  title?: string;
   body: string | ReactNode;
   yesOnClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   open: boolean;
   setOpen: (open: boolean) => any;
 };
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    actions: {
+      padding: theme.spacing(1.5),
+    },
+  })
+);
 
 const BasicConfirmDialog: React.FC<State> = ({
   title,
@@ -27,6 +39,7 @@ const BasicConfirmDialog: React.FC<State> = ({
   open,
   setOpen,
 }) => {
+  const classes = useStyles();
   const handleClose = () => {
     setOpen(false);
   };
@@ -38,13 +51,14 @@ const BasicConfirmDialog: React.FC<State> = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      {title && <DialogTitle id="alert-dialog-title">{title}</DialogTitle>}
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           {body}
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <Divider />
+      <DialogActions className={classes.actions}>
         <Button
           variant="outlined"
           onClick={noOnClick || handleClose}

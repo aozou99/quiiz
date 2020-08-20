@@ -8,7 +8,7 @@ const endpoints = [
   "deleteQuiz",
   "pagingQuiz",
   "pagingMyLikeQuiz",
-  "pagingMyPlayList",
+  "pagingPlayList",
   "pagingPlayListContents",
   "getChannelHeader",
 ];

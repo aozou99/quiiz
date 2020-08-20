@@ -5,8 +5,13 @@ import Skeleton from "@material-ui/lab/Skeleton";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: "white",
-      padding: theme.spacing(3, 20, 1),
+      backgroundColor: theme.palette.background.default,
+      [theme.breakpoints.up("sm")]: {
+        padding: theme.spacing(3, 20, 1),
+      },
+      [theme.breakpoints.down("sm")]: {
+        padding: theme.spacing(3, 8, 1),
+      },
     },
     avator: {
       width: theme.spacing(10),

@@ -9,7 +9,7 @@ module.exports = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     return;
   }
-  const uid = context.auth.uid;
+  const uid = data?.channelId || context.auth.uid;
   const baseQuery = db
     .collection("users")
     .doc(uid)
@@ -17,7 +17,7 @@ module.exports = functions.https.onCall(async (data, context) => {
     .orderBy("updatedAt")
     .limit(8);
 
-  if (data && data.date) {
+  if (data?.date) {
     baseQuery.startAfter(data.date);
   }
 

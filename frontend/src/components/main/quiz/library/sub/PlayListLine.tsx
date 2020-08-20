@@ -8,7 +8,7 @@ import {
 import { grey } from "@material-ui/core/colors";
 import PlaylistPlayIcon from "@material-ui/icons/PlaylistPlay";
 import React from "react";
-import { useFetchMyPlayList } from "services/playList/PlayListHooks";
+import { useFetchPlayListsWithThumbnail } from "services/playList/PlayListHooks";
 import Item from "components/common/playList/Item";
 import DummyItem from "components/common/playList/DummyItem";
 import { useHistory } from "react-router-dom";
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const PlayListLine: React.FC = () => {
   const classes = useStyles();
-  const { myPlayLists, loaded } = useFetchMyPlayList();
+  const { playLists, loaded } = useFetchPlayListsWithThumbnail();
   const history = useHistory();
 
   return (
@@ -51,7 +51,7 @@ const PlayListLine: React.FC = () => {
       </Box>
       <Box className={classes.list}>
         {loaded
-          ? myPlayLists.map((item: any) => (
+          ? playLists.map((item: any) => (
               <Item
                 key={item.id}
                 thumbnail={item.thumbnail["640x360"]}
