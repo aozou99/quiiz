@@ -10,6 +10,7 @@ export const useFetchChannelHeader = (channelId: string) => {
   const [hasError, setHasError] = useState(false);
   const { loaded: subscLoaded, isSubscribed } = useIsSubscribed(channelId);
   const [headerLoaded, setHeaderLoaded] = useState(false);
+  const [editable, setEditable] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -17,7 +18,10 @@ export const useFetchChannelHeader = (channelId: string) => {
       .functions()
       .httpsCallable("getChannelHeader")({ channelId })
       .then((res) => {
-        if (mounted) setChannelHeader(res.data);
+        if (mounted) {
+          setChannelHeader(res.data);
+          setEditable(firebase.auth().currentUser?.uid === channelId);
+        }
       })
       .catch((_e) => {
         if (mounted) setHasError(true);
@@ -38,6 +42,7 @@ export const useFetchChannelHeader = (channelId: string) => {
     loaded,
     channelHeader,
     isSubscribed,
+    editable,
     hasError,
   };
 };

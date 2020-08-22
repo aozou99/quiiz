@@ -6,6 +6,7 @@ import {
   Theme,
   createStyles,
   Button,
+  IconButton,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { useFetchChannelHeader } from "services/channel/ChannelHooks";
@@ -15,6 +16,12 @@ import { Redirect } from "react-router-dom";
 import ChannelService from "services/channel/ChannelService";
 import { DummyChannelHeader } from "components/main/quiz/channel/sub/header/DummyChannelHeader";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
+import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
+import clsx from "clsx";
+import { EditableTextField } from "components/common/input/EditableTextField";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,7 +37,6 @@ const useStyles = makeStyles((theme: Theme) =>
     avator: {
       width: theme.spacing(10),
       height: theme.spacing(10),
-      marginRight: theme.spacing(3),
     },
     subscribeButton: {
       marginLeft: "auto",
@@ -40,6 +46,22 @@ const useStyles = makeStyles((theme: Theme) =>
       placeContent: "center",
       placeItems: "center",
     },
+    channelLogo: {
+      display: "flex",
+      placeItems: "center",
+      placeContent: "center",
+      marginRight: theme.spacing(3),
+    },
+    editLogo: {
+      position: "absolute",
+      backgroundColor: "rgba(0, 0, 0, 0.54)",
+      "&:hover": {
+        backgroundColor: "rgba(0, 0, 0, 0.54)",
+      },
+    },
+    displayNone: {
+      display: "none",
+    },
   })
 );
 
@@ -47,15 +69,19 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
   channelId,
 }) => {
   const classes = useStyles();
+  const [user, authLoading] = useAuthState(firebase.auth());
   const {
     loaded,
     channelHeader,
     isSubscribed: initialSubscState,
+    editable,
     hasError,
   } = useFetchChannelHeader(channelId);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedUsers, setSubscribedUsers] = useState(0);
   const [unsubscDialogOpen, setUnsubscDialogOpen] = useState(false);
+  const [onHoverLogo, setOnHoverLogo] = useState(false);
+  const [channelName, setChannelName] = useState("");
 
   const handleSubscribeOrCancel = () => {
     ChannelService.subscribeOrCancel(channelId).then((latestIsSubscribed) => {
@@ -69,17 +95,51 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
     if (loaded) {
       setIsSubscribed(initialSubscState);
       setSubscribedUsers(channelHeader.subscribedCount);
+      setChannelName(channelHeader.channelName);
     }
   }, [initialSubscState, loaded, channelHeader]);
 
   return loaded && hasError ? (
     <Redirect to={"/error?src=404"} />
-  ) : loaded ? (
+  ) : loaded && !authLoading ? (
     <Box className={classes.root}>
       <Box className={classes.container}>
-        <Avatar src={channelHeader.channelLogo} className={classes.avator} />
+        <Box
+          className={classes.channelLogo}
+          onMouseEnter={() => {
+            setOnHoverLogo(true);
+          }}
+          onMouseLeave={() => {
+            setOnHoverLogo(false);
+          }}
+        >
+          <Avatar src={channelHeader.channelLogo} className={classes.avator} />
+          <IconButton
+            aria-label="edit"
+            size="medium"
+            className={clsx(
+              classes.editLogo,
+              (!editable || !onHoverLogo) && classes.displayNone
+            )}
+            disableRipple
+            disableFocusRipple
+          >
+            <PhotoCameraIcon fontSize="large" style={{ color: "white" }} />
+          </IconButton>
+        </Box>
         <Box>
-          <Typography variant={"h6"}>{channelHeader.channelName}</Typography>
+          <EditableTextField
+            editable={editable}
+            value={channelName}
+            valueName={"チャンネル名"}
+            setValue={setChannelName}
+            maxLength={50}
+            onSave={(newChannelName) =>
+              user?.updateProfile({
+                displayName: newChannelName,
+              })
+            }
+          />
           <Typography variant={"subtitle2"}>
             チャンネル登録者数 {subscribedUsers}人
           </Typography>
