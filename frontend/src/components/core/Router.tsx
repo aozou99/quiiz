@@ -16,17 +16,21 @@ export default () => {
   const [user, loading] = useAuthState(firebase.auth());
 
   const authRedirectTop = (el: JSX.Element) => {
-    return authRedirect("/", el);
+    return authRedirect(!!user, "/", el);
   };
 
   const guestRedirectSignin = (el: JSX.Element) => {
-    return authRedirect("/signin", el);
+    return authRedirect(!user, "/signin", el);
   };
 
-  const authRedirect = (redirectTo: string, el: JSX.Element) => {
+  const authRedirect = (
+    authState: boolean,
+    redirectTo: string,
+    el: JSX.Element
+  ) => {
     return ({ location }: any) => {
       if (!loading) {
-        return !user ? (
+        return authState ? (
           <Redirect
             to={{
               pathname: redirectTo,
