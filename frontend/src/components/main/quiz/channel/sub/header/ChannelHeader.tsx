@@ -7,12 +7,13 @@ import {
   createStyles,
   Button,
   IconButton,
+  Snackbar,
 } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useFetchChannelHeader } from "services/channel/ChannelHooks";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import SentimentVerySatisfiedIcon from "@material-ui/icons/SentimentVerySatisfied";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import ChannelService from "services/channel/ChannelService";
 import { DummyChannelHeader } from "components/main/quiz/channel/sub/header/DummyChannelHeader";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
@@ -22,6 +23,13 @@ import { EditableTextField } from "components/common/input/EditableTextField";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
 import "firebase/auth";
+import CropDialog from "components/common/dialog/CropDialog";
+import doMatchRatios from "utils/helper/doMatchRatios";
+import AuthService from "services/auth/AuthService";
+import { BackDropContext } from "components/main/quiz/Main";
+import { LinearWithLabel } from "components/common/feedback/LinearWithLabel";
+import Alert from "@material-ui/lab/Alert";
+import PostAddIcon from "@material-ui/icons/PostAdd";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,6 +70,11 @@ const useStyles = makeStyles((theme: Theme) =>
     displayNone: {
       display: "none",
     },
+    inputFileBtnHide: {
+      opacity: 0,
+      appearance: "none",
+      position: "absolute",
+    },
   })
 );
 
@@ -82,13 +95,22 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
   const [unsubscDialogOpen, setUnsubscDialogOpen] = useState(false);
   const [onHoverLogo, setOnHoverLogo] = useState(false);
   const [channelName, setChannelName] = useState("");
-
+  const [openCropDialog, setOpenCronpDialog] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackBarText, setSnackBarText] = useState("");
+  const [originImage, setOriginImage] = useState<string | undefined>(undefined);
+  const history = useHistory();
+  const { setBackDropChildNode, setOpenBackDrop } = useContext(BackDropContext);
   const handleSubscribeOrCancel = () => {
     ChannelService.subscribeOrCancel(channelId).then((latestIsSubscribed) => {
       setIsSubscribed(latestIsSubscribed);
       setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a));
       setUnsubscDialogOpen(false);
     });
+  };
+  const setSnackBar = (text: string) => {
+    setSnackBarText(text);
+    setOpenSnackBar(true);
   };
 
   useEffect(() => {
@@ -98,6 +120,30 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
       setChannelName(channelHeader.channelName);
     }
   }, [initialSubscState, loaded, channelHeader]);
+
+  const handleProfileImageChanged = (imageUrl: string) => {
+    setBackDropChildNode(
+      <LinearWithLabel progress={0} label={`リサイズ中...`} />
+    );
+    setOpenBackDrop(true);
+    AuthService.updatePhotoUrl(
+      imageUrl,
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setBackDropChildNode(
+          <LinearWithLabel
+            progress={progress}
+            label={`アップロード中...(${Math.floor(progress)}%)`}
+          />
+        );
+      },
+      () => {
+        setOpenBackDrop(false);
+        setSnackBar("画像の変更が完了しました！");
+      }
+    );
+  };
 
   return loaded && hasError ? (
     <Redirect to={"/error?src=404"} />
@@ -125,6 +171,26 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
             disableFocusRipple
           >
             <PhotoCameraIcon fontSize="large" style={{ color: "white" }} />
+            <input
+              type="file"
+              className={classes.inputFileBtnHide}
+              accept="image/*"
+              // id="thumbnail"
+              onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                if (
+                  e.target.files !== null &&
+                  (e.target.files?.length || 0) > 0
+                ) {
+                  const url = URL.createObjectURL(e.target.files[0]);
+                  setOriginImage(url);
+                  if (!(await doMatchRatios(url, 1, 1))) {
+                    setOpenCronpDialog(true);
+                  } else {
+                    handleProfileImageChanged(url);
+                  }
+                }
+              }}
+            />
           </IconButton>
         </Box>
         <Box>
@@ -135,36 +201,54 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
             setValue={setChannelName}
             maxLength={50}
             onSave={(newChannelName) =>
-              user?.updateProfile({
-                displayName: newChannelName,
-              })
+              user
+                ?.updateProfile({
+                  displayName: newChannelName,
+                })
+                .then(() => {
+                  setSnackBar("チャンネル名を変更しました！");
+                })
             }
           />
           <Typography variant={"subtitle2"}>
             チャンネル登録者数 {subscribedUsers}人
           </Typography>
         </Box>
-        <Button
-          variant={isSubscribed ? "contained" : "outlined"}
-          color={isSubscribed ? "default" : "primary"}
-          endIcon={
-            isSubscribed ? (
-              <SentimentVerySatisfiedIcon />
-            ) : (
-              <SubscriptionsIcon />
-            )
-          }
-          size="large"
-          disableElevation
-          className={classes.subscribeButton}
-          onClick={
-            isSubscribed
-              ? () => setUnsubscDialogOpen(true)
-              : handleSubscribeOrCancel
-          }
-        >
-          {isSubscribed ? "登録済み" : "チャンネル登録"}
-        </Button>
+        {editable ? (
+          <Button
+            variant={"outlined"}
+            color={"primary"}
+            endIcon={<PostAddIcon />}
+            size="large"
+            disableElevation
+            className={classes.subscribeButton}
+            onClick={() => history.push("/studio")}
+          >
+            Quiz Studioへ
+          </Button>
+        ) : (
+          <Button
+            variant={isSubscribed ? "contained" : "outlined"}
+            color={isSubscribed ? "default" : "primary"}
+            endIcon={
+              isSubscribed ? (
+                <SentimentVerySatisfiedIcon />
+              ) : (
+                <SubscriptionsIcon />
+              )
+            }
+            size="large"
+            disableElevation
+            className={classes.subscribeButton}
+            onClick={
+              isSubscribed
+                ? () => setUnsubscDialogOpen(true)
+                : handleSubscribeOrCancel
+            }
+          >
+            {isSubscribed ? "登録済み" : "チャンネル登録"}
+          </Button>
+        )}
       </Box>
       <BasicConfirmDialog
         body={`${channelHeader.channelName}のチャンネル登録を解除しますか？`}
@@ -172,6 +256,24 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
         open={unsubscDialogOpen}
         setOpen={setUnsubscDialogOpen}
       />
+      <CropDialog
+        open={openCropDialog}
+        setOpen={setOpenCronpDialog}
+        imgUrl={originImage || ""}
+        onCompleted={handleProfileImageChanged}
+        onClose={() => {}}
+        aspect={1 / 1}
+      />
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackBar(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert severity="success" onClose={() => setOpenSnackBar(false)}>
+          {snackBarText}
+        </Alert>
+      </Snackbar>
     </Box>
   ) : (
     <DummyChannelHeader />

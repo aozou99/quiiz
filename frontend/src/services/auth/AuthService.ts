@@ -1,8 +1,11 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/functions";
+import "firebase/storage";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
+import Service from "services/Service";
+import Jimp from "jimp";
 
 type AuthArgs = {
   displayName?: string;
@@ -10,7 +13,7 @@ type AuthArgs = {
   password: string;
 };
 
-class AuthService {
+class AuthService extends Service {
   ui!: firebaseui.auth.AuthUI;
 
   async onAuthStateChanged(callback: (user: firebase.User | null) => any) {
@@ -54,6 +57,47 @@ class AuthService {
       ],
       signInFlow: "popup",
       signInSuccessUrl: "/",
+    });
+  }
+
+  async updatePhotoUrl(
+    imageUrl: string,
+    onProgress?: (snapshot: firebase.storage.UploadTaskSnapshot) => void,
+    onCompleted?: () => void
+  ) {
+    const user = this.logInUserOrFailed();
+
+    const userProfileStorage = firebase.app().storage("gs://quiiz-b06ee");
+    const storageRef = userProfileStorage.ref(
+      `images/user-profile/${user.uid}.jpg`
+    );
+    const jimpImg = await Jimp.read(imageUrl);
+    const resizedImgUrl = await jimpImg
+      .resize(512, 512)
+      .quality(100)
+      .getBase64Async(Jimp.MIME_JPEG);
+
+    // dataURLをBlobに変換する
+    const response = await fetch(resizedImgUrl);
+    // アップロード
+    response.blob().then((blob) => {
+      const task = storageRef.put(blob);
+      task.on(
+        firebase.storage.TaskEvent.STATE_CHANGED,
+        onProgress || null,
+        null,
+        () => {
+          storageRef.getDownloadURL().then((url) => {
+            user
+              .updateProfile({
+                photoURL: url,
+              })
+              .then(() => {
+                onCompleted && onCompleted();
+              });
+          });
+        }
+      );
     });
   }
 }

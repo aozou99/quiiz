@@ -10,6 +10,7 @@
     "@reduxjs/toolkit": "^1.4.0",
     "firebase": "^7.15.5",
     "firebaseui": "^4.5.1",
+    "jimp": "^0.16.0",
     "material-table": "^1.63.1",
     "material-ui-chip-input": "^2.0.0-beta.2",
     "object-hash": "^2.0.3",

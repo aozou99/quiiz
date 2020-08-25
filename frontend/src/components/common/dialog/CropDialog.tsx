@@ -19,7 +19,9 @@ type State = {
   open: boolean;
   setOpen: (open: boolean) => any;
   imgUrl: string;
-  setCroppedImage: (croppedImage: string | undefined) => any;
+  aspect: number;
+  onCompleted: (cropedImage: string) => any;
+  onClose: () => any;
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -70,8 +72,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const CropDialog: React.FC<State> = ({
   open,
   setOpen,
-  setCroppedImage,
+  onCompleted,
+  onClose,
   imgUrl,
+  aspect,
 }) => {
   const handleClose = () => {
     setOpen(false);
@@ -98,16 +102,12 @@ const CropDialog: React.FC<State> = ({
         croppedAreaPixels,
         rotation
       );
-      setCroppedImage(croppedImage);
+      onCompleted(croppedImage);
     } catch (e) {
       console.error(e);
     }
     setOpen(false);
-  }, [croppedAreaPixels, rotation, imgUrl, setCroppedImage, setOpen]);
-
-  const onClose = () => {
-    setCroppedImage(undefined);
-  };
+  }, [croppedAreaPixels, rotation, imgUrl, onCompleted, setOpen]);
 
   return (
     <Dialog
@@ -125,7 +125,7 @@ const CropDialog: React.FC<State> = ({
             crop={crop}
             rotation={rotation}
             zoom={zoom}
-            aspect={16 / 9}
+            aspect={aspect}
             onCropChange={setCrop}
             onRotationChange={setRotation}
             onCropComplete={onCropComplete}

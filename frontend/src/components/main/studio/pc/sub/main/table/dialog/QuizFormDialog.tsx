@@ -25,7 +25,7 @@ import {
 import ChipInput from "material-ui-chip-input";
 import QuizService from "services/quiz/QuizService";
 import CropDialog from "components/common/dialog/CropDialog";
-import is16to9 from "utils/helper/is16to9";
+import doMatchRatios from "utils/helper/doMatchRatios";
 import imageUrl from "utils/helper/imageUrl";
 
 type State = {
@@ -349,7 +349,7 @@ const QuizFormDialog: React.FC<State> = ({
                   ) {
                     const url = URL.createObjectURL(e.target.files[0]);
                     setValue("thumbnail", url);
-                    if (!(await is16to9(url))) {
+                    if (!(await doMatchRatios(url, 16, 9))) {
                       setCropOpen(true);
                     } else {
                       setCroppedImage(url);
@@ -372,7 +372,9 @@ const QuizFormDialog: React.FC<State> = ({
             open={cropOpen}
             setOpen={setCropOpen}
             imgUrl={fields.thumbnail || ""}
-            setCroppedImage={setCroppedImage}
+            onCompleted={(cropedImage: string) => setCroppedImage(cropedImage)}
+            onClose={() => setCroppedImage(undefined)}
+            aspect={16 / 9}
           ></CropDialog>
           <ChipInput
             helperText={
