@@ -6,8 +6,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import { useSelector } from "react-redux";
-import { RootState } from "modules/core/rootReducer";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import LoginedMenu from "components/common/header/sub/LoginedMenu";
 import GuestMenu from "components/common/header/sub/GuestMenu";
@@ -15,6 +13,9 @@ import { Avatar, fade, InputBase, Tooltip } from "@material-ui/core";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import SearchIcon from "@material-ui/icons/Search";
 import { useHistory } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Main: React.FC = () => {
-  const auth = useSelector((state: RootState) => state.firebase.auth);
+  const [user, loading, error] = useAuthState(firebase.auth());
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
@@ -115,7 +116,7 @@ const Main: React.FC = () => {
             />
           </div>
           <div className={classes.grow} />
-          {auth.isEmpty && (
+          {user && (
             <div>
               <IconButton
                 aria-label="display more actions"
@@ -132,7 +133,7 @@ const Main: React.FC = () => {
               />
             </div>
           )}
-          {!auth.isEmpty && (
+          {user && (
             <div>
               <Tooltip title="クイズを作成する">
                 <IconButton
@@ -151,8 +152,8 @@ const Main: React.FC = () => {
                   color="inherit"
                 >
                   <Avatar
-                    alt={auth.displayName || ""}
-                    src={auth.photoURL || ""}
+                    alt={user.displayName || ""}
+                    src={user.photoURL || ""}
                   />
                 </IconButton>
               </Tooltip>

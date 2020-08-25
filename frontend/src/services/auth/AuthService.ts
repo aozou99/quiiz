@@ -60,6 +60,10 @@ class AuthService extends Service {
     });
   }
 
+  signOut() {
+    return firebase.auth().signOut();
+  }
+
   async updatePhotoUrl(
     imageUrl: string,
     onProgress?: (snapshot: firebase.storage.UploadTaskSnapshot) => void,

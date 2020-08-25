@@ -6,14 +6,13 @@ import {
   ListItemIcon,
   makeStyles,
   Theme,
-  createStyles
+  createStyles,
 } from "@material-ui/core";
-import { signOut } from "modules/auth/authModule";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import PostAddIcon from "@material-ui/icons/PostAdd";
+import AuthService from "services/auth/AuthService";
 
 type State = {
   anchorEl: null | HTMLElement;
@@ -25,18 +24,17 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listIcon: {
       minWidth: "inherit",
-      marginRight: theme.spacing(2)
+      marginRight: theme.spacing(2),
     },
     smDisplayNone: {
       [theme.breakpoints.up("sm")]: {
-        display: "none"
-      }
-    }
+        display: "none",
+      },
+    },
   })
 );
 
 const LoginedMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
-  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   return (
@@ -45,12 +43,12 @@ const LoginedMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right"
+        horizontal: "right",
       }}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right"
+        horizontal: "right",
       }}
       open={open}
       onClose={handleClose}
@@ -73,8 +71,9 @@ const LoginedMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
       </MenuItem>
       <MenuItem
         onClick={() => {
-          dispatch(signOut());
-          history.push("/signin");
+          AuthService.signOut().then(() => {
+            history.push("/signin");
+          });
         }}
       >
         <ListItemIcon className={classes.listIcon}>

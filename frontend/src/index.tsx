@@ -3,32 +3,13 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { Provider } from "react-redux";
-import store from "./store";
 import { BrowserRouter } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/functions";
-import { createFirestoreInstance } from "redux-firestore";
-import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 
-// react-redux-firebase config
-const rrfConfig = {
-  userProfile: "users",
-  useFirestoreForProfile: true,
-  attachAuthIsReady: true
-  // enableClaims: true // Get custom claims along with the profile
-};
-
-const rrfProps = {
-  firebase,
-  config: rrfConfig,
-  dispatch: store.dispatch,
-  createFirestoreInstance
-};
-
-fetch("/__/firebase/init.json").then(async response => {
+fetch("/__/firebase/init.json").then(async (response) => {
   const json = await response.json();
   firebase.initializeApp(json);
   // Initialize other services on firebase instance
@@ -39,18 +20,14 @@ fetch("/__/firebase/init.json").then(async response => {
     firebase.functions().useFunctionsEmulator("http://localhost:5001");
     db.settings({
       host: "localhost:8080",
-      ssl: false
+      ssl: false,
     });
   }
 
   ReactDOM.render(
-    <Provider store={store}>
-      <ReactReduxFirebaseProvider {...rrfProps}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ReactReduxFirebaseProvider>
-    </Provider>,
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
     document.getElementById("root")
   );
   // If you want your app to work offline and load faster, you can change
