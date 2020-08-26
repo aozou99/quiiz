@@ -7,6 +7,8 @@ import {
   Button,
   makeStyles,
   Theme,
+  Backdrop,
+  CircularProgress,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -67,6 +69,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: "0 16px",
     },
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 
 const CropDialog: React.FC<State> = ({
@@ -90,6 +96,7 @@ const CropDialog: React.FC<State> = ({
     x: 0,
     y: 0,
   });
+  const [openBackDrop, setOpenBackDrop] = useState(false);
 
   const onCropComplete = useCallback((_croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -97,16 +104,18 @@ const CropDialog: React.FC<State> = ({
 
   const showCroppedImage = useCallback(async () => {
     try {
+      setOpenBackDrop(true);
       const croppedImage = await getCroppedImg(
         imgUrl,
         croppedAreaPixels,
         rotation
       );
+      setOpenBackDrop(false);
+      setOpen(false);
       onCompleted(croppedImage);
     } catch (e) {
       console.error(e);
     }
-    setOpen(false);
   }, [croppedAreaPixels, rotation, imgUrl, onCompleted, setOpen]);
 
   return (
@@ -195,6 +204,9 @@ const CropDialog: React.FC<State> = ({
           決定
         </Button>
       </DialogActions>
+      <Backdrop className={classes.backdrop} open={openBackDrop}>
+        <CircularProgress />
+      </Backdrop>
     </Dialog>
   );
 };

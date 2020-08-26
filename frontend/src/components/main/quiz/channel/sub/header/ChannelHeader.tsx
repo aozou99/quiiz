@@ -141,6 +141,9 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
       () => {
         setOpenBackDrop(false);
         setSnackBar("画像の変更が完了しました！");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     );
   };
