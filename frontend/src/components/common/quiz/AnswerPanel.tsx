@@ -142,7 +142,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
       quizId: selected.id,
       authorId: selected.authorId,
     }).then(() => {
-      setTimeout(() => setLikeClick(!likeClick), 100);
+      setTimeout(() => setLikeClick(!likeClick), 300);
     });
   };
 
