@@ -27,6 +27,8 @@ import QuizService from "services/quiz/QuizService";
 import CropDialog from "components/common/dialog/CropDialog";
 import doMatchRatios from "utils/helper/doMatchRatios";
 import imageUrl from "utils/helper/imageUrl";
+import validUrl from "valid-url";
+import OgpService from "services/ogp/OgpService";
 
 type State = {
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -138,9 +140,15 @@ const QuizFormDialog: React.FC<State> = ({
   );
   const oldThumbnailRef = useRef(null);
   // 入力フォーム系
-  const { register, handleSubmit, setValue, watch, control, errors } = useForm<
-    QuizFormData
-  >({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    control,
+    setError,
+    errors,
+  } = useForm<QuizFormData>({
     mode: "onBlur",
   });
   const fields = watch();
@@ -163,9 +171,34 @@ const QuizFormDialog: React.FC<State> = ({
         },
       }
     );
+    // referencesのカスタム登録
+    register(
+      { name: "references", type: "text" },
+      {
+        validate: {
+          maxLength: (value: string) =>
+            (value?.replace(/,/g, "").length || 0) < 300 ||
+            "合計の文字数が長すぎます",
+          urlFormat: (value: string) => {
+            const notUrls = value
+              ?.split(",")
+              .filter((el) => el.length !== 0 && !validUrl.isUri(el));
+            return (
+              notUrls?.length < 1 ||
+              `${notUrls.join(",")}がURL形式ではありません`
+            );
+          },
+        },
+      }
+    );
     // thumbnailのカスタム登録
     register({ name: "thumbnail" });
-  }, [register]);
+    // referencesの初期値設定
+    setValue(
+      "references",
+      oldData?.references?.map((r) => r.requestUrl).join(",") || ""
+    );
+  }, [register, oldData, setValue]);
 
   // handler
   const handleClose = () => {
@@ -175,6 +208,25 @@ const QuizFormDialog: React.FC<State> = ({
   };
   const onSubmit = handleSubmit(async (data) => {
     setProgressing(true);
+    // validate
+    let ogps;
+    if (data.references) {
+      const urls = data.references.split(",");
+      ogps = await OgpService.getOpg(urls);
+      if (ogps.length !== urls.length) {
+        const ogpSuccessUrls = ogps.map(
+          (ogp: { requestUrl: string }) => ogp.requestUrl
+        );
+        const errorUrls = urls.filter((url) => !ogpSuccessUrls.includes(url));
+        setError("references", {
+          type: "validate",
+          message: `${errorUrls.join(",")}のページが開けません`,
+        });
+        setProgressing(false);
+        return;
+      }
+    }
+
     // サムネを再設定
     if (croppedImage !== undefined) {
       data.thumbnail = croppedImage;
@@ -185,9 +237,10 @@ const QuizFormDialog: React.FC<State> = ({
         ? await QuizService.update(
             oldData.id,
             oldThumbnailRef.current !== data.thumbnail,
-            data
+            data,
+            ogps
           )
-        : await QuizService.register(data);
+        : await QuizService.register(data, ogps);
       handleClose();
     } catch (error) {
       console.log(error);
@@ -397,7 +450,7 @@ const QuizFormDialog: React.FC<State> = ({
             }
             error={!!errors.tags}
             defaultValue={oldData?.tags || []}
-          ></ChipInput>
+          />
           {wrapTextFiled({
             id: "description",
             label: "解説",
@@ -407,6 +460,33 @@ const QuizFormDialog: React.FC<State> = ({
             rows: 2,
             defaultValue: oldData?.description || "",
           })}
+          <ChipInput
+            helperText={
+              <React.Fragment>
+                <span>カンマで区切って入力してください</span>
+                <span>
+                  {fields.references?.replace(/,/g, "").length || 0}/300
+                </span>
+              </React.Fragment>
+            }
+            FormHelperTextProps={{
+              className: classes.tagsHelperText,
+            }}
+            fullWidth
+            label={errors.references?.message || "参考記事のURL"}
+            variant="outlined"
+            newChipKeyCodes={[188]}
+            newChipKeys={[",", "<"]}
+            className={classes.chipInput}
+            onChange={(chips: string[]) =>
+              setValue("references", chips.join(","), { shouldValidate: true })
+            }
+            error={!!errors.references}
+            defaultValue={
+              oldData?.references?.map((ref) => ref.requestUrl) || []
+            }
+            fullWidthInput
+          />
         </DialogContent>
         <DialogActions>
           <Button

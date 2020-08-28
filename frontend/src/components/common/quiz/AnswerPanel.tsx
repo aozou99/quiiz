@@ -7,12 +7,14 @@ import {
   Collapse,
   Card,
   CardHeader,
-  Avatar,
   CardContent,
   makeStyles,
   createStyles,
   Theme,
   IconButton,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
 } from "@material-ui/core";
 import clsx from "clsx";
 import React, { useState } from "react";
@@ -20,29 +22,14 @@ import Choices from "components/main/quiz/preview/sub/Choices";
 import { themeColors } from "components/core/CustomeTheme";
 import FolderIcon from "@material-ui/icons/Folder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { QuizResult } from "types/QuizTypes";
+import { QuizResult, QuizDisplay } from "types/QuizTypes";
 import QuizService from "services/quiz/QuizService";
 import { useFetchLike } from "services/quiz/QuizHooks";
 import PlayListDialog from "components/common/dialog/PlayListDialog";
 import { useCheckList } from "services/playList/PlayListHooks";
 
-type quiz = {
-  id: string;
-  thumbnail: { "256x144": string; "640x360": string };
-  question: string;
-  authorId: string;
-  authorName: string;
-  authorImageUrl: string;
-  selectA: string;
-  selectB: string;
-  selectC: string;
-  selectD: string;
-  answer: 0 | 1 | 2 | 3;
-  description?: string;
-};
-
 type Props = {
-  selected: quiz;
+  selected: QuizDisplay;
   result: QuizResult;
   setResult: React.Dispatch<React.SetStateAction<QuizResult>>;
 };
@@ -112,6 +99,34 @@ const useStyles = makeStyles((theme: Theme) =>
       height: theme.spacing(3),
       backgroundColor: themeColors.primary[400],
     },
+    reference: {
+      color: themeColors.tertiary[400],
+    },
+    referenceIcon: {
+      minWidth: theme.spacing(4),
+    },
+    referenceLink: {
+      padding: theme.spacing(0.5, 1),
+      marginBottom: theme.spacing(0.5),
+      "&:hover": {
+        backgroundColor: "rgba(0, 0, 0, 1.00)",
+      },
+    },
+    borderLeftPrimary: {
+      color: themeColors.primary["A200"],
+      borderLeft: `medium solid ${themeColors.primary[400]}`,
+    },
+    borderLeftrTertiary: {
+      color: themeColors.tertiary["A200"],
+      borderLeft: `medium solid ${themeColors.tertiary[400]}`,
+    },
+    borderLeftQuaternary: {
+      color: themeColors.quaternary["A200"],
+      borderLeft: `medium solid ${themeColors.quaternary[400]}`,
+    },
+    borderBottom: {
+      borderBottom: `thin solid`,
+    },
     "@keyframes rotate": {
       "0%": { transform: "rotateY(0deg)" },
       "100%": { transform: "rotateY(360deg)" },
@@ -121,6 +136,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   const classes = useStyles();
+  const borderLeftColors = [
+    classes.borderLeftrTertiary,
+    classes.borderLeftQuaternary,
+    classes.borderLeftPrimary,
+  ];
   const [likeClick, setLikeClick] = useState(false);
   const [isOpenList, setIsOpenList] = useState(false);
   const { loaded: likeLoaded, isLike, likeCount } = useFetchLike(
@@ -131,7 +151,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     selected.id
   );
 
-  const choices = (e: quiz): [string, string, string, string] => [
+  const choices = (e: QuizDisplay): [string, string, string, string] => [
     e.selectA,
     e.selectB,
     e.selectC,
@@ -165,19 +185,58 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
       >
         <Card className={classes.description} elevation={2}>
           <CardHeader
-            title={<Typography variant={"subtitle1"}>Tips</Typography>}
-            avatar={
-              <Avatar
-                aria-label="description"
-                className={classes.avatorSizeSmall}
+            title={
+              <Typography
+                variant={"subtitle1"}
+                className={classes.borderBottom}
               >
-                ?
-              </Avatar>
+                解説
+              </Typography>
             }
           />
           <CardContent>
             <Typography variant={"body1"}>{selected.description}</Typography>
           </CardContent>
+          {selected.references?.length > 0 && (
+            <>
+              <CardHeader
+                title={
+                  <Typography
+                    variant={"subtitle1"}
+                    className={clsx(classes.reference, classes.borderBottom)}
+                  >
+                    参考記事
+                  </Typography>
+                }
+              />
+              <CardContent>
+                {selected.references.map((ref, i) => (
+                  <ListItem
+                    key={i}
+                    button
+                    component="a"
+                    href={ref.requestUrl}
+                    target={"_blank"}
+                    rel={"noopener noreferrer"}
+                    className={clsx(
+                      borderLeftColors[i % 3],
+                      classes.referenceLink
+                    )}
+                  >
+                    <ListItemIcon className={classes.referenceIcon}>
+                      <img
+                        src={`https://www.google.com/s2/favicons?domain=${
+                          new URL(ref.requestUrl).hostname
+                        }`}
+                        alt={"favicon"}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={ref.ogTitle} />
+                  </ListItem>
+                ))}
+              </CardContent>
+            </>
+          )}
         </Card>
       </Collapse>
       <Box className={classes.icons}>

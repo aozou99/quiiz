@@ -20,7 +20,7 @@ const imageUrl = async (filePath: string, imgSize: size) => {
   }
   // 有効期限を設定
   const expires = new Date();
-  expires.setHours(expires.getHours() + 1);
+  expires.setFullYear(expires.getFullYear() + 1);
 
   const url = await storageRef
     .bucket()

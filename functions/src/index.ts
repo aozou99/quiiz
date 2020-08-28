@@ -11,6 +11,7 @@ const endpoints = [
   "pagingPlayList",
   "pagingPlayListContents",
   "getChannelHeader",
+  "getOgpListByUrl",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {

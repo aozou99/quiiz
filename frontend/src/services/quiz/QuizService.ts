@@ -11,7 +11,7 @@ const uploadThumbnailPath = "images/quiz/thumbnails/";
 const defaultThumbnailPath = "images/default/quiiz-thumbnail.png";
 
 class QuizService extends Service {
-  async register(formData: QuizFormData) {
+  async register(formData: QuizFormData, ogps: any) {
     if (!this.currentUser()) {
       return;
     }
@@ -31,6 +31,7 @@ class QuizService extends Service {
         ...formData,
         id: newDoc.id,
         tags: formData.tags?.split(",") || [],
+        references: ogps || [],
         thumbnail: filepath,
         authorId: firebase.auth().currentUser?.uid,
         answerCount: 0,
@@ -46,11 +47,13 @@ class QuizService extends Service {
   async update(
     docId: string,
     thumbnailUpdate: boolean,
-    formData: QuizFormData
+    formData: QuizFormData,
+    ogps: any
   ) {
     const postData = {
       ...formData,
       tags: formData.tags?.split(",") || [],
+      references: ogps || [],
     };
     // 新規サムネのパスを設定する
     const isUpdate = !!(thumbnailUpdate && formData.thumbnail);

@@ -16,6 +16,7 @@ export type QuizFormTextData = {
   selectD: string;
   description?: string;
   tags?: string;
+  references?: string;
 };
 
 export type QuizFormSelectData = {
@@ -29,6 +30,7 @@ export type QuizData = QuizFormData & {
   id: string;
   thumbnail: string;
   tags: string[];
+  references: any[];
 };
 
 export type QuizTableRowData = QuizData & {
@@ -56,4 +58,5 @@ export type QuizDisplay = {
   selectD: string;
   answer: 0 | 1 | 2 | 3;
   description: string;
+  references: any[];
 };
