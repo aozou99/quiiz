@@ -18,11 +18,14 @@ module.exports = functions.https.onCall(async (data, _context) => {
       })
         .then((res) => {
           if (!res.error) {
+            // TypeScriptの定義にogVideoが無いので拡張する
+            const result: any = res.result;
             results.push({
-              requestUrl: res.result.requestUrl,
-              ogTitle: res.result.ogTitle,
-              ogDescription: res.result.ogDescription,
-              ogImage: res.result.ogImage,
+              requestUrl: result.requestUrl,
+              ogTitle: result.ogTitle,
+              ogDescription: result.ogDescription,
+              ogImage: result.ogImage,
+              ogVideo: result.ogVideo,
             });
           }
         })

@@ -94,11 +94,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
-    avatorSizeSmall: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-      backgroundColor: themeColors.primary[400],
-    },
     reference: {
       color: themeColors.tertiary[400],
     },
@@ -231,7 +226,20 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
                         alt={"favicon"}
                       />
                     </ListItemIcon>
-                    <ListItemText primary={ref.ogTitle} />
+                    <ListItemText
+                      primary={ref.ogTitle}
+                      secondary={
+                        ref.ogVideo && (
+                          <iframe
+                            title={ref.ogTitle}
+                            src={ref.ogVideo.url}
+                            width="100%"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                          />
+                        )
+                      }
+                    />
                   </ListItem>
                 ))}
               </CardContent>

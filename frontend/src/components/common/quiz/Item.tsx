@@ -37,9 +37,12 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: theme.spacing(1),
       backgroundColor: "#e8f0fe",
     },
-    hoverUnderLine: {
+    hoverBackGround: {
+      padding: theme.spacing(0.5, 1),
+      marginLeft: theme.spacing(-1),
       "&:hover": {
-        textDecoration: "underline solid rgba(0, 0, 0, 0.54)",
+        backgroundColor: "rgba(0, 0, 0, 0.04)",
+        borderRadius: theme.spacing(1),
       },
     },
   })
@@ -96,9 +99,9 @@ const Item: React.FC<Props> = ({
               <Typography
                 variant="body2"
                 color="textSecondary"
-                component="p"
+                component="span"
                 onClick={handleClickChannelLink}
-                className={classes.hoverUnderLine}
+                className={classes.hoverBackGround}
               >
                 {authorName}
               </Typography>

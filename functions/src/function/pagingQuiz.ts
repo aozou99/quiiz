@@ -3,26 +3,52 @@ import admin from "../core/admin";
 import convertQuizResponse from "../helper/convertQuizResponse";
 
 const db = admin.firestore();
-
-module.exports = functions.https.onCall(async (data, _context) => {
+const genBaseQuery = async (data: {
+  channelId: string;
+  lastQuizId: string;
+}) => {
   let baseQuery;
   if (data?.channelId) {
     baseQuery = db
       .collection("users")
       .doc(data.channelId)
       .collection("quizzes")
-      .orderBy("createdAt")
-      .limit(8);
+      .orderBy("createdAt", "asc");
   } else {
-    baseQuery = db.collectionGroup("quizzes").orderBy("createdAt").limit(8);
+    baseQuery = db.collectionGroup("quizzes").orderBy("createdAt", "asc");
   }
 
-  if (data && data.date) {
-    baseQuery.startAfter(data.date);
+  if (data && data.lastQuizId) {
+    const snapshot = await db
+      .collectionGroup("quizzes")
+      .where("id", "==", data.lastQuizId)
+      .get();
+    baseQuery = baseQuery.startAfter(snapshot.docs[0]);
   }
 
+  return baseQuery.limit(16);
+};
+
+module.exports = functions.https.onCall(async (data, _context) => {
+  const baseQuery = await genBaseQuery(data);
   const snapshot = await baseQuery.get();
+  if (snapshot.size < 1) {
+    return {
+      quizzes: [],
+      hasNext: false,
+    };
+  }
   const rs = snapshot.docs.map(convertQuizResponse);
+  const nextQuery = await genBaseQuery({
+    ...data,
+    lastQuizId: snapshot.docs[snapshot.size - 1].data().id,
+  });
+  const hasNext = nextQuery.get().then((next) => {
+    return next.size > 1;
+  });
 
-  return Promise.all(rs);
+  return {
+    quizzes: await Promise.all(rs),
+    hasNext: await hasNext,
+  };
 });

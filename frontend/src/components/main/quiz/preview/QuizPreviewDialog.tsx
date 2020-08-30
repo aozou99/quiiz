@@ -38,9 +38,15 @@ type State = {
   open: boolean;
   setOpen: (open: boolean) => void;
   quiz: QuizData;
+  onClose: () => void;
 };
 
-const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
+const QuizPreviewDialog: React.FC<State> = ({
+  open,
+  setOpen,
+  quiz,
+  onClose,
+}) => {
   const classes = useStyles();
   const [result, setResult] = useState<QuizResult>(undefined);
   const [selectedQuiz, setSelectedQuiz] = useState<any>(undefined);
@@ -62,7 +68,10 @@ const QuizPreviewDialog: React.FC<State> = ({ open, setOpen, quiz }) => {
   return (
     <Dialog
       open={open}
-      onExited={() => setResult(undefined)}
+      onExited={() => {
+        setResult(undefined);
+        onClose();
+      }}
       fullScreen
       aria-labelledby="preview-dialog-title"
       aria-describedby="preview-dialog-description"

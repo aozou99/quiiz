@@ -7,20 +7,24 @@ import { getCounter } from "utils/helper/counter";
 
 type parameters = {
   channelId?: string;
+  lastQuizId?: string;
 };
-export const useFetchFirstDocuments = (parameters?: parameters) => {
-  const [apiOptions] = useState(parameters);
-  const [firstDocuments, setFirstDocuments] = useState<any>();
+export const usePageNateQuiz = (parameters?: parameters) => {
+  const [apiOptions, setApiOptions] = useState(parameters);
+  const [quizzes, setFirstDocuments] = useState<any>([]);
   const [loaded, setLoaded] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
 
   useEffect(() => {
     let mounted = true;
+    setLoaded(false);
     firebase
       .functions()
       .httpsCallable("pagingQuiz")({ ...apiOptions })
       .then((res) => {
         if (mounted) {
-          setFirstDocuments(res.data);
+          setFirstDocuments((pre: any[]) => [...pre, ...res.data.quizzes]);
+          setHasNext(res.data.hasNext);
           setLoaded(true);
         }
       });
@@ -29,7 +33,13 @@ export const useFetchFirstDocuments = (parameters?: parameters) => {
     };
   }, [apiOptions]);
 
-  return { firstDocuments, loaded };
+  useEffect(() => {
+    if (parameters?.lastQuizId !== apiOptions?.lastQuizId) {
+      setApiOptions(parameters);
+    }
+  }, [parameters, apiOptions]);
+
+  return { quizzes, loaded, hasNext };
 };
 
 export const useFetchThumbnailUrl = (

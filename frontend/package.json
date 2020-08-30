@@ -20,6 +20,7 @@
     "react-firebase-hooks": "^2.2.0",
     "react-hook-form": "^6.0.0",
     "react-image": "^4.0.2",
+    "react-infinite-scroll-hook": "^3.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "valid-url": "^1.0.9"

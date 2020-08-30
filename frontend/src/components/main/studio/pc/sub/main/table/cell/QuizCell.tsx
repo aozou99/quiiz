@@ -65,15 +65,19 @@ const QuizCell: React.FC<State> = ({
   const [imgSrc, setImgSrc] = useState();
   useEffect(() => {
     let unmounted = false;
-    const loadUrl = async () => {
-      const path = await imageUrl(rowData.thumbnail, "256x144");
-      if (!unmounted) {
-        setImgSrc(path);
-      }
+    const loadUrl = () => {
+      imageUrl(rowData.thumbnail, "256x144")
+        .then((path) => {
+          if (!unmounted) {
+            setImgSrc(path);
+          }
+        })
+        .catch(() => {
+          setImgSrc(undefined);
+          setTimeout(loadUrl, 1000);
+        });
     };
-    loadUrl().catch(() => {
-      setTimeout(loadUrl, 1000);
-    });
+    loadUrl();
     return () => {
       unmounted = true;
     };

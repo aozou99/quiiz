@@ -209,6 +209,7 @@ const QuizTable = () => {
         <QuizPreviewDialog
           open={openPreviewDialog}
           setOpen={setOpenPreviewDialog}
+          onClose={() => setSelectedData(undefined)}
           quiz={selectedData}
         ></QuizPreviewDialog>
       )}
