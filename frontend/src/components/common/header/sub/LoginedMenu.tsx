@@ -18,6 +18,7 @@ type State = {
   anchorEl: null | HTMLElement;
   open: boolean;
   handleClose: (event: {}) => void;
+  userId: string;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,7 +35,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const LoginedMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
+const LoginedMenu: React.FC<State> = ({
+  anchorEl,
+  open,
+  handleClose,
+  userId,
+}) => {
   const history = useHistory();
   const classes = useStyles();
   return (
@@ -61,12 +67,17 @@ const LoginedMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
           クイズを作成する
         </Typography>
       </MenuItem>
-      <MenuItem onClick={handleClose}>
+      <MenuItem
+        onClick={(e) => {
+          history.push(`/channel/${userId}`);
+          handleClose(e);
+        }}
+      >
         <ListItemIcon className={classes.listIcon}>
           <AccountBoxIcon fontSize="small" />
         </ListItemIcon>
         <Typography variant="body1" color="textSecondary">
-          アカウント
+          マイチャンネル
         </Typography>
       </MenuItem>
       <MenuItem

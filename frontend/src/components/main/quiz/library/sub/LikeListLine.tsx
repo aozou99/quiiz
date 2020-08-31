@@ -82,6 +82,11 @@ const LikeListLine: React.FC<Props> = ({
           : Array.from({ length: 4 })
               .fill(null)
               .map((_, i) => <DummyItem key={i} />)}
+        {loaded && likedQuizzes.length === 0 && (
+          <Typography variant={"subtitle2"} color="textSecondary">
+            いいねをしたクイズがここに表示されます
+          </Typography>
+        )}
       </Box>
     </>
   );

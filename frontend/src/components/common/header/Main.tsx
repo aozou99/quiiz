@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Main: React.FC = () => {
-  const [user, loading, error] = useAuthState(firebase.auth());
+  const [user] = useAuthState(firebase.auth());
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const history = useHistory();
@@ -143,7 +143,7 @@ const Main: React.FC = () => {
                   <PostAddIcon fontSize="large" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="アカウント">
+              <Tooltip title="マイメニュー">
                 <IconButton
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
@@ -161,6 +161,7 @@ const Main: React.FC = () => {
                 anchorEl={anchorEl}
                 open={open}
                 handleClose={handleClose}
+                userId={user.uid}
               />
             </div>
           )}

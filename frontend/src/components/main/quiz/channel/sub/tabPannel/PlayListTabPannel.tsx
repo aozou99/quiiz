@@ -1,4 +1,10 @@
-import { makeStyles, Theme, createStyles, Box } from "@material-ui/core";
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  Box,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import Item from "components/common/playList/Item";
@@ -19,6 +25,12 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down("xs")]: {
         flex: "4",
       },
+    },
+    center: {
+      display: "flex",
+      width: "100%",
+      placeContent: "center",
+      placeItems: "center",
     },
   })
 );
@@ -48,6 +60,13 @@ export const PlayListTabPannel: React.FC<{ channelId: string }> = (
         : Array.from({ length: 4 })
             .fill(null)
             .map((_, i) => <DummyItem key={i} />)}
+      {loaded && playLists.length === 0 && (
+        <Box className={classes.center}>
+          <Typography variant={"subtitle2"} color="textSecondary">
+            このチャンネルには再生リストがありません
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

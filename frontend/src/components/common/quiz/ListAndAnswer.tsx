@@ -7,6 +7,7 @@ import {
   createStyles,
   List,
   CircularProgress,
+  Typography,
 } from "@material-ui/core";
 import clsx from "clsx";
 import Item from "components/common/quiz/Item";
@@ -36,11 +37,12 @@ const useStyles = makeStyles((theme: Theme) =>
         flex: "4",
       },
     },
-    loading: {
+    center: {
       display: "flex",
       placeContent: "center",
       placeItems: "center",
       width: "100%",
+      whiteSpace: "pre-wrap",
     },
   })
 );
@@ -71,32 +73,40 @@ export const ListAndAnswer: React.FC<pagingParam> = (initPagingParam = {}) => {
   return (
     <Box className={clsx(classes.root)}>
       <List className={classes.list} ref={infiniteRef}>
-        {quizzes.length > 0
-          ? quizzes.map((item: QuizDisplay) => (
-              <Item
-                key={item.id}
-                thumbnail={item.thumbnail["640x360"]}
-                question={item.question}
-                authorId={item.authorId}
-                authorName={item.authorName}
-                authorImageUrl={item.authorImageUrl}
-                handleClick={() => {
-                  if (selected === item) {
-                    setSelected(undefined);
-                  } else {
-                    setSelected(item);
-                    setResult(undefined);
-                  }
-                }}
-                isSelected={selected === item}
-              />
-            ))
-          : Array.from({ length: 32 })
-              .fill(null)
-              .map((_, i) => <DummyItem key={i} />)}
+        {quizzes.map((item: QuizDisplay) => (
+          <Item
+            key={item.id}
+            thumbnail={item.thumbnail["640x360"]}
+            question={item.question}
+            authorId={item.authorId}
+            authorName={item.authorName}
+            authorImageUrl={item.authorImageUrl}
+            handleClick={() => {
+              if (selected === item) {
+                setSelected(undefined);
+              } else {
+                setSelected(item);
+                setResult(undefined);
+              }
+            }}
+            isSelected={selected === item}
+          />
+        ))}
+        {!loaded &&
+          quizzes.length === 0 &&
+          Array.from({ length: 32 })
+            .fill(null)
+            .map((_, i) => <DummyItem key={i} />)}
         {!loaded && (
-          <Box className={classes.loading}>
+          <Box className={classes.center}>
             <CircularProgress />
+          </Box>
+        )}
+        {loaded && quizzes.length === 0 && pagingParam.channelId && (
+          <Box className={classes.center}>
+            <Typography variant={"subtitle2"} color="textSecondary">
+              {"このチャンネルにはクイズがありません"}
+            </Typography>
           </Box>
         )}
       </List>

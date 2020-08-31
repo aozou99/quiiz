@@ -66,6 +66,11 @@ const PlayListLine: React.FC = () => {
           : Array.from({ length: 4 })
               .fill(null)
               .map((_, i) => <DummyItem key={i} />)}
+        {loaded && playLists.length === 0 && (
+          <Typography variant={"subtitle2"} color="textSecondary">
+            作成した再生リストがここに表示されます
+          </Typography>
+        )}
       </Box>
     </>
   );

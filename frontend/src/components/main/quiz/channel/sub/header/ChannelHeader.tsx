@@ -13,7 +13,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useFetchChannelHeader } from "services/channel/ChannelHooks";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import SentimentVerySatisfiedIcon from "@material-ui/icons/SentimentVerySatisfied";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import ChannelService from "services/channel/ChannelService";
 import { DummyChannelHeader } from "components/main/quiz/channel/sub/header/DummyChannelHeader";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
@@ -29,7 +29,7 @@ import AuthService from "services/auth/AuthService";
 import { BackDropContext } from "components/main/quiz/Main";
 import { LinearWithLabel } from "components/common/feedback/LinearWithLabel";
 import Alert from "@material-ui/lab/Alert";
-import PostAddIcon from "@material-ui/icons/PostAdd";
+import { GoQuizStudioButton } from "components/common/button/GoQuizStudio";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,7 +99,6 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [snackBarText, setSnackBarText] = useState("");
   const [originImage, setOriginImage] = useState<string | undefined>(undefined);
-  const history = useHistory();
   const { setBackDropChildNode, setOpenBackDrop } = useContext(BackDropContext);
   const handleSubscribeOrCancel = () => {
     ChannelService.subscribeOrCancel(channelId).then((latestIsSubscribed) => {
@@ -218,17 +217,7 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
           </Typography>
         </Box>
         {editable ? (
-          <Button
-            variant={"outlined"}
-            color={"primary"}
-            endIcon={<PostAddIcon />}
-            size="large"
-            disableElevation
-            className={classes.subscribeButton}
-            onClick={() => history.push("/studio")}
-          >
-            Quiz Studioへ
-          </Button>
+          <GoQuizStudioButton />
         ) : (
           <Button
             variant={isSubscribed ? "contained" : "outlined"}

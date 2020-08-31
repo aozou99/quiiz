@@ -158,7 +158,7 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
                 <PostAddIcon fontSize="large" />
               </IconButton>
             </Tooltip>
-            <Tooltip title="アカウント">
+            <Tooltip title="マイメニュー">
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -176,6 +176,7 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
               anchorEl={anchorEl}
               open={open}
               handleClose={handleClose}
+              userId={user.uid}
             />
           </div>
         )}
