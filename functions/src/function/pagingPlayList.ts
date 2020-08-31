@@ -27,11 +27,11 @@ module.exports = functions.https.onCall(async (data, context) => {
     const playListData = playList.data();
     let thumbnail = defaultThumbnailPath;
     if (playListData.quizCount > 0) {
-      const snapshot = await playList.ref
+      const playListSnapshot = await playList.ref
         .collection("playListQuiz")
         .orderBy("createdAt", "desc")
         .get();
-      const quizSnapShot = await snapshot.docs[0].data().quizRef.get();
+      const quizSnapShot = await playListSnapshot.docs[0].data().quizRef.get();
       thumbnail = quizSnapShot.data().thumbnail;
     }
 

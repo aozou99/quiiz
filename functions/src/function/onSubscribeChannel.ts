@@ -17,5 +17,8 @@ module.exports = functions.firestore
       await createCounter(counterRef, 10);
       counterDoc = await counterRef.get();
     }
-    incrementCounter(counterRef, counterDoc.data()?.numShards || 10);
+    incrementCounter(
+      counterRef,
+      counterDoc.data()?.numShards || 10
+    ).catch((e) => console.error(e));
   });

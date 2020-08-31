@@ -9,7 +9,7 @@ export const createCounter = (
   batch.set(ref, { numShards });
   // Initialize each shard with count=0
   for (let i = 0; i < numShards; i++) {
-    let shardRef = ref.collection("shards").doc(i.toString());
+    const shardRef = ref.collection("shards").doc(i.toString());
     batch.set(shardRef, { count: 0 });
   }
   // Commit the write batch

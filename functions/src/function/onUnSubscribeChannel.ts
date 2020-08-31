@@ -12,8 +12,12 @@ module.exports = functions.firestore
       .collection("counters")
       .doc("subscribedUser");
 
-    let counterDoc = await counterRef.get();
+    const counterDoc = await counterRef.get();
     if (counterDoc.exists) {
-      incrementCounter(counterRef, counterDoc.data()?.numShards || 10, -1);
+      incrementCounter(
+        counterRef,
+        counterDoc.data()?.numShards || 10,
+        -1
+      ).catch((e) => console.error(e));
     }
   });

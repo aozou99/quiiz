@@ -14,9 +14,13 @@ module.exports = functions.firestore
       batch.delete(quizSnapshot.ref);
       count++;
       if (count === 500) {
-        batch.commit();
+        batch.commit().catch((e) => {
+          console.error(e);
+        });
         batch = admin.firestore().batch();
       }
     });
-    batch.commit();
+    batch.commit().catch((e) => {
+      console.error(e);
+    });
   });
