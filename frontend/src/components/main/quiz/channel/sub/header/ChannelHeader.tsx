@@ -29,7 +29,7 @@ import AuthService from "services/auth/AuthService";
 import { BackDropContext } from "components/main/quiz/Main";
 import { LinearWithLabel } from "components/common/feedback/LinearWithLabel";
 import Alert from "@material-ui/lab/Alert";
-import { GoQuizStudioButton } from "components/common/button/GoQuizStudio";
+import { GoQuizStudioButton } from "components/common/button/GoQuizStudioButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

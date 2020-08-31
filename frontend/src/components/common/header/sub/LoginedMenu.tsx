@@ -13,6 +13,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import AuthService from "services/auth/AuthService";
+import TvIcon from "@material-ui/icons/Tv";
 
 type State = {
   anchorEl: null | HTMLElement;
@@ -74,10 +75,23 @@ const LoginedMenu: React.FC<State> = ({
         }}
       >
         <ListItemIcon className={classes.listIcon}>
-          <AccountBoxIcon fontSize="small" />
+          <TvIcon fontSize="small" />
         </ListItemIcon>
         <Typography variant="body1" color="textSecondary">
           マイチャンネル
+        </Typography>
+      </MenuItem>
+      <MenuItem
+        onClick={(e) => {
+          history.push(`/profile`);
+          handleClose(e);
+        }}
+      >
+        <ListItemIcon className={classes.listIcon}>
+          <AccountBoxIcon fontSize="small" />
+        </ListItemIcon>
+        <Typography variant="body1" color="textSecondary">
+          メールアドレス・パスワード変更
         </Typography>
       </MenuItem>
       <MenuItem
