@@ -14,6 +14,7 @@ import {
   IconButton,
   TextField,
   MenuItem,
+  Typography,
 } from "@material-ui/core";
 import { useParams, useHistory } from "react-router-dom";
 import { useFetchPlayListContents } from "services/playList/PlayListHooks";
@@ -63,6 +64,13 @@ const useStyles = makeStyles((theme: Theme) =>
         borderBottom: 0,
       },
     },
+    center: {
+      width: "100%",
+      display: "flex",
+      placeContent: "center",
+      placeItems: "center",
+      padding: theme.spacing(2),
+    },
   })
 );
 
@@ -91,7 +99,7 @@ const QuizListPannel: React.FC<{
   };
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && playList) {
       setTitle(playList.listName);
       setPrivacy(playList.privacy);
       setQuizList(quizzes);
@@ -100,7 +108,7 @@ const QuizListPannel: React.FC<{
 
   return (
     <>
-      {loaded ? (
+      {loaded && playList && (
         <Box className={classes.listPannel}>
           <Box className={classes.playListInfo}>
             <EditableTextField
@@ -169,26 +177,34 @@ const QuizListPannel: React.FC<{
                       secondary={quiz.authorName}
                       className={classes.listText}
                     />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => {
-                          handleRemoveQuiz(quiz);
-                          setSelected(undefined);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
+                    {editable && (
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => {
+                            handleRemoveQuiz(quiz);
+                            setSelected(undefined);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    )}
                   </ListItem>
                   <Divider />
                 </React.Fragment>
               ))}
           </List>
         </Box>
-      ) : (
-        <DummyQuizListPannel />
+      )}
+      {!loaded && <DummyQuizListPannel />}
+      {loaded && !playList && (
+        <Box className={classes.center}>
+          <Typography variant="subtitle1" color="textSecondary">
+            指定された再生リストは存在しません
+          </Typography>
+        </Box>
       )}
     </>
   );

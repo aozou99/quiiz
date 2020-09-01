@@ -111,7 +111,6 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
     setSnackBarText(text);
     setOpenSnackBar(true);
   };
-
   useEffect(() => {
     if (loaded) {
       setIsSubscribed(initialSubscState);

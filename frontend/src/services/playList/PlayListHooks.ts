@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import { useState, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const playListRef = (userId: string) =>
   firebase
@@ -96,23 +97,32 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
   channelId?: string;
 }) => {
   const [loaded, setLoaded] = useState(false);
-  const [playLists, setPlayLists] = useState<any>();
+  const [playLists, setPlayLists] = useState<any>([]);
   const [apiOptions] = useState(parameters);
+  const [user, loading] = useAuthState(firebase.auth());
   useEffect(() => {
     let mounted = true;
-    firebase
-      .functions()
-      .httpsCallable("pagingPlayList")({ ...apiOptions })
-      .then((res) => {
-        if (mounted) {
-          setPlayLists(res.data);
-          setLoaded(true);
-        }
-      });
+    if (!loading && user) {
+      firebase
+        .functions()
+        .httpsCallable("pagingPlayList")({ ...apiOptions })
+        .then((res) => {
+          if (mounted) {
+            setPlayLists(res.data || []);
+            setLoaded(true);
+          }
+        });
+    }
+    if (!loading && !user) {
+      if (mounted) {
+        setPlayLists([]);
+        setLoaded(true);
+      }
+    }
     return () => {
       mounted = false;
     };
-  }, [apiOptions]);
+  }, [apiOptions, loading, user]);
   return { loaded, playLists };
 };
 
@@ -131,7 +141,7 @@ export const useFetchPlayListContents = (playListId: string) => {
       .then((res) => {
         if (mounted) {
           setEditable(
-            firebase.auth().currentUser?.uid === res.data.playList.authorId
+            firebase.auth().currentUser?.uid === res.data.playList?.authorId
           );
           setPlayList(res.data.playList);
           setQuizzes(res.data.quizzes);

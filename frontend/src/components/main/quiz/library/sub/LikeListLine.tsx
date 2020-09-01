@@ -59,7 +59,7 @@ const LikeListLine: React.FC<Props> = ({
         <Typography variant="subtitle1">いいねしたクイズ</Typography>
       </Box>
       <Box className={classes.list}>
-        {loaded
+        {loaded && likedQuizzes
           ? likedQuizzes.map((item: QuizDisplay) => (
               <Item
                 key={item.id}

@@ -1,9 +1,11 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/functions";
+import "firebase/auth";
 import { useState, useEffect } from "react";
 import imageUrl from "utils/helper/imageUrl";
 import { getCounter } from "utils/helper/counter";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 type parameters = {
   channelId?: string;
@@ -116,21 +118,34 @@ export const useFetchLike = (quizId: string, likeClick: boolean) => {
 
 export const useFetchLikeQuizzes = () => {
   const [loaded, setLoaded] = useState(false);
-  const [likedQuizzes, setLikedQuizzes] = useState<any>();
+  const [likedQuizzes, setLikedQuizzes] = useState<any>([]);
+  const [user, loading] = useAuthState(firebase.auth());
   useEffect(() => {
     let mounted = true;
-    firebase
-      .functions()
-      .httpsCallable("pagingMyLikeQuiz")()
-      .then((res) => {
-        if (mounted) {
-          setLikedQuizzes(res.data);
-          setLoaded(true);
-        }
-      });
+    if (!loading && user) {
+      firebase
+        .functions()
+        .httpsCallable("pagingMyLikeQuiz")()
+        .then((res) => {
+          if (mounted) {
+            setLikedQuizzes(res.data || []);
+            setLoaded(true);
+          }
+        })
+        .catch(() => {
+          if (mounted) {
+            setLikedQuizzes([]);
+            setLoaded(true);
+          }
+        });
+    } else if (!loading && !user) {
+      setLikedQuizzes([]);
+      setLoaded(true);
+    }
+
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [user, loading]);
   return { loaded, likedQuizzes };
 };

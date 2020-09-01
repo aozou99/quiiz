@@ -56,6 +56,9 @@ export const useIsSubscribed = (channelId: string) => {
     let mounted = true;
 
     if (loading || error || !user) {
+      if (mounted) {
+        setLoaded(true);
+      }
       return;
     }
 
@@ -69,6 +72,10 @@ export const useIsSubscribed = (channelId: string) => {
       .then((snapshot) => {
         if (mounted) {
           setIsSubscribed(snapshot.exists);
+        }
+      })
+      .finally(() => {
+        if (mounted) {
           setLoaded(true);
         }
       });
