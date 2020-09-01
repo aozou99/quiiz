@@ -1,10 +1,11 @@
 import functions from "../core/functions";
 import admin from "../core/admin";
 import convertQuizResponse from "../helper/convertQuizResponse";
+import { PRIVACY } from "../costant/InputConst";
 
 const db = admin.firestore();
 
-module.exports = functions.https.onCall(async (data, _context) => {
+module.exports = functions.https.onCall(async (data, context) => {
   const playLists = await db
     .collectionGroup("playLists")
     .where("id", "==", data.id)
@@ -24,12 +25,21 @@ module.exports = functions.https.onCall(async (data, _context) => {
   }
 
   const playList = playLists.docs[0];
-  const baseQuery = playList.ref
+  const isMine = playList.data().authorId === context.auth?.uid;
+  if (!isMine && playList.data().privacy === PRIVACY.PRIVATE) {
+    return {
+      error: {
+        status: "PrivatePlayList",
+        message: "This playlist is closed to the public and cannot be viewed.",
+      },
+    };
+  }
+  let baseQuery = playList.ref
     .collection("playListQuiz")
     .orderBy("createdAt", "desc");
 
   if (data && data.date) {
-    baseQuery.startAfter(data.date);
+    baseQuery = baseQuery.startAfter(data.date);
   }
 
   const snapshot = await baseQuery.get();

@@ -1,6 +1,7 @@
 import functions from "../core/functions";
 import admin from "../core/admin";
 import convertQuizResponse from "../helper/convertQuizResponse";
+import { PRIVACY } from "../costant/InputConst";
 
 const db = admin.firestore();
 const genBaseQuery = async (data: {
@@ -13,9 +14,13 @@ const genBaseQuery = async (data: {
       .collection("users")
       .doc(data.channelId)
       .collection("quizzes")
+      .where("privacy", "==", PRIVACY.PUBLIC)
       .orderBy("createdAt", "asc");
   } else {
-    baseQuery = db.collectionGroup("quizzes").orderBy("createdAt", "asc");
+    baseQuery = db
+      .collectionGroup("quizzes")
+      .where("privacy", "==", PRIVACY.PUBLIC)
+      .orderBy("createdAt", "asc");
   }
 
   if (data && data.lastQuizId) {

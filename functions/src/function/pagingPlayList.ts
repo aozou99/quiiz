@@ -1,24 +1,33 @@
 import functions from "../core/functions";
 import admin from "../core/admin";
 import imgUrl from "../helper/imageUrl";
+import { PRIVACY } from "../costant/InputConst";
+import { HttpsError } from "firebase-functions/lib/providers/https";
 
 const db = admin.firestore();
 const defaultThumbnailPath = "images/default/quiiz-thumbnail.png";
 
 module.exports = functions.https.onCall(async (data, context) => {
-  if (!context.auth) {
-    return;
+  const uid = data?.channelId || context.auth?.uid;
+  if (!uid) {
+    throw new HttpsError("invalid-argument", "Invalid Parameter");
   }
-  const uid = data?.channelId || context.auth.uid;
-  const baseQuery = db
+  const isMine =
+    !data?.channelId ||
+    (data?.channelId && data?.channelId === context.auth?.uid);
+  let baseQuery = db
     .collection("users")
     .doc(uid)
     .collection("playLists")
-    .orderBy("updatedAt")
-    .limit(8);
+    .orderBy("updatedAt");
+
+  if (!isMine) {
+    baseQuery = baseQuery.where("privacy", "==", PRIVACY.PUBLIC);
+  }
+  baseQuery = baseQuery.limit(8);
 
   if (data?.date) {
-    baseQuery.startAfter(data.date);
+    baseQuery = baseQuery.startAfter(data.date);
   }
 
   const snapshot = await baseQuery.get();
