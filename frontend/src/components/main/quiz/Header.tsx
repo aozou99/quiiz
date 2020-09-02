@@ -16,6 +16,7 @@ import PostAddIcon from "@material-ui/icons/PostAdd";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { SignInButton } from "components/common/button/SignInButton";
 
 type State = {
   handleDrawer: (event: {}) => void;
@@ -76,6 +77,11 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  buttons: {
+    "&>*": {
+      margin: theme.spacing(0.5),
+    },
+  },
 }));
 
 const Header: React.FC<State> = ({ handleDrawer }) => {
@@ -132,7 +138,7 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
         </div>
         <div className={classes.grow} />
         {!loading && !user && (
-          <div>
+          <div className={classes.buttons}>
             <IconButton
               aria-label="display more actions"
               edge="end"
@@ -141,6 +147,7 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
             >
               <MoreIcon />
             </IconButton>
+            <SignInButton />
             <GuestMenu
               anchorEl={anchorEl}
               open={open}

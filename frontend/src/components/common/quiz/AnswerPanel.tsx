@@ -27,6 +27,10 @@ import QuizService from "services/quiz/QuizService";
 import { useFetchLike } from "services/quiz/QuizHooks";
 import PlayListDialog from "components/common/dialog/PlayListDialog";
 import { useCheckList } from "services/playList/PlayListHooks";
+import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 type Props = {
   selected: QuizDisplay;
@@ -131,6 +135,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   const classes = useStyles();
+  const [user, loading] = useAuthState(firebase.auth());
   const borderLeftColors = [
     classes.borderLeftrTertiary,
     classes.borderLeftQuaternary,
@@ -145,6 +150,9 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   const { checked, loaded: checkListLoaded, update } = useCheckList(
     selected.id
   );
+  const [openSignInDialog, setOpenSignInDialog] = useState(false);
+  const [signInTitle, setSignInTitle] = useState("");
+  const [signInBody, setSignInBody] = useState("");
 
   const choices = (e: QuizDisplay): [string, string, string, string] => [
     e.selectA,
@@ -152,13 +160,42 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     e.selectC,
     e.selectD,
   ];
+  const validateSignInDialog = (title: string, body: string) => {
+    const isNg = !loading && !user;
+    if (isNg) {
+      setSignInTitle(title);
+      setSignInBody(body);
+      setOpenSignInDialog(true);
+    }
+    return isNg;
+  };
+
   const handleGood = () => {
+    if (
+      validateSignInDialog(
+        "このクイズにいいねをする",
+        "いいねするには、ログインをしてください"
+      )
+    ) {
+      return;
+    }
     QuizService.likeOrCancel({
       quizId: selected.id,
       authorId: selected.authorId,
     }).then(() => {
       setTimeout(() => setLikeClick(!likeClick), 300);
     });
+  };
+  const handleAddPlayList = () => {
+    if (
+      validateSignInDialog(
+        "再生リストに追加する",
+        "再生リストに追加するには、ログインをしてください"
+      )
+    ) {
+      return;
+    }
+    setIsOpenList(!isOpenList);
   };
 
   return (
@@ -259,10 +296,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
           </IconButton>
         </Tooltip>
         <Tooltip title="リストに追加">
-          <IconButton
-            aria-label="good"
-            onClick={() => setIsOpenList(!isOpenList)}
-          >
+          <IconButton aria-label="addPlayList" onClick={handleAddPlayList}>
             <FolderIcon
               className={clsx(
                 checkListLoaded &&
@@ -278,6 +312,12 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
         onClose={() => setIsOpenList(false)}
         quiz={{ id: selected.id, authorId: selected.authorId }}
         afterChecked={update}
+      />
+      <SignInGuideDialog
+        open={openSignInDialog}
+        title={signInTitle}
+        bodyText={signInBody}
+        onClose={() => setOpenSignInDialog(false)}
       />
     </Paper>
   );

@@ -30,6 +30,7 @@ import { BackDropContext } from "components/main/quiz/Main";
 import { LinearWithLabel } from "components/common/feedback/LinearWithLabel";
 import Alert from "@material-ui/lab/Alert";
 import { GoQuizStudioButton } from "components/common/button/GoQuizStudioButton";
+import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,25 +100,41 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [snackBarText, setSnackBarText] = useState("");
   const [originImage, setOriginImage] = useState<string | undefined>(undefined);
+  const [openSignInDialog, setOpenSignInDialog] = useState(false);
+  const [signInTitle, setSignInTitle] = useState("");
+  const [signInBody, setSignInBody] = useState("");
   const { setBackDropChildNode, setOpenBackDrop } = useContext(BackDropContext);
+
+  const validateSignInDialog = (title: string, body: string) => {
+    const isNg = !authLoading && !user;
+    if (isNg) {
+      setSignInTitle(title);
+      setSignInBody(body);
+      setOpenSignInDialog(true);
+    }
+    return isNg;
+  };
+  const setSnackBar = (text: string) => {
+    setSnackBarText(text);
+    setOpenSnackBar(true);
+  };
+
   const handleSubscribeOrCancel = () => {
+    if (
+      validateSignInDialog(
+        "チャンネル登録をする",
+        "チャンネル登録をするには、ログインをしてください"
+      )
+    ) {
+      return;
+    }
+
     ChannelService.subscribeOrCancel(channelId).then((latestIsSubscribed) => {
       setIsSubscribed(latestIsSubscribed);
       setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a));
       setUnsubscDialogOpen(false);
     });
   };
-  const setSnackBar = (text: string) => {
-    setSnackBarText(text);
-    setOpenSnackBar(true);
-  };
-  useEffect(() => {
-    if (loaded) {
-      setIsSubscribed(initialSubscState);
-      setSubscribedUsers(channelHeader.subscribedCount);
-      setChannelName(channelHeader.channelName);
-    }
-  }, [initialSubscState, loaded, channelHeader]);
 
   const handleProfileImageChanged = (imageUrl: string) => {
     setBackDropChildNode(
@@ -145,6 +162,14 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
       }
     );
   };
+
+  useEffect(() => {
+    if (loaded) {
+      setIsSubscribed(initialSubscState);
+      setSubscribedUsers(channelHeader.subscribedCount);
+      setChannelName(channelHeader.channelName);
+    }
+  }, [initialSubscState, loaded, channelHeader]);
 
   return loaded && hasError ? (
     <Redirect to={"/error?src=404"} />
@@ -265,6 +290,12 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
           {snackBarText}
         </Alert>
       </Snackbar>
+      <SignInGuideDialog
+        open={openSignInDialog}
+        title={signInTitle}
+        bodyText={signInBody}
+        onClose={() => setOpenSignInDialog(false)}
+      />
     </Box>
   ) : (
     <DummyChannelHeader />

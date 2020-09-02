@@ -119,12 +119,8 @@ const PlayListDialog: React.FC<State> = ({
 
   return (
     <>
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="simple-dialog-title"
-        open={open}
-      >
-        <DialogTitle id="ialog-title" disableTypography>
+      <Dialog onClose={handleClose} aria-labelledby="dialog-title" open={open}>
+        <DialogTitle id="dialog-title" disableTypography>
           保存先...
         </DialogTitle>
         <Divider />

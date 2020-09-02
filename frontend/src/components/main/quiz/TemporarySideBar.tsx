@@ -10,6 +10,7 @@ import {
   ListItemText,
   Typography,
   Divider,
+  Theme,
 } from "@material-ui/core";
 import { themeColors } from "components/core/CustomeTheme";
 import { useHistory } from "react-router-dom";
@@ -17,6 +18,11 @@ import clsx from "clsx";
 import HomeIcon from "@material-ui/icons/Home";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
+import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase/app";
+import "firebase/auth";
+import { SignInGuideDescription } from "components/common/guide/SignInGuideDescription";
 
 type State = {
   open: boolean;
@@ -39,34 +45,24 @@ const listItems = [
     linkPath: "/subscriptions",
     icon: <SubscriptionsIcon />,
   },
+  {
+    name: "ライブラリ",
+    linkPath: "/library",
+    icon: <LocalLibraryIcon />,
+  },
 ];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
-    flexShrink: 0,
-    whiteSpace: "nowrap",
-  },
-  selected: {
-    "& $listChild": {
-      color: themeColors.primary[400],
+    width: theme.spacing(30),
+    "& > div.MuiDrawer-paperAnchorLeft": {
+      width: "inherit",
     },
   },
-  drawerOpen: {
-    width: 240,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: "hidden",
-    width: theme.spacing(9) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
+  selected: {
+    backgroundColor: theme.palette.grey[300],
+    "& $listChild": {
+      color: themeColors.primary[400],
     },
   },
   menuButton: {
@@ -75,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
   list: {
     paddingTop: 0,
     paddingBottom: 0,
+    width: theme.spacing(30),
   },
   listRoot: {
     paddingLeft: theme.spacing(3),
@@ -88,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
 const TemporarySidebar: React.FC<State> = ({ open, setOpen }) => {
   const classes = useStyles();
   const history = useHistory();
+  const [user, loading] = useAuthState(firebase.auth());
 
   const handleClose = () => {
     setOpen(false);
@@ -95,7 +93,12 @@ const TemporarySidebar: React.FC<State> = ({ open, setOpen }) => {
 
   return (
     <>
-      <Drawer anchor="left" open={open} onClose={handleClose}>
+      <Drawer
+        anchor="left"
+        open={open}
+        onClose={handleClose}
+        className={classes.drawer}
+      >
         <List className={classes.list}>
           <ListItem
             className={clsx(classes.listRoot, classes.list)}
@@ -138,6 +141,12 @@ const TemporarySidebar: React.FC<State> = ({ open, setOpen }) => {
             </ListItem>
           ))}
         </List>
+        {!loading && !user && (
+          <>
+            <Divider />
+            <SignInGuideDescription />
+          </>
+        )}
       </Drawer>
     </>
   );

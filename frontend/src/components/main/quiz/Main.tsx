@@ -1,7 +1,13 @@
 import React, { createContext, ReactChild } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Sidebar from "components/main/quiz/SideBar";
+import {
+  CircularProgress,
+  Backdrop,
+  useTheme,
+  useMediaQuery,
+} from "@material-ui/core";
 import { Route, Switch } from "react-router-dom";
+import Sidebar from "components/main/quiz/SideBar";
 import ReadyImage from "components/common/meta/Ready";
 import Single from "components/main/quiz/home/Main";
 import Header from "components/main/quiz/Header";
@@ -10,7 +16,7 @@ import Library from "components/main/quiz/library/Main";
 import { grey } from "@material-ui/core/colors";
 import PlayList from "components/main/quiz/playlist/Main";
 import Channel from "components/main/quiz/channel/Main";
-import { CircularProgress, Backdrop } from "@material-ui/core";
+import Subscriptions from "components/main/quiz/subscriptions/Main";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,11 +51,18 @@ const Main: React.FC = () => {
   const classes = useStyles();
   const [openSidebar, setOpenSidebar] = React.useState(false);
   const [openBackDrop, setOpenBackDrop] = React.useState(false);
+  const [foldSidebar, setFoldSidebar] = React.useState(false);
   const [backDropChildNode, setBackDropChildNode] = React.useState<ReactChild>(
     <CircularProgress />
   );
+  const theme = useTheme();
+  const isLargerLg = useMediaQuery(theme.breakpoints.up(1320));
   const handleDrawer = () => {
-    setOpenSidebar(!openSidebar);
+    if (isLargerLg) {
+      setFoldSidebar(!foldSidebar);
+    } else {
+      setOpenSidebar(!openSidebar);
+    }
   };
 
   return (
@@ -57,7 +70,7 @@ const Main: React.FC = () => {
       <div className={classes.root}>
         <Header handleDrawer={handleDrawer} />
         <TemporarySidebar open={openSidebar} setOpen={setOpenSidebar} />
-        <Sidebar />
+        <Sidebar foldSidebar={foldSidebar} />
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
@@ -69,7 +82,7 @@ const Main: React.FC = () => {
               <ReadyImage />
             </Route>
             <Route path={`/subscriptions`}>
-              <ReadyImage />
+              <Subscriptions />
             </Route>
             <Route path={`/library`}>
               <Library />

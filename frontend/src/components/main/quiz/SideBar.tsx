@@ -1,17 +1,27 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
+import {
+  Typography,
+  useTheme,
+  useMediaQuery,
+  ListItemText,
+  Divider,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import { useHistory } from "react-router-dom";
 import { themeColors } from "components/core/CustomeTheme";
-import HomeIcon from "@material-ui/icons/Home";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
-import { Typography } from "@material-ui/core";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
+import HomeIcon from "@material-ui/icons/Home";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase/app";
+import "firebase/auth";
+import { SignInGuideDescription } from "components/common/guide/SignInGuideDescription";
 
 const listItems = [
   {
@@ -42,18 +52,20 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
     "& > div.MuiDrawer-paperAnchorLeft": {
       borderRight: "0px",
+      width: "inherit",
     },
   },
-  drawerClose: {
+  drawerLessLg: {
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
-    width: theme.spacing(9) + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
-    },
+    width: theme.spacing(9) + 2,
+  },
+  drawerMoreLg: {
+    overflowX: "hidden",
+    width: theme.spacing(30),
   },
   toolbar: {
     display: "flex",
@@ -67,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
       color: themeColors.primary[400],
     },
   },
+  selectedMoreLg: {
+    backgroundColor: theme.palette.grey[300],
+  },
   list: {
     paddingTop: 0,
   },
@@ -79,26 +94,47 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     textAlign: "center",
   },
+  listRootMoreLg: {
+    padding: theme.spacing(1, 3),
+    flexDirection: "initial",
+    textAlign: "left",
+  },
   listChild: {
     minWidth: "initial",
+  },
+  listChildMoreLg: {
+    marginRight: theme.spacing(3),
   },
   menuName: {
     fontSize: "0.65rem",
     marginTop: theme.spacing(1),
   },
+  signInGuideBox: {
+    padding: theme.spacing(1.5, 3),
+    whiteSpace: "normal",
+    "&>*": {
+      margin: theme.spacing(1, 0),
+    },
+  },
 }));
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<{ foldSidebar: boolean }> = ({ foldSidebar }) => {
   const classes = useStyles();
   const history = useHistory();
+  const theme = useTheme();
+  const isLargerLg = useMediaQuery(theme.breakpoints.up(1320));
+  const [user, loading] = useAuthState(firebase.auth());
 
   return (
     <Drawer
       variant="permanent"
-      className={clsx(classes.drawer, classes.drawerClose)}
-      classes={{
-        paper: clsx(classes.drawerClose),
-      }}
+      className={clsx(
+        classes.drawer,
+        !foldSidebar && isLargerLg
+          ? classes.drawerMoreLg
+          : classes.drawerLessLg,
+        foldSidebar && isLargerLg && classes.drawerLessLg
+      )}
     >
       <div className={classes.toolbar} />
       <List className={classes.list}>
@@ -110,17 +146,41 @@ const Sidebar: React.FC = () => {
             onClick={() => history.push(item.linkPath)}
             className={clsx(classes.listRoot, {
               [classes.selected]: history.location.pathname === item.linkPath,
+              [classes.selectedMoreLg]:
+                history.location.pathname === item.linkPath &&
+                !foldSidebar &&
+                isLargerLg,
+              [classes.listRootMoreLg]: !foldSidebar && isLargerLg,
             })}
           >
-            <ListItemIcon className={classes.listChild}>
+            <ListItemIcon
+              className={clsx(classes.listChild, {
+                [classes.listChildMoreLg]: !foldSidebar && isLargerLg,
+              })}
+            >
               {item.icon}
             </ListItemIcon>
-            <Typography variant="caption" className={classes.menuName}>
-              {item.name}
-            </Typography>
+            {!foldSidebar && isLargerLg ? (
+              <ListItemText
+                primary={item.name}
+                primaryTypographyProps={{
+                  variant: "body2",
+                }}
+              />
+            ) : (
+              <Typography variant="caption" className={classes.menuName}>
+                {item.name}
+              </Typography>
+            )}
           </ListItem>
         ))}
       </List>
+      {!loading && !user && !foldSidebar && isLargerLg && (
+        <>
+          <Divider />
+          <SignInGuideDescription />
+        </>
+      )}
     </Drawer>
   );
 };

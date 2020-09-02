@@ -6,6 +6,11 @@ import PlayListLine from "components/main/quiz/library/sub/PlayListLine";
 import LikeListLine from "components/main/quiz/library/sub/LikeListLine";
 import { QuizDisplay, QuizResult } from "types/QuizTypes";
 import AnswerPanel from "components/common/quiz/AnswerPanel";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase/app";
+import "firebase/auth";
+import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
+import { GuestDescription } from "components/common/content/GuestDescription";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,26 +35,38 @@ const Main: React.FC = () => {
   const classes = useStyles();
   const [selected, setSelected] = useState<QuizDisplay>();
   const [result, setResult] = useState<QuizResult>(undefined);
+  const [user, loading] = useAuthState(firebase.auth());
 
   return (
-    <Box className={clsx(classes.root)}>
-      <Box className={clsx(classes.list)}>
-        <PlayListLine />
-        <Divider className={classes.divider} />
-        <LikeListLine
-          selected={selected}
-          setSelected={setSelected}
-          setResult={setResult}
-        />
-      </Box>
-      {selected && (
-        <AnswerPanel
-          selected={selected}
-          result={result}
-          setResult={setResult}
+    <>
+      {!loading && user && (
+        <Box className={clsx(classes.root)}>
+          <Box className={clsx(classes.list)}>
+            <PlayListLine />
+            <Divider className={classes.divider} />
+            <LikeListLine
+              selected={selected}
+              setSelected={setSelected}
+              setResult={setResult}
+            />
+          </Box>
+          {selected && (
+            <AnswerPanel
+              selected={selected}
+              result={result}
+              setResult={setResult}
+            />
+          )}
+        </Box>
+      )}
+      {!loading && !user && (
+        <GuestDescription
+          icon={<LocalLibraryIcon style={{ fontSize: 120 }} color="action" />}
+          title="お気に入りのクイズを楽しみいただけます"
+          caption="ログインすると、いいねやお気に入り登録したクイズにアクセスできます"
         />
       )}
-    </Box>
+    </>
   );
 };
 
