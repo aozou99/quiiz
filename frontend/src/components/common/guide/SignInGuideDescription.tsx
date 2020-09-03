@@ -19,7 +19,7 @@ export const SignInGuideDescription = () => {
     <>
       <Box className={classes.signInGuideBox}>
         <Typography variant={"body2"} color={"textPrimary"} gutterBottom>
-          クイズをいいね、お気に入り、チャンネル登録を行うにはログインしてください。
+          クイズを作成したり、いいね、お気に入り、チャンネル登録を行うにはログインしてください。
         </Typography>
         <SignInButton />
       </Box>

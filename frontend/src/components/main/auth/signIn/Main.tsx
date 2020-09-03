@@ -7,31 +7,31 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import SignInForm from "components/main/auth/signIn/sub/SignInForm";
-import Copyright from "components/main/auth/commonSub/Copyright";
+import Copyright from "components/common/guide/Copyright";
 import AuthService from "services/auth/AuthService";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    color: "white"
+    color: "white",
   },
   title: {
-    fontFamily: "Chalkboard"
-  }
+    fontFamily: "Chalkboard",
+  },
 }));
 
 const SignIn = () => {

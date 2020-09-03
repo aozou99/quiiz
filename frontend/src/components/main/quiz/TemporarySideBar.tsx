@@ -23,6 +23,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { SignInGuideDescription } from "components/common/guide/SignInGuideDescription";
+import Copyright from "components/common/guide/Copyright";
+import { AboutQuiiz } from "components/common/guide/AboutQuiiz";
 
 type State = {
   open: boolean;
@@ -59,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: "inherit",
     },
   },
+  title: {
+    fontFamily: "Chalkboard",
+  },
   selected: {
     backgroundColor: theme.palette.grey[300],
     "& $listChild": {
@@ -80,6 +85,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   listChild: {},
+  guideBox: {
+    padding: theme.spacing(1.5, 3),
+    whiteSpace: "normal",
+  },
 }));
 
 const TemporarySidebar: React.FC<State> = ({ open, setOpen }) => {
@@ -112,7 +121,7 @@ const TemporarySidebar: React.FC<State> = ({ open, setOpen }) => {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h5" color="primary">
+            <Typography variant="h5" color="primary" className={classes.title}>
               Quiiz
             </Typography>
           </ListItem>
@@ -147,6 +156,13 @@ const TemporarySidebar: React.FC<State> = ({ open, setOpen }) => {
             <SignInGuideDescription />
           </>
         )}
+        <Divider />
+        <AboutQuiiz
+          className={classes.guideBox}
+          onLink={() => setOpen(false)}
+        />
+        <Divider />
+        <Copyright className={classes.guideBox} textAlgin="left" />
       </Drawer>
     </>
   );

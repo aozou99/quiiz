@@ -17,6 +17,7 @@ import { grey } from "@material-ui/core/colors";
 import PlayList from "components/main/quiz/playlist/Main";
 import Channel from "components/main/quiz/channel/Main";
 import Subscriptions from "components/main/quiz/subscriptions/Main";
+import Terms from "components/main/quiz/terms/Main";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,6 +93,9 @@ const Main: React.FC = () => {
             </Route>
             <Route path={`/channel/:id`}>
               <Channel />
+            </Route>
+            <Route path={`/terms`}>
+              <Terms />
             </Route>
           </Switch>
         </main>

@@ -22,6 +22,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { SignInGuideDescription } from "components/common/guide/SignInGuideDescription";
+import Copyright from "components/common/guide/Copyright";
+import { AboutQuiiz } from "components/common/guide/AboutQuiiz";
 
 const listItems = [
   {
@@ -109,12 +111,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.65rem",
     marginTop: theme.spacing(1),
   },
-  signInGuideBox: {
+  guideBox: {
     padding: theme.spacing(1.5, 3),
     whiteSpace: "normal",
-    "&>*": {
-      margin: theme.spacing(1, 0),
-    },
   },
 }));
 
@@ -179,6 +178,14 @@ const Sidebar: React.FC<{ foldSidebar: boolean }> = ({ foldSidebar }) => {
         <>
           <Divider />
           <SignInGuideDescription />
+        </>
+      )}
+      {!foldSidebar && isLargerLg && (
+        <>
+          <Divider />
+          <AboutQuiiz className={classes.guideBox} />
+          <Divider />
+          <Copyright className={classes.guideBox} textAlgin="left" />
         </>
       )}
     </Drawer>

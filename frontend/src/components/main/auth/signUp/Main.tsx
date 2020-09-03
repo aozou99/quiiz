@@ -6,24 +6,24 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Copyright from "components/main/auth/commonSub/Copyright";
+import Copyright from "components/common/guide/Copyright";
 import SignUpForm from "components/main/auth/signUp/sub/SignUpForm";
 import AuthService from "services/auth/AuthService";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   title: {
-    fontFamily: "Chalkboard"
-  }
+    fontFamily: "Chalkboard",
+  },
 }));
 
 const SignUp = () => {
