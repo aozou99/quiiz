@@ -18,6 +18,7 @@ import PlayList from "components/main/quiz/playlist/Main";
 import Channel from "components/main/quiz/channel/Main";
 import Subscriptions from "components/main/quiz/subscriptions/Main";
 import Terms from "components/main/quiz/terms/Main";
+import Privacy from "components/main/quiz/privacy/Main";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,6 +97,9 @@ const Main: React.FC = () => {
             </Route>
             <Route path={`/terms`}>
               <Terms />
+            </Route>
+            <Route path={`/privacy`}>
+              <Privacy />
             </Route>
           </Switch>
         </main>

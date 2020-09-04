@@ -1,14 +1,14 @@
 import React from "react";
 import { Box, Typography, Theme, makeStyles } from "@material-ui/core";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => ({
   listRoot: {
     margin: theme.spacing(0),
     padding: theme.spacing(0.5, 3),
     listStyle: "circle",
-    "&>li>a": {
-      textDecoration: "none",
+    "&>li": {
+      cursor: "pointer",
     },
   },
 }));
@@ -34,12 +34,15 @@ export const AboutQuiiz: React.FC<{
             利用規約
           </Typography>
         </li>
-        <li>
-          <Link to="/privacy">
-            <Typography variant={"caption"} color={"textSecondary"}>
-              プライバシーポリシー
-            </Typography>
-          </Link>
+        <li
+          onClick={() => {
+            history.push("/privacy");
+            onLink && onLink();
+          }}
+        >
+          <Typography variant={"caption"} color={"textSecondary"}>
+            プライバシーポリシー
+          </Typography>
         </li>
       </ul>
     </Box>

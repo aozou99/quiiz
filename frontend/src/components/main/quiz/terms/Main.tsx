@@ -36,12 +36,12 @@ const Main: React.FC = () => {
         )}
         <ul className={classes.list}>
           {list.map((s, i) => (
-            <li>
+            <li key={s}>
               <Typography variant="body2">{s}</Typography>
               {children && children[i] && (
                 <ul className={classes.list}>
                   {children[i].map((s2: string) => (
-                    <li>
+                    <li key={s2}>
                       <Typography variant="body2">{s2}</Typography>
                     </li>
                   ))}
