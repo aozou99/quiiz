@@ -143,7 +143,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   ];
   const [likeClick, setLikeClick] = useState(false);
   const [isOpenList, setIsOpenList] = useState(false);
-  const { loaded: likeLoaded, isLike, likeCount } = useFetchLike(
+  const { loaded: likeLoaded, isLike, likeCount, setLikeCount } = useFetchLike(
     selected.id,
     likeClick
   );
@@ -182,7 +182,8 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     QuizService.likeOrCancel({
       quizId: selected.id,
       authorId: selected.authorId,
-    }).then(() => {
+    }).then((isCancel) => {
+      setLikeCount((pre) => (isCancel ? pre + 1 : pre - 1));
       setTimeout(() => setLikeClick(!likeClick), 300);
     });
   };

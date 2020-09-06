@@ -4,14 +4,16 @@ import {
   createStyles,
   Typography,
   Box,
+  Button,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import React from "react";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
-import { useFetchLikeQuizzes } from "services/quiz/QuizHooks";
+import { usePagenateLikeQuizzes } from "services/quiz/QuizHooks";
 import Item from "components/common/quiz/Item";
 import DummyItem from "components/common/quiz/DummyItem";
 import { QuizDisplay } from "types/QuizTypes";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       display: "flex",
       flexWrap: "wrap",
-      justifyContent: "start",
+      justifyContent: "space-around",
       "& > *": {
         margin: theme.spacing(1),
       },
@@ -34,6 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down("xs")]: {
         flex: "4",
       },
+    },
+    showAll: {
+      marginLeft: "auto",
+    },
+    noItemsCaption: {
+      marginRight: "auto",
     },
   })
 );
@@ -50,13 +58,26 @@ const LikeListLine: React.FC<Props> = ({
   selected,
 }) => {
   const classes = useStyles();
-  const { loaded, likedQuizzes } = useFetchLikeQuizzes();
+  const { loaded, likedQuizzes, hasNext } = usePagenateLikeQuizzes({
+    perCount: 4,
+  });
+  const history = useHistory();
 
   return (
     <>
       <Box className={classes.subTitle}>
         <FavoriteBorderOutlinedIcon />
         <Typography variant="subtitle1">いいねしたクイズ</Typography>
+        {hasNext && (
+          <Button
+            color="primary"
+            variant="text"
+            className={classes.showAll}
+            onClick={() => history.push("/playlist?list=LL")}
+          >
+            すべてを表示する
+          </Button>
+        )}
       </Box>
       <Box className={classes.list}>
         {loaded && likedQuizzes
@@ -83,7 +104,11 @@ const LikeListLine: React.FC<Props> = ({
               .fill(null)
               .map((_, i) => <DummyItem key={i} />)}
         {loaded && likedQuizzes.length === 0 && (
-          <Typography variant={"subtitle2"} color="textSecondary">
+          <Typography
+            variant={"subtitle2"}
+            color="textSecondary"
+            className={classes.noItemsCaption}
+          >
             いいねをしたクイズがここに表示されます
           </Typography>
         )}

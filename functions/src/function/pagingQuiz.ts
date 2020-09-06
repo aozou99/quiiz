@@ -49,7 +49,7 @@ module.exports = functions.https.onCall(async (data, _context) => {
     lastQuizId: snapshot.docs[snapshot.size - 1].data().id,
   });
   const hasNext = nextQuery.get().then((next) => {
-    return next.size > 1;
+    return next.size > 0;
   });
 
   return {

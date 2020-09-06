@@ -11,7 +11,7 @@ type parameters = {
   channelId?: string;
   lastQuizId?: string;
 };
-export const usePageNateQuiz = (parameters?: parameters) => {
+export const usePagenateQuiz = (parameters?: parameters) => {
   const [apiOptions, setApiOptions] = useState(parameters);
   const [quizzes, setFirstDocuments] = useState<any>([]);
   const [loaded, setLoaded] = useState(false);
@@ -113,22 +113,33 @@ export const useFetchLike = (quizId: string, likeClick: boolean) => {
       mounted = false;
     };
   }, [quizId, likeClick]);
-  return { isLike, loaded, likeCount };
+  return { isLike, loaded, likeCount, setLikeCount };
 };
 
-export const useFetchLikeQuizzes = () => {
+export const usePagenateLikeQuizzes = (parameters: {
+  lastLikeId?: string;
+  perCount?: number;
+}) => {
+  const [apiOptions, setApiOptions] = useState(parameters);
   const [loaded, setLoaded] = useState(false);
   const [likedQuizzes, setLikedQuizzes] = useState<any>([]);
   const [user, loading] = useAuthState(firebase.auth());
+  const [hasNext, setHasNext] = useState(false);
   useEffect(() => {
     let mounted = true;
+    setLoaded(false);
     if (!loading && user) {
       firebase
         .functions()
-        .httpsCallable("pagingMyLikeQuiz")()
+        .httpsCallable("pagingMyLikeQuiz")(apiOptions)
         .then((res) => {
           if (mounted) {
-            setLikedQuizzes(res.data || []);
+            console.log(res.data);
+            setLikedQuizzes((pre: any[]) => [
+              ...pre,
+              ...(res.data?.quizzes || []),
+            ]);
+            setHasNext(res.data?.hasNext);
             setLoaded(true);
           }
         })
@@ -146,6 +157,12 @@ export const useFetchLikeQuizzes = () => {
     return () => {
       mounted = false;
     };
-  }, [user, loading]);
-  return { loaded, likedQuizzes };
+  }, [user, loading, apiOptions]);
+
+  useEffect(() => {
+    if (parameters?.lastLikeId !== apiOptions?.lastLikeId) {
+      setApiOptions(parameters);
+    }
+  }, [parameters, apiOptions]);
+  return { loaded, likedQuizzes, setLikedQuizzes, hasNext };
 };

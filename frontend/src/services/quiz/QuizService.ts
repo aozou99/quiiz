@@ -175,12 +175,12 @@ class QuizService extends Service {
       // 登録
       batch.set(likedUser.ref, {
         id: me.uid,
-        ref: this.userRef.doc(me.uid),
+        quizRef: this.userRef.doc(me.uid),
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       batch.set(myLikedQuiz.ref, {
         id: quizId,
-        ref: likedQuizRef,
+        quizRef: likedQuizRef,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
       // カウントアップ

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       display: "flex",
       flexWrap: "wrap",
-      justifyContent: "start",
+      justifyContent: "space-around",
       "& > *": {
         margin: theme.spacing(1),
       },
@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down("xs")]: {
         flex: "4",
       },
+    },
+    noItemsCaption: {
+      marginRight: "auto",
     },
   })
 );
@@ -67,7 +70,11 @@ const PlayListLine: React.FC = () => {
               .fill(null)
               .map((_, i) => <DummyItem key={i} />)}
         {loaded && playLists.length === 0 && (
-          <Typography variant={"subtitle2"} color="textSecondary">
+          <Typography
+            variant={"subtitle2"}
+            color="textSecondary"
+            className={classes.noItemsCaption}
+          >
             作成した再生リストがここに表示されます
           </Typography>
         )}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { usePageNateQuiz } from "services/quiz/QuizHooks";
+import { usePagenateQuiz } from "services/quiz/QuizHooks";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
@@ -54,7 +54,7 @@ type pagingParam = {
 
 export const ListAndAnswer: React.FC<pagingParam> = (initPagingParam = {}) => {
   const [pagingParam, setPagingParam] = useState<pagingParam>(initPagingParam);
-  const { quizzes, loaded, hasNext } = usePageNateQuiz(pagingParam);
+  const { quizzes, loaded, hasNext } = usePagenateQuiz(pagingParam);
   const classes = useStyles();
   const [selected, setSelected] = useState<QuizDisplay>();
   const [result, setResult] = useState<QuizResult>(undefined);

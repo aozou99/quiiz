@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, Theme, createStyles, Divider } from "@material-ui/core";
+import {
+  Box,
+  Theme,
+  createStyles,
+  Divider,
+  Container,
+} from "@material-ui/core";
 import clsx from "clsx";
 import PlayListLine from "components/main/quiz/library/sub/PlayListLine";
 import LikeListLine from "components/main/quiz/library/sub/LikeListLine";
@@ -15,7 +21,7 @@ import { GuestDescription } from "components/common/content/GuestDescription";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(2, 0),
       display: "flex",
       flexWrap: "nowrap",
       alignItems: "start",
@@ -23,10 +29,12 @@ const useStyles = makeStyles((theme: Theme) =>
       minHeight: `calc(100vh - ${theme.spacing(12)}px)`,
     },
     list: {
-      flex: 1,
+      flex: 4,
+      paddingRight: theme.spacing(3),
     },
     divider: {
       margin: theme.spacing(2, 0),
+      maxWidth: theme.breakpoints.width("lg"),
     },
   })
 );
@@ -38,18 +46,19 @@ const Main: React.FC = () => {
   const [user, loading] = useAuthState(firebase.auth());
 
   return (
-    <>
+    <Container maxWidth="xl">
       {!loading && user && (
         <Box className={clsx(classes.root)}>
-          <Box className={clsx(classes.list)}>
+          <Container maxWidth="lg" className={clsx(classes.list)}>
             <PlayListLine />
             <Divider className={classes.divider} />
+
             <LikeListLine
               selected={selected}
               setSelected={setSelected}
               setResult={setResult}
             />
-          </Box>
+          </Container>
           {selected && (
             <AnswerPanel
               selected={selected}
@@ -66,7 +75,7 @@ const Main: React.FC = () => {
           caption="ログインすると、いいねやお気に入り登録したクイズにアクセスできます"
         />
       )}
-    </>
+    </Container>
   );
 };
 

@@ -89,7 +89,7 @@ const Main: React.FC = () => {
             <Route path={`/library`}>
               <Library />
             </Route>
-            <Route path={`/playlist/:id`}>
+            <Route path={[`/playlist/:id`, `/playlist`]}>
               <PlayList />
             </Route>
             <Route path={`/channel/:id`}>

@@ -3,24 +3,52 @@ import admin from "../core/admin";
 import imgUrl from "../helper/imageUrl";
 
 const db = admin.firestore();
+const genBaseQuery = async (uid: string, params: any, lastLikedQuiz?: any) => {
+  let baseQuery = db
+    .collection("users")
+    .doc(uid)
+    .collection("likedQuizzes")
+    .orderBy("createdAt");
+
+  if (lastLikedQuiz) {
+    baseQuery = baseQuery.startAfter(lastLikedQuiz);
+  }
+
+  if (!lastLikedQuiz && params?.lastLikeId) {
+    const snapshot = await db
+      .collection("users")
+      .doc(uid)
+      .collection("likedQuizzes")
+      .doc(params.lastLikeId)
+      .get();
+    baseQuery = baseQuery.startAfter(snapshot);
+  }
+
+  return baseQuery.limit(params?.perCount || 4);
+};
 
 module.exports = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     return;
   }
-  const uid = context.auth.uid;
-  const baseQuery = db
-    .collection("users")
-    .doc(uid)
-    .collection("likedQuizzes")
-    .orderBy("createdAt")
-    .limit(8);
-
-  if (data && data.date) {
-    baseQuery.startAfter(data.date);
-  }
+  const baseQuery = await genBaseQuery(context.auth.uid, data);
 
   const snapshot = await baseQuery.get();
+  if (snapshot.size < 1) {
+    return {
+      quizzes: [],
+      hasNext: false,
+    };
+  }
+
+  const nextQuery = await genBaseQuery(
+    context.auth.uid,
+    data,
+    snapshot.docs[snapshot.size - 1]
+  );
+  const hasNext = nextQuery.get().then((next) => {
+    return next.size > 0;
+  });
 
   const convertBeforeLikedQuiz = snapshot.docs.map((likedQuiz) => {
     return likedQuiz.data().quizRef.get();
@@ -47,5 +75,8 @@ module.exports = functions.https.onCall(async (data, context) => {
     };
   });
 
-  return Promise.all(rs);
+  return {
+    quizzes: await Promise.all(rs),
+    hasNext: await hasNext,
+  };
 });
