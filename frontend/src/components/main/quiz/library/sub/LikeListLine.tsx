@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       display: "flex",
       flexWrap: "wrap",
-      justifyContent: "space-around",
+      justifyContent: "start",
       "& > *": {
         margin: theme.spacing(1),
       },

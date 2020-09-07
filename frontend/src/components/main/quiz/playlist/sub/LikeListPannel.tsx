@@ -14,13 +14,10 @@ import {
   IconButton,
   Typography,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
-import { useFetchPlayListContents } from "services/playList/PlayListHooks";
 import { QuizDisplay } from "types/QuizTypes";
 import { grey } from "@material-ui/core/colors";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DummyQuizListPannel from "components/main/quiz/playlist/sub/DummyQuizListPannel";
-import { EditableTextField } from "components/common/input/EditableTextField";
 import { usePagenateLikeQuizzes } from "services/quiz/QuizHooks";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import QuizService from "services/quiz/QuizService";

@@ -4,6 +4,7 @@ import {
   createStyles,
   Typography,
   Box,
+  Button,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import PlaylistPlayIcon from "@material-ui/icons/PlaylistPlay";
@@ -12,6 +13,9 @@ import { useFetchPlayListsWithThumbnail } from "services/playList/PlayListHooks"
 import Item from "components/common/playList/Item";
 import DummyItem from "components/common/playList/DummyItem";
 import { useHistory } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       display: "flex",
       flexWrap: "wrap",
-      justifyContent: "space-around",
+      justifyContent: "start",
       "& > *": {
         margin: theme.spacing(1),
       },
@@ -38,19 +42,35 @@ const useStyles = makeStyles((theme: Theme) =>
     noItemsCaption: {
       marginRight: "auto",
     },
+    showAll: {
+      marginLeft: "auto",
+    },
   })
 );
 
 const PlayListLine: React.FC = () => {
   const classes = useStyles();
-  const { playLists, loaded } = useFetchPlayListsWithThumbnail();
+  const { playLists, loaded, hasNext } = useFetchPlayListsWithThumbnail({
+    perCount: 4,
+  });
   const history = useHistory();
+  const [user] = useAuthState(firebase.auth());
 
   return (
     <>
       <Box className={classes.subTitle}>
         <PlaylistPlayIcon />
         <Typography variant="subtitle1">再生リスト</Typography>
+        {hasNext && user && (
+          <Button
+            color="primary"
+            variant="text"
+            className={classes.showAll}
+            onClick={() => history.push(`/channel/${user.uid}?tabIndex=1`)}
+          >
+            すべてを表示する
+          </Button>
+        )}
       </Box>
       <Box className={classes.list}>
         {loaded

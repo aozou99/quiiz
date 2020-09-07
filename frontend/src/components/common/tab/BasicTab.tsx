@@ -63,9 +63,10 @@ const TabPanel = (props: TabPanelProps) => {
 export const BasicTab: React.FC<{
   tabsprops: TabProps[];
   tabsClassName?: string;
-}> = ({ tabsprops, tabsClassName }) => {
+  selectedTab?: number;
+}> = ({ tabsprops, tabsClassName, selectedTab = 0 }) => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(selectedTab);
 
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);

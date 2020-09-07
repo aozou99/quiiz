@@ -86,6 +86,7 @@ const useStyles = makeStyles((theme) => ({
   },
   list: {
     paddingTop: 0,
+    paddingBottom: 0,
   },
   listRoot: {
     paddingLeft: theme.spacing(0),

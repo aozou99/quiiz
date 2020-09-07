@@ -31,9 +31,10 @@ module.exports = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     return;
   }
-  const baseQuery = await genBaseQuery(context.auth.uid, data);
 
-  const snapshot = await baseQuery.get();
+  const snapshot = await genBaseQuery(context.auth.uid, data).then((doc) =>
+    doc.get()
+  );
   if (snapshot.size < 1) {
     return {
       quizzes: [],
@@ -41,14 +42,11 @@ module.exports = functions.https.onCall(async (data, context) => {
     };
   }
 
-  const nextQuery = await genBaseQuery(
+  const hasNext = genBaseQuery(
     context.auth.uid,
     data,
     snapshot.docs[snapshot.size - 1]
-  );
-  const hasNext = nextQuery.get().then((next) => {
-    return next.size > 0;
-  });
+  ).then((query) => query.get().then((next) => next.size > 0));
 
   const convertBeforeLikedQuiz = snapshot.docs.map((likedQuiz) => {
     return likedQuiz.data().quizRef.get();

@@ -7,6 +7,7 @@ import { ChannelHeader } from "components/main/quiz/channel/sub/header/ChannelHe
 import { BasicTab } from "components/common/tab/BasicTab";
 import { QuizTabPannel } from "components/main/quiz/channel/sub/tabPannel/QuizTabPannel";
 import { PlayListTabPannel } from "components/main/quiz/channel/sub/tabPannel/PlayListTabPannel";
+import { useQuery } from "utils/helper/queryParameter";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,6 +27,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const Main: React.FC = () => {
   const classes = useStyles();
   const { id } = useParams();
+  const query = useQuery();
+  const selectedTab = Number.parseInt(query.get("tabIndex") || "0") || 0;
 
   return (
     <Box className={clsx(classes.root)}>
@@ -42,6 +45,7 @@ const Main: React.FC = () => {
           },
         ]}
         tabsClassName={classes.tabs}
+        selectedTab={selectedTab}
       />
     </Box>
   );

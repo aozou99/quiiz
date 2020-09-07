@@ -110,6 +110,8 @@ const PlayListDialog: React.FC<State> = ({
     if (listId) {
       // 作成したリストにクイズを登録
       PlayListService.addToList(listId, quiz.authorId, quiz.id);
+      update();
+      afterChecked && afterChecked();
     }
     // 登録完了した旨のsnackbarを表示
     onClose();

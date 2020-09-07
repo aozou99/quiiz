@@ -134,7 +134,6 @@ export const usePagenateLikeQuizzes = (parameters: {
         .httpsCallable("pagingMyLikeQuiz")(apiOptions)
         .then((res) => {
           if (mounted) {
-            console.log(res.data);
             setLikedQuizzes((pre: any[]) => [
               ...pre,
               ...(res.data?.quizzes || []),

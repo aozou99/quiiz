@@ -16,19 +16,19 @@ export const useFetchPlayLists = (userId?: string) => {
     { id: string; name: string; public: boolean }[]
   >([]);
   const [loaded, setLoaded] = useState(false);
-  if (!userId) {
-    userId = firebase.auth().currentUser?.uid;
-  }
+  const [user, loading] = useAuthState(firebase.auth());
+  const [reload, setReload] = useState(false);
+
   useEffect(() => {
     let mounted = true;
-
-    if (!userId) {
+    if (loading) return;
+    if (!user) {
       if (mounted) {
         setPlayLists([]);
         setLoaded(true);
       }
     } else {
-      playListRef(userId)
+      playListRef(userId || user.uid)
         .get()
         .then((snapshot) => {
           if (mounted) {
@@ -49,14 +49,14 @@ export const useFetchPlayLists = (userId?: string) => {
     return () => {
       mounted = false;
     };
-  }, [userId]);
+  }, [userId, loading, user, reload]);
 
-  return { playLists, loaded };
+  return { playLists, loaded, reload: () => setReload(!reload) };
 };
 
 export const useCheckList = (quizId: string) => {
   const [checked, setChecked] = useState<number[]>([]);
-  const { playLists, loaded } = useFetchPlayLists();
+  const { playLists, loaded, reload } = useFetchPlayLists();
   const [click, setClick] = useState(false);
   useEffect(() => {
     let mounted = true;
@@ -90,25 +90,42 @@ export const useCheckList = (quizId: string) => {
       mounted = false;
     };
   }, [loaded, playLists, quizId, click]);
-  return { checked, playLists, loaded, update: () => setClick(!click) };
+  return {
+    checked,
+    playLists,
+    loaded,
+    update: () => {
+      reload();
+      setClick(!click);
+    },
+  };
 };
 
 export const useFetchPlayListsWithThumbnail = (parameters?: {
   channelId?: string;
+  perCount?: number;
+  lastListId?: string;
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [playLists, setPlayLists] = useState<any>([]);
-  const [apiOptions] = useState(parameters);
+  const [apiOptions, setApiOptions] = useState(parameters);
   const [user, loading] = useAuthState(firebase.auth());
+  const [hasNext, setHasNext] = useState(false);
+
   useEffect(() => {
     let mounted = true;
+    setLoaded(false);
     if (!loading && user) {
       firebase
         .functions()
         .httpsCallable("pagingPlayList")({ ...apiOptions })
         .then((res) => {
           if (mounted) {
-            setPlayLists(res.data || []);
+            setPlayLists((pre: any[]) => [
+              ...pre,
+              ...(res.data?.playLists || []),
+            ]);
+            setHasNext(res.data?.hasNext);
             setLoaded(true);
           }
         });
@@ -123,7 +140,14 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
       mounted = false;
     };
   }, [apiOptions, loading, user]);
-  return { loaded, playLists };
+
+  useEffect(() => {
+    if (parameters?.lastListId !== apiOptions?.lastListId) {
+      setApiOptions(parameters);
+    }
+  }, [parameters, apiOptions]);
+
+  return { loaded, playLists, hasNext };
 };
 
 export const useFetchPlayListContents = (playListId: string) => {
