@@ -12,6 +12,7 @@ const endpoints = [
   "pagingPlayListContents",
   "getChannelHeader",
   "getOgpListByUrl",
+  "getSubscribeChannels",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {
@@ -30,10 +31,17 @@ if (
 }
 
 // トリガー
-exports.autoDeleteQuizThumbnails = require("./function/autoDeleteQuizThumbnails");
-exports.onUserCraete = require("./function/onUserCreate");
-exports.onDeletePlayList = require("./function/onDeletePlayList");
-exports.onSubscribeChannel = require("./function/onSubscribeChannel");
-exports.onUnSubscribeChannel = require("./function/onUnSubscribeChannel");
-exports.onLikeQuiz = require("./function/onLikeQuiz");
-exports.onUnLikeQuiz = require("./function/onUnLikeQuiz");
+const triggers = [
+  "autoDeleteQuizThumbnails",
+  "onUserCreate",
+  "onDeletePlayList",
+  "onSubscribeChannel",
+  "onUnSubscribeChannel",
+  "onLikeQuiz",
+  "onUnLikeQuiz",
+  "onCreateQuiz",
+  "onDeleteQuiz",
+];
+triggers.forEach((trigger) => {
+  exports[trigger] = require(`./function/${trigger}`);
+});

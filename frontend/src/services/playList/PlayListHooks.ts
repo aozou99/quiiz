@@ -3,6 +3,7 @@ import "firebase/firestore";
 import "firebase/auth";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { functions } from "utils/firebase/functions";
 
 const playListRef = (userId: string) =>
   firebase
@@ -116,8 +117,7 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
     let mounted = true;
     setLoaded(false);
     if (!loading && user) {
-      firebase
-        .functions()
+      functions
         .httpsCallable("pagingPlayList")({ ...apiOptions })
         .then((res) => {
           if (mounted) {
@@ -159,8 +159,7 @@ export const useFetchPlayListContents = (playListId: string) => {
 
   useEffect(() => {
     let mounted = true;
-    firebase
-      .functions()
+    functions
       .httpsCallable("pagingPlayListContents")({ id: playListId })
       .then((res) => {
         if (mounted) {

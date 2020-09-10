@@ -60,6 +60,7 @@ const SignInForm = () => {
           break;
 
         case "auth/user-not-found":
+        case "auth/wrong-password":
           setError("user", {
             type: error.code,
             message: "メールアドレス/パスワードのいずれかが誤っています",

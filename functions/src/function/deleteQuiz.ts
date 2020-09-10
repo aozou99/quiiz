@@ -6,11 +6,13 @@ const db = admin.firestore();
 module.exports = functions.https.onCall(async (data, context) => {
   if (!context.auth || !data.ids)
     throw new HttpsError("invalid-argument", "Invalid Parameter");
+
+  const uid = context.auth.uid;
   const rs = [];
   for (const id of data.ids) {
     const result = db
       .collection("users")
-      .doc(context.auth.uid)
+      .doc(uid)
       .collection("quizzes")
       .doc(id)
       .delete()

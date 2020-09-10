@@ -48,6 +48,14 @@ export GOOGLE_APPLICATION_CREDENTIALS=your_service_account.json
 firebase emulators:start --import=./data
 ```
 
+### Test Account
+
+| mail           | password |
+| -------------- | -------- |
+| test1@test.com | test1234 |
+| test2@test.com | test1234 |
+| test3@test.com | test1234 |
+
 ### Export FireStore Data
 
 ```

@@ -125,7 +125,7 @@ export const EditableTextField: React.FC<{
         </Box>
       )}
       <Box className={clsx(!edit && classes.displayNone)}>
-        {value.length > 0 && (
+        {
           <TextField
             required
             margin="dense"
@@ -153,7 +153,7 @@ export const EditableTextField: React.FC<{
               if (e.which === 27) setEdit(false);
             }}
           />
-        )}
+        }
         <Box className={classes.inputTitleButtonGroup}>
           <Button
             onClick={() => {

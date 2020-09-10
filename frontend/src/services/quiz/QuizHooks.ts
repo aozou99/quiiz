@@ -1,11 +1,11 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/functions";
 import "firebase/auth";
 import { useState, useEffect } from "react";
 import imageUrl from "utils/helper/imageUrl";
 import { getCounter } from "utils/helper/counter";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { functions } from "utils/firebase/functions";
 
 type parameters = {
   channelId?: string;
@@ -20,8 +20,7 @@ export const usePagenateQuiz = (parameters?: parameters) => {
   useEffect(() => {
     let mounted = true;
     setLoaded(false);
-    firebase
-      .functions()
+    functions
       .httpsCallable("pagingQuiz")({ ...apiOptions })
       .then((res) => {
         if (mounted) {

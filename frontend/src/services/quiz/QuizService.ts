@@ -6,6 +6,7 @@ import "firebase/storage";
 import { QuizFormData } from "types/QuizTypes";
 import hash from "object-hash";
 import Service from "services/Service";
+import { functions } from "utils/firebase/functions";
 
 const uploadThumbnailPath = "images/quiz/thumbnails/";
 const defaultThumbnailPath = "images/default/quiiz-thumbnail.png";
@@ -63,7 +64,7 @@ class QuizService extends Service {
       delete postData.thumbnail;
     }
 
-    const res = await firebase.functions().httpsCallable("updateQuiz")({
+    const res = await functions.httpsCallable("updateQuiz")({
       docId,
       isUpdate,
       postData,
@@ -78,7 +79,7 @@ class QuizService extends Service {
   }
 
   async delete(quizId: string[]) {
-    const res = await firebase.functions().httpsCallable("deleteQuiz")({
+    const res = await functions.httpsCallable("deleteQuiz")({
       ids: quizId,
     });
     return res.data.isSuccess;

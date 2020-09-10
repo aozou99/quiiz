@@ -1,8 +1,9 @@
 import firebase from "firebase/app";
-import "firebase/functions";
+import "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { useState, useEffect } from "react";
+import { functions } from "utils/firebase/functions";
 
 export const useFetchChannelHeader = (channelId: string) => {
   const [loaded, setLoaded] = useState(false);
@@ -14,8 +15,7 @@ export const useFetchChannelHeader = (channelId: string) => {
 
   useEffect(() => {
     let mounted = true;
-    firebase
-      .functions()
+    functions
       .httpsCallable("getChannelHeader")({ channelId })
       .then((res) => {
         if (mounted) {

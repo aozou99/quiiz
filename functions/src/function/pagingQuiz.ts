@@ -2,25 +2,36 @@ import functions from "../core/functions";
 import admin from "../core/admin";
 import convertQuizResponse from "../helper/convertQuizResponse";
 import { PRIVACY } from "../costant/InputConst";
+import { pagingQuizApiOptions } from "../types/apiOptions";
 
 const db = admin.firestore();
-const genBaseQuery = async (data: {
-  channelId: string;
-  lastQuizId: string;
-}) => {
-  let baseQuery;
-  if (data?.channelId) {
+const genBaseQuery = async (data: Partial<pagingQuizApiOptions>) => {
+  let baseQuery: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>;
+  // collection
+  if (data.channelId) {
     baseQuery = db
       .collection("users")
       .doc(data.channelId)
-      .collection("quizzes")
-      .where("privacy", "==", PRIVACY.PUBLIC)
-      .orderBy("createdAt", "asc");
+      .collection("quizzes");
   } else {
-    baseQuery = db
-      .collectionGroup("quizzes")
-      .where("privacy", "==", PRIVACY.PUBLIC)
-      .orderBy("createdAt", "asc");
+    baseQuery = db.collectionGroup("quizzes");
+  }
+
+  // where
+  baseQuery = baseQuery.where("privacy", "==", PRIVACY.PUBLIC);
+  if (data.where) {
+    Object.entries(data.where).forEach(([field, condition]) => {
+      baseQuery = baseQuery.where(field, condition.operator, condition.value);
+    });
+  }
+
+  // orderBy
+  if (data.order) {
+    Object.entries(data.order).forEach(([field, direction]) => {
+      baseQuery = baseQuery.orderBy(field, direction);
+    });
+  } else {
+    baseQuery = baseQuery.orderBy("createdAt", "desc");
   }
 
   if (data && data.lastQuizId) {
@@ -31,7 +42,7 @@ const genBaseQuery = async (data: {
     baseQuery = baseQuery.startAfter(snapshot.docs[0]);
   }
 
-  return baseQuery.limit(16);
+  return baseQuery.limit(data.perCount || 16);
 };
 
 module.exports = functions.https.onCall(async (data, _context) => {

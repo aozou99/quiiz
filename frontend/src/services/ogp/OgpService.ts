@@ -1,13 +1,8 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/functions";
-import "firebase/auth";
-import "firebase/storage";
+import { functions } from "utils/firebase/functions";
 
 class OgpService {
   getOpg(urls: string[]) {
-    return firebase
-      .functions()
+    return functions
       .httpsCallable("getOgpListByUrl")({ urls })
       .then((res) => res.data);
   }

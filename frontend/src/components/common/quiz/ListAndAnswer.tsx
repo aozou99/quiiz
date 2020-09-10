@@ -15,6 +15,7 @@ import AnswerPanel from "components/common/quiz/AnswerPanel";
 import { QuizResult, QuizDisplay } from "types/QuizTypes";
 import DummyItem from "components/common/quiz/DummyItem";
 import useInfiniteScroll from "react-infinite-scroll-hook";
+import { pagingQuizApiOptions } from "types/apiOptions";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,20 +48,22 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-type pagingParam = {
-  lastQuizId?: string;
-  channelId?: string;
-};
-
-export const ListAndAnswer: React.FC<pagingParam> = (initPagingParam = {}) => {
-  const [pagingParam, setPagingParam] = useState<pagingParam>(initPagingParam);
+export const ListAndAnswer: React.FC<pagingQuizApiOptions> = (
+  initPagingParam = {}
+) => {
+  const [pagingParam, setPagingParam] = useState<pagingQuizApiOptions>(
+    initPagingParam
+  );
   const { quizzes, loaded, hasNext } = usePagenateQuiz(pagingParam);
   const classes = useStyles();
   const [selected, setSelected] = useState<QuizDisplay>();
   const [result, setResult] = useState<QuizResult>(undefined);
   const handleLoadMore = () => {
-    setPagingParam({
-      lastQuizId: quizzes[quizzes.length - 1].id,
+    setPagingParam((pre) => {
+      return {
+        ...pre,
+        lastQuizId: quizzes[quizzes.length - 1].id,
+      };
     });
   };
 

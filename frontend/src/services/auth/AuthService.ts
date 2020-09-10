@@ -1,11 +1,11 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/functions";
 import "firebase/storage";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import Service from "services/Service";
 import Jimp from "jimp";
+import { functions } from "utils/firebase/functions";
 
 type AuthArgs = {
   displayName?: string;
@@ -40,7 +40,7 @@ class AuthService extends Service {
   }
 
   async existDisplayName(displayName: string) {
-    const res = await firebase.functions().httpsCallable("existDisplayName")({
+    const res = await functions.httpsCallable("existDisplayName")({
       displayName,
     });
     return res.data.isExist;
