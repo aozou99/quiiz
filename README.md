@@ -62,6 +62,14 @@ firebase emulators:start --import=./data
 firebase emulators:export --force ./data/
 ```
 
+### Firestore Index Update
+
+Issue the following commands when you update the Firestore index
+
+```
+firebase firestore:indexes > firestore.indexes.json
+```
+
 # Note
 
 comming soon ...
