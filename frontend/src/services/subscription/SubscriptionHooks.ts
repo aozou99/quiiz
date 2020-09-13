@@ -12,7 +12,6 @@ export const useFetchSubscribeChannels = () => {
       .httpsCallable("getSubscribeChannels")()
       .then((res) => {
         if (mounted) {
-          console.log(res.data);
           setChannels(res.data);
         }
       })

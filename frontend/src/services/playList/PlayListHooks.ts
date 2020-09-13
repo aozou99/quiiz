@@ -3,7 +3,8 @@ import "firebase/firestore";
 import "firebase/auth";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { functions } from "utils/firebase/functions";
+import { pagingPlayList } from "services/playList/pagingPlayList";
+import { pagingPlayListContents } from "services/playList/pagingPlayListContents";
 
 const playListRef = (userId: string) =>
   firebase
@@ -117,18 +118,13 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
     let mounted = true;
     setLoaded(false);
     if (!loading && user) {
-      functions
-        .httpsCallable("pagingPlayList")({ ...apiOptions })
-        .then((res) => {
-          if (mounted) {
-            setPlayLists((pre: any[]) => [
-              ...pre,
-              ...(res.data?.playLists || []),
-            ]);
-            setHasNext(res.data?.hasNext);
-            setLoaded(true);
-          }
-        });
+      pagingPlayList(user.uid, apiOptions).then((res) => {
+        if (mounted) {
+          setPlayLists((pre: any[]) => [...pre, ...(res.playLists || [])]);
+          setHasNext(res.hasNext);
+          setLoaded(true);
+        }
+      });
     }
     if (!loading && !user) {
       if (mounted) {
@@ -156,25 +152,24 @@ export const useFetchPlayListContents = (playListId: string) => {
   const [quizzes, setQuizzes] = useState<any>();
   const [refresh, setRefresh] = useState(false);
   const [editable, setEditable] = useState(false);
+  const [user, loading] = useAuthState(firebase.auth());
 
   useEffect(() => {
     let mounted = true;
-    functions
-      .httpsCallable("pagingPlayListContents")({ id: playListId })
-      .then((res) => {
+    if (!loading && user) {
+      pagingPlayListContents(user.uid, { id: playListId }).then((res) => {
         if (mounted) {
-          setEditable(
-            firebase.auth().currentUser?.uid === res.data.playList?.authorId
-          );
-          setPlayList(res.data.playList);
-          setQuizzes(res.data.quizzes);
+          setEditable(user.uid === res.playList?.authorId);
+          setPlayList(res.playList);
+          setQuizzes(res.quizzes);
           setLoaded(true);
         }
       });
+    }
     return () => {
       mounted = false;
     };
-  }, [playListId, refresh]);
+  }, [playListId, refresh, user, loading]);
   return {
     loaded,
     playList,

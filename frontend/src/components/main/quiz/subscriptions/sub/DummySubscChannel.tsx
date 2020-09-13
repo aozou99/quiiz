@@ -60,8 +60,8 @@ export const DummySubscChannels = () => {
     <Container maxWidth={"lg"} className={classes.root}>
       {Array.from({ length: 4 })
         .fill(null)
-        .map(() => (
-          <DummySubscChannel />
+        .map((_a, i) => (
+          <DummySubscChannel key={i} />
         ))}
     </Container>
   );
