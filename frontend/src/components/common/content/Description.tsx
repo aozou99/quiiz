@@ -6,7 +6,6 @@ import {
   createStyles,
   Box,
 } from "@material-ui/core";
-import { SignInButton } from "components/common/button/SignInButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
