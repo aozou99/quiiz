@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
-import SentimentVerySatisfiedIcon from "@material-ui/icons/SentimentVerySatisfied";
 import ChannelService from "services/channel/ChannelService";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -82,10 +81,8 @@ export const SubscribeButton: React.FC<{
     <Button
       variant={isSubscribed ? "contained" : "outlined"}
       color={isSubscribed ? "default" : "primary"}
-      endIcon={
-        isSubscribed ? <SentimentVerySatisfiedIcon /> : <SubscriptionsIcon />
-      }
-      size="large"
+      endIcon={isSubscribed ? undefined : <SubscriptionsIcon />}
+      size={isSubscribed ? "medium" : "large"}
       disableElevation
       className={classes.subscribeButton}
       onClick={
