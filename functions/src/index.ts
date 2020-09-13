@@ -6,9 +6,7 @@ const endpoints = [
   "existDisplayName",
   "updateQuiz",
   "deleteQuiz",
-  "getChannelHeader",
   "getOgpListByUrl",
-  "getSubscribeChannels",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {

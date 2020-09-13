@@ -1,9 +1,8 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-
 import { useState, useEffect } from "react";
-import { functions } from "utils/firebase/functions";
+import { getChannelHeader } from "services/channel/getChannelHeader";
 
 export const useFetchChannelHeader = (channelId: string) => {
   const [loaded, setLoaded] = useState(false);
@@ -12,27 +11,28 @@ export const useFetchChannelHeader = (channelId: string) => {
   const { loaded: subscLoaded, isSubscribed } = useIsSubscribed(channelId);
   const [headerLoaded, setHeaderLoaded] = useState(false);
   const [editable, setEditable] = useState(false);
-
+  const [user, loading] = useAuthState(firebase.auth());
   useEffect(() => {
     let mounted = true;
-    functions
-      .httpsCallable("getChannelHeader")({ channelId })
-      .then((res) => {
-        if (mounted) {
-          setChannelHeader(res.data);
-          setEditable(firebase.auth().currentUser?.uid === channelId);
-        }
-      })
-      .catch((_e) => {
-        if (mounted) setHasError(true);
-      })
-      .finally(() => {
-        if (mounted) setHeaderLoaded(true);
-      });
+    if (!loading) {
+      getChannelHeader({ channelId })
+        .then((res) => {
+          if (mounted) {
+            setChannelHeader(res);
+            setEditable(user?.uid === channelId);
+          }
+        })
+        .catch((_e) => {
+          if (mounted) setHasError(true);
+        })
+        .finally(() => {
+          if (mounted) setHeaderLoaded(true);
+        });
+    }
     return () => {
       mounted = false;
     };
-  }, [channelId]);
+  }, [channelId, loading, user]);
 
   useEffect(() => {
     setLoaded(headerLoaded && subscLoaded);
