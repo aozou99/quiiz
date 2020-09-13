@@ -17,7 +17,7 @@ import {
   ListItemIcon,
 } from "@material-ui/core";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Choices from "components/main/quiz/preview/sub/Choices";
 import { themeColors } from "components/core/CustomeTheme";
 import FolderIcon from "@material-ui/icons/Folder";
@@ -141,12 +141,14 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     classes.borderLeftQuaternary,
     classes.borderLeftPrimary,
   ];
-  const [likeClick, setLikeClick] = useState(false);
   const [isOpenList, setIsOpenList] = useState(false);
-  const { loaded: likeLoaded, isLike, likeCount, setLikeCount } = useFetchLike(
-    selected.id,
-    likeClick
-  );
+  const {
+    loaded: likeLoaded,
+    isLike: initialIsLike,
+    likeCount,
+    setLikeCount,
+  } = useFetchLike(selected.id, selected.authorId);
+  const [isLike, setIsLike] = useState(initialIsLike);
   const { checked, loaded: checkListLoaded, update } = useCheckList(
     selected.id
   );
@@ -170,7 +172,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     return isNg;
   };
 
-  const handleGood = () => {
+  const handleLike = () => {
     if (
       validateSignInDialog(
         "このクイズにいいねをする",
@@ -183,8 +185,8 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
       quizId: selected.id,
       authorId: selected.authorId,
     }).then((isCancel) => {
+      setIsLike(isCancel);
       setLikeCount((pre) => (isCancel ? pre + 1 : pre - 1));
-      setTimeout(() => setLikeClick(!likeClick), 300);
     });
   };
   const handleAddPlayList = () => {
@@ -198,6 +200,10 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
     }
     setIsOpenList(!isOpenList);
   };
+
+  useEffect(() => {
+    setIsLike(initialIsLike);
+  }, [initialIsLike, selected.id]);
 
   return (
     <Paper elevation={1} className={classes.detail}>
@@ -287,7 +293,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
       </Collapse>
       <Box className={classes.icons}>
         <Tooltip title="いいね">
-          <IconButton aria-label="good" onClick={handleGood}>
+          <IconButton aria-label="good" onClick={handleLike}>
             <FavoriteIcon
               className={clsx(likeLoaded && isLike && classes.iconSelectedPink)}
             />

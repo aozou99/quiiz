@@ -64,7 +64,7 @@ export const useFetchThumbnailUrl = (
   return { imgSrc, loaded };
 };
 
-export const useFetchLike = (quizId: string, likeClick: boolean) => {
+export const useFetchLike = (quizId: string, authorId: string) => {
   const [isLike, setIsLike] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -90,7 +90,7 @@ export const useFetchLike = (quizId: string, likeClick: boolean) => {
         firebase
           .firestore()
           .collection("users")
-          .doc(uid)
+          .doc(authorId)
           .collection("quizzes")
           .doc(quizId)
           .collection("counters")
@@ -109,7 +109,7 @@ export const useFetchLike = (quizId: string, likeClick: boolean) => {
     return () => {
       mounted = false;
     };
-  }, [quizId, likeClick]);
+  }, [quizId, authorId]);
   return { isLike, loaded, likeCount, setLikeCount };
 };
 
