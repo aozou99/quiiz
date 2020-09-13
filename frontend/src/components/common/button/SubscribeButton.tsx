@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import SentimentVerySatisfiedIcon from "@material-ui/icons/SentimentVerySatisfied";
@@ -73,6 +73,11 @@ export const SubscribeButton: React.FC<{
     setUnsubscDialogOpen,
     setHandleSubscribeOrCancel,
   } = useContext(UnSubscribedDialogContext);
+
+  useEffect(() => {
+    setIsSubscribed(initialIsSubscribed);
+  }, [initialIsSubscribed]);
+
   return (
     <Button
       variant={isSubscribed ? "contained" : "outlined"}

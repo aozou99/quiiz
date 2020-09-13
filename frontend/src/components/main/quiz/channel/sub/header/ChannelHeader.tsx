@@ -5,18 +5,13 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  Button,
   IconButton,
   Snackbar,
 } from "@material-ui/core";
 import React, { useState, useEffect, useContext } from "react";
 import { useFetchChannelHeader } from "services/channel/ChannelHooks";
-import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
-import SentimentVerySatisfiedIcon from "@material-ui/icons/SentimentVerySatisfied";
 import { Redirect } from "react-router-dom";
-import ChannelService from "services/channel/ChannelService";
 import { DummyChannelHeader } from "components/main/quiz/channel/sub/header/DummyChannelHeader";
-import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import clsx from "clsx";
 import { EditableTextField } from "components/common/input/EditableTextField";
@@ -30,7 +25,7 @@ import { BackDropContext } from "components/main/quiz/Main";
 import { LinearWithLabel } from "components/common/feedback/LinearWithLabel";
 import Alert from "@material-ui/lab/Alert";
 import { GoQuizStudioButton } from "components/common/button/GoQuizStudioButton";
-import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
+import { SubscribeButton } from "components/common/button/SubscribeButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,9 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
     avator: {
       width: theme.spacing(10),
       height: theme.spacing(10),
-    },
-    subscribeButton: {
-      marginLeft: "auto",
     },
     container: {
       display: "flex",
@@ -93,47 +85,17 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
   } = useFetchChannelHeader(channelId);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedUsers, setSubscribedUsers] = useState(0);
-  const [unsubscDialogOpen, setUnsubscDialogOpen] = useState(false);
   const [onHoverLogo, setOnHoverLogo] = useState(false);
   const [channelName, setChannelName] = useState("");
   const [openCropDialog, setOpenCronpDialog] = useState(false);
   const [openSnackBar, setOpenSnackBar] = useState(false);
   const [snackBarText, setSnackBarText] = useState("");
   const [originImage, setOriginImage] = useState<string | undefined>(undefined);
-  const [openSignInDialog, setOpenSignInDialog] = useState(false);
-  const [signInTitle, setSignInTitle] = useState("");
-  const [signInBody, setSignInBody] = useState("");
   const { setBackDropChildNode, setOpenBackDrop } = useContext(BackDropContext);
 
-  const validateSignInDialog = (title: string, body: string) => {
-    const isNg = !authLoading && !user;
-    if (isNg) {
-      setSignInTitle(title);
-      setSignInBody(body);
-      setOpenSignInDialog(true);
-    }
-    return isNg;
-  };
   const setSnackBar = (text: string) => {
     setSnackBarText(text);
     setOpenSnackBar(true);
-  };
-
-  const handleSubscribeOrCancel = () => {
-    if (
-      validateSignInDialog(
-        "チャンネル登録をする",
-        "チャンネル登録をするには、ログインをしてください"
-      )
-    ) {
-      return;
-    }
-
-    ChannelService.subscribeOrCancel(channelId).then((latestIsSubscribed) => {
-      setIsSubscribed(latestIsSubscribed);
-      setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a));
-      setUnsubscDialogOpen(false);
-    });
   };
 
   const handleProfileImageChanged = (imageUrl: string) => {
@@ -242,35 +204,16 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
         {editable ? (
           <GoQuizStudioButton />
         ) : (
-          <Button
-            variant={isSubscribed ? "contained" : "outlined"}
-            color={isSubscribed ? "default" : "primary"}
-            endIcon={
-              isSubscribed ? (
-                <SentimentVerySatisfiedIcon />
-              ) : (
-                <SubscriptionsIcon />
-              )
+          <SubscribeButton
+            channelId={channelId}
+            channelName={channelHeader.channelName}
+            initialIsSubscribed={isSubscribed}
+            onCompleted={(latestIsSubscribed: boolean) =>
+              setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a))
             }
-            size="large"
-            disableElevation
-            className={classes.subscribeButton}
-            onClick={
-              isSubscribed
-                ? () => setUnsubscDialogOpen(true)
-                : handleSubscribeOrCancel
-            }
-          >
-            {isSubscribed ? "登録済み" : "チャンネル登録"}
-          </Button>
+          />
         )}
       </Box>
-      <BasicConfirmDialog
-        body={`${channelHeader.channelName}のチャンネル登録を解除しますか？`}
-        yesOnClick={handleSubscribeOrCancel}
-        open={unsubscDialogOpen}
-        setOpen={setUnsubscDialogOpen}
-      />
       <CropDialog
         open={openCropDialog}
         setOpen={setOpenCronpDialog}
@@ -289,12 +232,6 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
           {snackBarText}
         </Alert>
       </Snackbar>
-      <SignInGuideDialog
-        open={openSignInDialog}
-        title={signInTitle}
-        bodyText={signInBody}
-        onClose={() => setOpenSignInDialog(false)}
-      />
     </Box>
   ) : (
     <DummyChannelHeader />
