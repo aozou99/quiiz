@@ -19,6 +19,7 @@ module.exports = functions.https.onCall(async (_data, context) => {
         snapshot.docs.map((doc) =>
           Promise.all([
             admin.auth().getUser(doc.id),
+            admin.firestore().collection("users").doc(doc.id).get(),
             getCounter(
               admin
                 .firestore()
@@ -27,10 +28,12 @@ module.exports = functions.https.onCall(async (_data, context) => {
                 .collection("counters")
                 .doc("subscribedUser")
             ),
-          ]).then(([user, subscribedCount]) => {
+          ]).then(([user, userDoc, subscribedCount]) => {
             return {
+              id: user.uid,
               channelName: user.displayName,
               channelLogo: user.photoURL,
+              hasQuizCount: userDoc?.data()?.hasQuizCount || 0,
               subscribedCount,
             };
           })

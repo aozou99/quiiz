@@ -201,7 +201,6 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
               type="file"
               className={classes.inputFileBtnHide}
               accept="image/*"
-              // id="thumbnail"
               onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
                 if (
                   e.target.files !== null &&

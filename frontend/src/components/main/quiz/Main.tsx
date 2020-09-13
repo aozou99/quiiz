@@ -1,4 +1,4 @@
-import React, { createContext, ReactChild } from "react";
+import React, { createContext, ReactChild, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   CircularProgress,
@@ -19,6 +19,8 @@ import Channel from "components/main/quiz/channel/Main";
 import Subscriptions from "components/main/quiz/subscriptions/Main";
 import Terms from "components/main/quiz/terms/Main";
 import Privacy from "components/main/quiz/privacy/Main";
+import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
+import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,15 +50,37 @@ export const BackDropContext = createContext({
   setOpenBackDrop: (_open: boolean) => {},
   setBackDropChildNode: (_child: ReactChild) => {},
 });
+export const SignInGuideDialogContext = createContext({
+  setOpenSignInDialog: (_open: boolean) => {},
+  setSignInTitle: (_title: string) => {},
+  setSignInBody: (_body: string) => {},
+});
+export const UnSubscribedDialogContext = createContext({
+  setUnsubscDialogOpen: (_open: boolean) => {},
+  setChannelName: (_channelName: string) => {},
+  setHandleSubscribeOrCancel: (a: any) => {},
+});
 
 const Main: React.FC = () => {
   const classes = useStyles();
-  const [openSidebar, setOpenSidebar] = React.useState(false);
-  const [openBackDrop, setOpenBackDrop] = React.useState(false);
-  const [foldSidebar, setFoldSidebar] = React.useState(false);
-  const [backDropChildNode, setBackDropChildNode] = React.useState<ReactChild>(
+  const [openSidebar, setOpenSidebar] = useState(false);
+  const [foldSidebar, setFoldSidebar] = useState(false);
+  // BackDropContext
+  const [openBackDrop, setOpenBackDrop] = useState(false);
+  const [backDropChildNode, setBackDropChildNode] = useState<ReactChild>(
     <CircularProgress />
   );
+  // SignInGuideDialogContext
+  const [openSignInDialog, setOpenSignInDialog] = useState(false);
+  const [signInTitle, setSignInTitle] = useState("");
+  const [signInBody, setSignInBody] = useState("");
+  // UnSubscribedDialogContext
+  const [channelName, setChannelName] = useState("");
+  const [unsubscDialogOpen, setUnsubscDialogOpen] = useState(false);
+  const [handleSubscribeOrCancel, setHandleSubscribeOrCancel] = useState<
+    () => void
+  >(() => {});
+
   const theme = useTheme();
   const isLargerLg = useMediaQuery(theme.breakpoints.up(1320));
   const handleDrawer = () => {
@@ -73,40 +97,67 @@ const Main: React.FC = () => {
         <Header handleDrawer={handleDrawer} />
         <TemporarySidebar open={openSidebar} setOpen={setOpenSidebar} />
         <Sidebar foldSidebar={foldSidebar} />
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
+        <SignInGuideDialogContext.Provider
+          value={{ setOpenSignInDialog, setSignInTitle, setSignInBody }}
+        >
+          <UnSubscribedDialogContext.Provider
+            value={{
+              setUnsubscDialogOpen,
+              setChannelName,
+              setHandleSubscribeOrCancel,
+            }}
+          >
+            <main className={classes.content}>
+              <div className={classes.toolbar} />
 
-          <Switch>
-            <Route exact path={`/`}>
-              <Single />
-            </Route>
-            <Route path={`/trending`}>
-              <ReadyImage />
-            </Route>
-            <Route path={`/subscriptions`}>
-              <Subscriptions />
-            </Route>
-            <Route path={`/library`}>
-              <Library />
-            </Route>
-            <Route path={[`/playlist/:id`, `/playlist`]}>
-              <PlayList />
-            </Route>
-            <Route path={`/channel/:id`}>
-              <Channel />
-            </Route>
-            <Route path={`/terms`}>
-              <Terms />
-            </Route>
-            <Route path={`/privacy`}>
-              <Privacy />
-            </Route>
-          </Switch>
-        </main>
+              <Switch>
+                <Route exact path={`/`}>
+                  <Single />
+                </Route>
+                <Route path={`/trending`}>
+                  <ReadyImage />
+                </Route>
+                <Route path={`/subscriptions`}>
+                  <Subscriptions />
+                </Route>
+                <Route path={`/library`}>
+                  <Library />
+                </Route>
+                <Route path={[`/playlist/:id`, `/playlist`]}>
+                  <PlayList />
+                </Route>
+                <Route path={`/channel/:id`}>
+                  <Channel />
+                </Route>
+                <Route path={`/terms`}>
+                  <Terms />
+                </Route>
+                <Route path={`/privacy`}>
+                  <Privacy />
+                </Route>
+              </Switch>
+            </main>
+          </UnSubscribedDialogContext.Provider>
+        </SignInGuideDialogContext.Provider>
       </div>
+      <BasicConfirmDialog
+        body={`${channelName}のチャンネル登録を解除しますか？`}
+        yesOnClick={() => {
+          handleSubscribeOrCancel();
+          setUnsubscDialogOpen(false);
+        }}
+        open={unsubscDialogOpen}
+        setOpen={setUnsubscDialogOpen}
+      />
       <Backdrop className={classes.backdrop} open={openBackDrop}>
         {backDropChildNode}
       </Backdrop>
+      <SignInGuideDialog
+        open={openSignInDialog}
+        title={signInTitle}
+        bodyText={signInBody}
+        onClose={() => setOpenSignInDialog(false)}
+      />
     </BackDropContext.Provider>
   );
 };

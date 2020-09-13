@@ -3,7 +3,7 @@ import { functions } from "utils/firebase/functions";
 
 export const useFetchSubscribeChannels = () => {
   const [loaded, setLoaded] = useState(false);
-  const [channels, setChannels] = useState<any>([]);
+  const [channels, setChannels] = useState<any[]>([]);
 
   useEffect(() => {
     let mounted = true;
