@@ -119,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
   chipInput: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
-    '& div[class*="WAMuiChipInput-chip"]': {
+    '& div[class*="MuiButtonBase-root MuiChip-root"]': {
       textOverflow: "ellipsis",
       maxWidth: "95%",
     },

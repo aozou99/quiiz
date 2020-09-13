@@ -5,9 +5,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
 import "firebase/auth";
 
-const Exercises = lazy(() => import("components/main/quiz/home/Main"));
 const Index = lazy(() => import("components/main/quiz/Main"));
-const Workbook = lazy(() => import("components/main/quiz/series/Main"));
 const Signup = lazy(() => import("components/main/auth/signUp/Main"));
 const Signin = lazy(() => import("components/main/auth/signIn/Main"));
 const Studio = lazy(() => import("components/main/studio/pc/Main"));
@@ -52,8 +50,6 @@ export default () => {
 
   return (
     <Switch>
-      <Route path="/exercise/:exercisesId" component={Exercises} />
-      <Route path="/series/:seriesId" component={Workbook} />
       <Route path="/signup" render={authRedirectTop(<Signup />)} />
       <Route path="/signin" render={authRedirectTop(<Signin />)} />
       <Route path="/studio" render={guestRedirectSignin(<Studio />)} />
