@@ -83,6 +83,7 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
     editable,
     hasError,
   } = useFetchChannelHeader(channelId);
+  const [fullLoaded, setFullLoaded] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribedUsers, setSubscribedUsers] = useState(0);
   const [onHoverLogo, setOnHoverLogo] = useState(false);
@@ -130,12 +131,13 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
       setIsSubscribed(initialSubscState);
       setSubscribedUsers(channelHeader.subscribedCount);
       setChannelName(channelHeader.channelName);
+      setFullLoaded(true);
     }
   }, [initialSubscState, loaded, channelHeader]);
 
-  return loaded && hasError ? (
+  return fullLoaded && hasError ? (
     <Redirect to={"/error?src=404"} />
-  ) : loaded && !authLoading ? (
+  ) : fullLoaded && !authLoading ? (
     <Box className={classes.root}>
       <Box className={classes.container}>
         <Box
@@ -188,13 +190,16 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
             setValue={setChannelName}
             maxLength={50}
             onSave={(newChannelName) =>
-              user
-                ?.updateProfile({
+              Promise.all([
+                user?.updateProfile({
                   displayName: newChannelName,
-                })
-                .then(() => {
-                  setSnackBar("チャンネル名を変更しました！");
-                })
+                }),
+                AuthService.userRef.doc(channelId).update({
+                  displayName: newChannelName,
+                }),
+              ]).then(() => {
+                setSnackBar("チャンネル名を変更しました！");
+              })
             }
           />
           <Typography variant={"subtitle2"}>

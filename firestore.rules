@@ -45,7 +45,7 @@ service cloud.firestore {
       }
 
       match /subscribedUser/{subscribedUserID} {
-        allow read: if isAuthenticated();
+        allow read;
         allow create:
           if isUserAuthenticated(subscribedUserID)
         allow update:
@@ -54,7 +54,7 @@ service cloud.firestore {
           if isUserAuthenticated(subscribedUserID)
       }
       match /subscribedChannel/{channelID} {
-        allow read: if isAuthenticated();
+        allow read;
         allow create:
           if isUserAuthenticated(userID)
         allow update:
@@ -64,14 +64,14 @@ service cloud.firestore {
       }
 
       match /quizzes/{quizID} {
-        allow read: if isAuthenticated();
+        allow read;
         allow create:
           if isUserAuthenticated(userID)
         allow update:
           if isUserAuthenticated(userID)
 
         match /likedUsers/{likedUserID} {
-          allow read: if isAuthenticated();
+          allow read;
           allow create:
             if isUserAuthenticated(likedUserID)  
           allow delete:
@@ -98,7 +98,9 @@ service cloud.firestore {
           if isUserAuthenticated(userID)
       }
     }
-
+    match /{path=**}/quizzes/{quizID} {
+      allow read;
+    }
     function isAuthenticated() {
       return request.auth != null;
     }

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import imageUrl from "utils/helper/imageUrl";
 import { getCounter } from "utils/helper/counter";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { functions } from "utils/firebase/functions";
+import { pagingQuiz } from "services/quiz/pagingQuiz";
 
 type parameters = {
   channelId?: string;
@@ -20,15 +20,13 @@ export const usePagenateQuiz = (parameters?: parameters) => {
   useEffect(() => {
     let mounted = true;
     setLoaded(false);
-    functions
-      .httpsCallable("pagingQuiz")({ ...apiOptions })
-      .then((res) => {
-        if (mounted) {
-          setFirstDocuments((pre: any[]) => [...pre, ...res.data.quizzes]);
-          setHasNext(res.data.hasNext);
-          setLoaded(true);
-        }
-      });
+    pagingQuiz(apiOptions).then((res) => {
+      if (mounted) {
+        setFirstDocuments((pre: any[]) => [...pre, ...res.quizzes]);
+        setHasNext(res.hasNext);
+        setLoaded(true);
+      }
+    });
     return () => {
       mounted = false;
     };

@@ -6,7 +6,6 @@ const endpoints = [
   "existDisplayName",
   "updateQuiz",
   "deleteQuiz",
-  "pagingQuiz",
   "pagingMyLikeQuiz",
   "pagingPlayList",
   "pagingPlayListContents",

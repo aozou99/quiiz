@@ -92,13 +92,16 @@ class AuthService extends Service {
         null,
         () => {
           storageRef.getDownloadURL().then((url) => {
-            user
-              .updateProfile({
+            Promise.all([
+              user.updateProfile({
                 photoURL: url,
-              })
-              .then(() => {
-                onCompleted && onCompleted();
-              });
+              }),
+              this.userRef.doc(user.uid).update({
+                photoUrl: url,
+              }),
+            ]).then(() => {
+              onCompleted && onCompleted();
+            });
           });
         }
       );

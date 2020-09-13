@@ -1,12 +1,13 @@
-import functions from "../core/functions";
-import admin from "../core/admin";
-import convertQuizResponse from "../helper/convertQuizResponse";
-import { PRIVACY } from "../costant/InputConst";
-import { pagingQuizApiOptions } from "../types/apiOptions";
+import { pagingQuizApiOptions } from "types/apiOptions";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { PRIVACY } from "utils/costant/InputConst";
+import { convertQuizResponse } from "services/quiz/convertQuizResponse";
 
-const db = admin.firestore();
+const db = firebase.firestore();
+
 const genBaseQuery = async (data: Partial<pagingQuizApiOptions>) => {
-  let baseQuery: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>;
+  let baseQuery: firebase.firestore.Query<firebase.firestore.DocumentData>;
   // collection
   if (data.channelId) {
     baseQuery = db
@@ -45,7 +46,7 @@ const genBaseQuery = async (data: Partial<pagingQuizApiOptions>) => {
   return baseQuery.limit(data.perCount || 16);
 };
 
-module.exports = functions.https.onCall(async (data, _context) => {
+export const pagingQuiz = async (data: any) => {
   const baseQuery = await genBaseQuery(data);
   const snapshot = await baseQuery.get();
   if (snapshot.size < 1) {
@@ -67,4 +68,4 @@ module.exports = functions.https.onCall(async (data, _context) => {
     quizzes: await Promise.all(rs),
     hasNext: await hasNext,
   };
-});
+};
