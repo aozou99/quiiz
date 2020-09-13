@@ -70,6 +70,12 @@ Issue the following commands when you update the Firestore index
 firebase firestore:indexes > firestore.indexes.json
 ```
 
+### Delete Cloud Functions
+
+```
+firebase functions:delete {functionName} --region asia-northeast1
+```
+
 # Note
 
 comming soon ...

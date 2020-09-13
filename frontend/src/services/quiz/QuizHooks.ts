@@ -6,6 +6,7 @@ import imageUrl from "utils/helper/imageUrl";
 import { getCounter } from "utils/helper/counter";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { pagingQuiz } from "services/quiz/pagingQuiz";
+import { pagingMyLikeQuiz } from "services/quiz/pagingMyLikeQuiz";
 
 type parameters = {
   channelId?: string;
@@ -126,16 +127,11 @@ export const usePagenateLikeQuizzes = (parameters: {
     let mounted = true;
     setLoaded(false);
     if (!loading && user) {
-      firebase
-        .functions()
-        .httpsCallable("pagingMyLikeQuiz")(apiOptions)
+      pagingMyLikeQuiz(user.uid, apiOptions)
         .then((res) => {
           if (mounted) {
-            setLikedQuizzes((pre: any[]) => [
-              ...pre,
-              ...(res.data?.quizzes || []),
-            ]);
-            setHasNext(res.data?.hasNext);
+            setLikedQuizzes((pre: any[]) => [...pre, ...(res.quizzes || [])]);
+            setHasNext(res.hasNext);
             setLoaded(true);
           }
         })
