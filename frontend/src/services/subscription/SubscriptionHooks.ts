@@ -11,7 +11,7 @@ export const useFetchSubscribeChannels = () => {
   useEffect(() => {
     let mounted = true;
     setLoaded(false);
-    if (!loading && user) {
+    if (user) {
       getSubscribeChannels(user.uid)
         .then((res) => {
           if (mounted) {
@@ -19,6 +19,9 @@ export const useFetchSubscribeChannels = () => {
           }
         })
         .finally(() => setLoaded(true));
+    }
+    if (!loading) {
+      setLoaded(true);
     }
     return () => {
       mounted = false;

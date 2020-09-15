@@ -24,14 +24,15 @@ const Main: React.FC = () => {
   const { loaded, channels } = useFetchSubscribeChannels();
   return (
     <>
-      {(loading || !loaded) && <DummySubscChannels />}
-      {loaded && channels.length > 0 ? (
+      {!loaded && <DummySubscChannels />}
+      {loaded && user && channels.length > 0 && (
         <Container maxWidth="lg" className={classes.root}>
           {channels.map((channel) => (
             <SubscChannel channel={channel} />
           ))}
         </Container>
-      ) : (
+      )}
+      {loaded && user && channels.length === 0 && (
         <Description
           icon={<SubscriptionsIcon style={{ fontSize: 120 }} color="action" />}
           title="新作クイズをお見逃しなく"
