@@ -9,6 +9,10 @@ const Index = lazy(() => import("components/main/quiz/Main"));
 const Signup = lazy(() => import("components/main/auth/signUp/Main"));
 const Signin = lazy(() => import("components/main/auth/signIn/Main"));
 const Studio = lazy(() => import("components/main/studio/pc/Main"));
+const NotFound = lazy(() => import("components/main/errors/NotFound"));
+const InternalError = lazy(() =>
+  import("components/main/errors/InternalError")
+);
 
 export default () => {
   const [user, loading] = useAuthState(firebase.auth());
@@ -53,6 +57,8 @@ export default () => {
       <Route path="/signup" render={authRedirectTop(<Signup />)} />
       <Route path="/signin" render={authRedirectTop(<Signin />)} />
       <Route path="/studio" render={guestRedirectSignin(<Studio />)} />
+      <Route path="/404" component={NotFound} />
+      <Route path="/500" component={InternalError} />
       <Route path="/" component={Index} />
     </Switch>
   );

@@ -7,7 +7,7 @@ import {
   useMediaQuery,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Sidebar from "components/main/quiz/SideBar";
 import ReadyImage from "components/common/meta/Ready";
 import Home from "components/main/quiz/home/Main";
@@ -138,6 +138,9 @@ const Main: React.FC = () => {
                 </Route>
                 <Route path={`/privacy`}>
                   <Privacy />
+                </Route>
+                <Route path={`*`}>
+                  <Redirect to={"/404"} />
                 </Route>
               </Switch>
             </main>
