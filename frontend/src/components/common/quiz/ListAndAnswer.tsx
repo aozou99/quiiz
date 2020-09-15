@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo, ReactNode } from "react";
 import { usePagenateQuiz } from "services/quiz/QuizHooks";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -7,7 +7,6 @@ import {
   createStyles,
   List,
   CircularProgress,
-  Typography,
 } from "@material-ui/core";
 import clsx from "clsx";
 import Item from "components/common/quiz/Item";
@@ -48,13 +47,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const ListAndAnswer: React.FC<pagingQuizApiOptions> = (
-  initPagingParam = {}
-) => {
-  const [pagingParam, setPagingParam] = useState<pagingQuizApiOptions>(
-    initPagingParam
-  );
-  const { quizzes, loaded, hasNext } = usePagenateQuiz(pagingParam);
+const ListAndAnswer: React.FC<pagingQuizApiOptions & {
+  dummyOff?: boolean;
+  emptyResulDescription?: ReactNode;
+}> = (props) => {
+  const [pagingParam, setPagingParam] = useState<pagingQuizApiOptions>(props);
+  const { quizzes, loaded, hasNext, nextQuiz } = usePagenateQuiz(pagingParam);
   const classes = useStyles();
   const [selected, setSelected] = useState<QuizDisplay>();
   const [result, setResult] = useState<QuizResult>(undefined);
@@ -62,7 +60,7 @@ export const ListAndAnswer: React.FC<pagingQuizApiOptions> = (
     setPagingParam((pre) => {
       return {
         ...pre,
-        lastQuizId: quizzes[quizzes.length - 1].id,
+        nextQuiz,
       };
     });
   };
@@ -73,45 +71,49 @@ export const ListAndAnswer: React.FC<pagingQuizApiOptions> = (
     onLoadMore: handleLoadMore,
   });
 
+  useEffect(() => {
+    setPagingParam(props);
+  }, [props, props.where]);
+
+  const QuizList = useMemo(() => {
+    return quizzes.map((item: QuizDisplay) => (
+      <Item
+        key={item.id}
+        thumbnail={item.thumbnail["640x360"]}
+        question={item.question}
+        authorId={item.authorId}
+        authorName={item.authorName}
+        authorImageUrl={item.authorImageUrl}
+        handleClick={() => {
+          if (selected === item) {
+            setSelected(undefined);
+          } else {
+            setSelected(item);
+            setResult(undefined);
+          }
+        }}
+        isSelected={selected === item}
+      />
+    ));
+  }, [quizzes, selected]);
+
+  const Dummy = useMemo(() => {
+    return Array.from({ length: 32 })
+      .fill(null)
+      .map((_, i) => <DummyItem key={i} />);
+  }, []);
+
   return (
     <Box className={clsx(classes.root)}>
       <List className={classes.list} ref={infiniteRef}>
-        {quizzes.map((item: QuizDisplay) => (
-          <Item
-            key={item.id}
-            thumbnail={item.thumbnail["640x360"]}
-            question={item.question}
-            authorId={item.authorId}
-            authorName={item.authorName}
-            authorImageUrl={item.authorImageUrl}
-            handleClick={() => {
-              if (selected === item) {
-                setSelected(undefined);
-              } else {
-                setSelected(item);
-                setResult(undefined);
-              }
-            }}
-            isSelected={selected === item}
-          />
-        ))}
-        {!loaded &&
-          quizzes.length === 0 &&
-          Array.from({ length: 32 })
-            .fill(null)
-            .map((_, i) => <DummyItem key={i} />)}
-        {!loaded && (
+        {QuizList}
+        {!loaded && quizzes.length === 0 && !props.dummyOff && Dummy}
+        {!loaded && quizzes.length > 0 && (
           <Box className={classes.center}>
             <CircularProgress />
           </Box>
         )}
-        {loaded && quizzes.length === 0 && pagingParam.channelId && (
-          <Box className={classes.center}>
-            <Typography variant={"subtitle2"} color="textSecondary">
-              {"このチャンネルにはクイズがありません"}
-            </Typography>
-          </Box>
-        )}
+        {loaded && quizzes.length === 0 && props.emptyResulDescription}
       </List>
       {selected && (
         <AnswerPanel
@@ -123,3 +125,5 @@ export const ListAndAnswer: React.FC<pagingQuizApiOptions> = (
     </Box>
   );
 };
+
+export default React.memo(ListAndAnswer);

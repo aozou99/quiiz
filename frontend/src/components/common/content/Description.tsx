@@ -41,7 +41,7 @@ export const Description: React.FC<{
         <Typography variant="subtitle2" color="textSecondary">
           {caption}
         </Typography>
-        {button && button}
+        {button}
       </Box>
     </Box>
   );

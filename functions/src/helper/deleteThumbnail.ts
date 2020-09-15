@@ -8,7 +8,7 @@ const deleteThumbnail = (thumbnail: string) => {
     console.log({
       message: `${thumbnail} is not delete target!`,
     });
-    return;
+    return undefined;
   }
   const splited = thumbnail.split(".");
   // imagedir/userId_timestamp.ext -> imagedir/userId_timestamp, ext

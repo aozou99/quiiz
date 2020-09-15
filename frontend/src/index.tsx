@@ -11,7 +11,7 @@ import "firebase/functions";
 
 fetch("/__/firebase/init.json").then(async (response) => {
   const json = await response.json();
-  firebase.initializeApp(json);
+  firebase.initializeApp({ ...json, authDomain: "quiiz.space" });
   // Initialize other services on firebase instance
   const db = firebase.firestore(); // <- needed if using firestore
   firebase.functions(); // <- needed if using httpsCallable

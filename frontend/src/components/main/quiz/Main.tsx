@@ -6,14 +6,15 @@ import {
   useTheme,
   useMediaQuery,
 } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import { Route, Switch } from "react-router-dom";
 import Sidebar from "components/main/quiz/SideBar";
 import ReadyImage from "components/common/meta/Ready";
-import Single from "components/main/quiz/home/Main";
+import Home from "components/main/quiz/home/Main";
+import Search from "components/main/quiz/search/Main";
 import Header from "components/main/quiz/Header";
 import TemporarySidebar from "components/main/quiz/TemporarySideBar";
 import Library from "components/main/quiz/library/Main";
-import { grey } from "@material-ui/core/colors";
 import PlayList from "components/main/quiz/playlist/Main";
 import Channel from "components/main/quiz/channel/Main";
 import Subscriptions from "components/main/quiz/subscriptions/Main";
@@ -58,7 +59,7 @@ export const SignInGuideDialogContext = createContext({
 export const UnSubscribedDialogContext = createContext({
   setUnsubscDialogOpen: (_open: boolean) => {},
   setChannelName: (_channelName: string) => {},
-  setHandleSubscribeOrCancel: (a: any) => {},
+  setHandleSubscribeOrCancel: (_a: any) => {},
 });
 
 const Main: React.FC = () => {
@@ -112,7 +113,10 @@ const Main: React.FC = () => {
 
               <Switch>
                 <Route exact path={`/`}>
-                  <Single />
+                  <Home />
+                </Route>
+                <Route exact path={`/search`}>
+                  <Search />
                 </Route>
                 <Route path={`/trending`}>
                   <ReadyImage />

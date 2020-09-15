@@ -330,4 +330,4 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
   );
 };
 
-export default AnswerPanel;
+export default React.memo(AnswerPanel);

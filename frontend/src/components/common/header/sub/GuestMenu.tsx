@@ -7,7 +7,7 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  ListItemIcon
+  ListItemIcon,
 } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import InputIcon from "@material-ui/icons/Input";
@@ -23,25 +23,26 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listIcon: {
       minWidth: "inherit",
-      marginRight: theme.spacing(2)
-    }
+      marginRight: theme.spacing(2),
+    },
   })
 );
 
 const GuestMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
   const classes = useStyles();
+
   return (
     <Menu
       id="menu-appbar"
       anchorEl={anchorEl}
       anchorOrigin={{
         vertical: "top",
-        horizontal: "right"
+        horizontal: "right",
       }}
       keepMounted
       transformOrigin={{
         vertical: "top",
-        horizontal: "right"
+        horizontal: "right",
       }}
       open={open}
       onClose={handleClose}
@@ -70,4 +71,4 @@ const GuestMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
   );
 };
 
-export default GuestMenu;
+export default React.memo(GuestMenu);

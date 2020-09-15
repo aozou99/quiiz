@@ -35,6 +35,7 @@ const triggers = [
   "onUnLikeQuiz",
   "onCreateQuiz",
   "onDeleteQuiz",
+  "onUpdateQuiz",
 ];
 triggers.forEach((trigger) => {
   exports[trigger] = require(`./function/${trigger}`);

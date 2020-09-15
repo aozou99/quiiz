@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Avatar, fade, InputBase, Tooltip } from "@material-ui/core";
+import { Avatar, fade, InputBase, Tooltip, useTheme } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import LoginedMenu from "components/common/header/sub/LoginedMenu";
@@ -17,6 +17,8 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { SignInButton } from "components/common/button/SignInButton";
+import Skeleton from "@material-ui/lab/Skeleton";
+import { useQuery } from "utils/helper/queryParameter";
 
 type State = {
   handleDrawer: (event: {}) => void;
@@ -87,19 +89,20 @@ const useStyles = makeStyles((theme) => ({
 
 const Header: React.FC<State> = ({ handleDrawer }) => {
   const classes = useStyles();
+  const theme = useTheme();
+  const query = useQuery();
   const history = useHistory();
   const { url } = useRouteMatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [user, loading] = useAuthState(firebase.auth());
-
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
   return (
     <AppBar
@@ -129,12 +132,16 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
             <SearchIcon />
           </div>
           <InputBase
-            placeholder="検索"
+            placeholder="キーワードを入力"
             classes={{
               root: classes.inputRoot,
               input: classes.inputInput,
             }}
             inputProps={{ "aria-label": "search" }}
+            onChange={(e) => {
+              history.push(`/search?keyword=${e.target.value}`);
+            }}
+            defaultValue={query.get("keyword")}
           />
         </div>
         <div className={classes.grow} />
@@ -187,6 +194,23 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
               userId={user.uid}
             />
           </div>
+        )}
+        {loading && (
+          <>
+            <Skeleton
+              animation="wave"
+              variant="circle"
+              width={40}
+              height={40}
+              style={{ marginRight: theme.spacing(1.5) }}
+            />
+            <Skeleton
+              animation="wave"
+              variant="circle"
+              width={40}
+              height={40}
+            />
+          </>
         )}
       </Toolbar>
     </AppBar>

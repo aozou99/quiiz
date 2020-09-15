@@ -7,24 +7,23 @@ import { getCounter } from "utils/helper/counter";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { pagingQuiz } from "services/quiz/pagingQuiz";
 import { pagingMyLikeQuiz } from "services/quiz/pagingMyLikeQuiz";
+import { pagingQuizApiOptions } from "types/apiOptions";
 
-type parameters = {
-  channelId?: string;
-  lastQuizId?: string;
-};
-export const usePagenateQuiz = (parameters?: parameters) => {
+export const usePagenateQuiz = (parameters: pagingQuizApiOptions) => {
   const [apiOptions, setApiOptions] = useState(parameters);
-  const [quizzes, setFirstDocuments] = useState<any>([]);
+  const [quizzes, setQuizzes] = useState<any>([]);
   const [loaded, setLoaded] = useState(false);
   const [hasNext, setHasNext] = useState(false);
+  const [nextQuiz, setNextQuiz] = useState<any>(null);
 
   useEffect(() => {
     let mounted = true;
     setLoaded(false);
     pagingQuiz(apiOptions).then((res) => {
       if (mounted) {
-        setFirstDocuments((pre: any[]) => [...pre, ...res.quizzes]);
+        setQuizzes((pre: any[]) => [...pre, ...res.quizzes]);
         setHasNext(res.hasNext);
+        setNextQuiz(res.nextQuiz);
         setLoaded(true);
       }
     });
@@ -34,12 +33,17 @@ export const usePagenateQuiz = (parameters?: parameters) => {
   }, [apiOptions]);
 
   useEffect(() => {
-    if (parameters?.lastQuizId !== apiOptions?.lastQuizId) {
+    if (parameters?.where !== apiOptions?.where) {
+      setQuizzes([]);
+      setApiOptions(parameters);
+      return;
+    }
+    if (parameters?.nextQuiz !== apiOptions?.nextQuiz) {
       setApiOptions(parameters);
     }
   }, [parameters, apiOptions]);
 
-  return { quizzes, loaded, hasNext };
+  return { quizzes, loaded, hasNext, nextQuiz };
 };
 
 export const useFetchThumbnailUrl = (

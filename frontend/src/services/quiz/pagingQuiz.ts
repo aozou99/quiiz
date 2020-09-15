@@ -4,6 +4,13 @@ import "firebase/firestore";
 import { PRIVACY } from "utils/costant/InputConst";
 import { convertQuizResponse } from "services/quiz/convertQuizResponse";
 
+const EMPTY_RESPONSE = {
+  quizzes: [],
+  hasNext: false,
+  nextQuiz: null,
+};
+const DEFAULT_COUNT = 16;
+
 const db = firebase.firestore();
 
 const genBaseQuery = async (data: Partial<pagingQuizApiOptions>) => {
@@ -35,37 +42,33 @@ const genBaseQuery = async (data: Partial<pagingQuizApiOptions>) => {
     baseQuery = baseQuery.orderBy("createdAt", "desc");
   }
 
-  if (data && data.lastQuizId) {
-    const snapshot = await db
-      .collectionGroup("quizzes")
-      .where("id", "==", data.lastQuizId)
-      .get();
-    baseQuery = baseQuery.startAfter(snapshot.docs[0]);
+  if (data && data.nextQuiz) {
+    baseQuery = baseQuery.startAfter(data.nextQuiz);
   }
 
-  return baseQuery.limit(data.perCount || 16);
+  return baseQuery.limit((data.perCount || DEFAULT_COUNT) + 1);
 };
 
-export const pagingQuiz = async (data: any) => {
-  const baseQuery = await genBaseQuery(data);
-  const snapshot = await baseQuery.get();
-  if (snapshot.size < 1) {
-    return {
-      quizzes: [],
-      hasNext: false,
-    };
+export const pagingQuiz = async (data: pagingQuizApiOptions) => {
+  if (data.noExecute) return EMPTY_RESPONSE;
+
+  const snapshot = await genBaseQuery(data).then((doc) => doc.get());
+
+  if (snapshot.size < 1) return EMPTY_RESPONSE;
+  let hasNext = false;
+  let nextQuiz = null;
+  const quizDocs = snapshot.docs;
+  if (snapshot.size > (data.perCount || DEFAULT_COUNT)) {
+    hasNext = true;
+    quizDocs.pop();
+    nextQuiz = quizDocs[(data.perCount || DEFAULT_COUNT) - 1];
   }
-  const rs = snapshot.docs.map(convertQuizResponse);
-  const nextQuery = await genBaseQuery({
-    ...data,
-    lastQuizId: snapshot.docs[snapshot.size - 1].data().id,
-  });
-  const hasNext = nextQuery.get().then((next) => {
-    return next.size > 0;
-  });
+
+  const rs = quizDocs.map(convertQuizResponse);
 
   return {
     quizzes: await Promise.all(rs),
-    hasNext: await hasNext,
+    hasNext: hasNext,
+    nextQuiz,
   };
 };

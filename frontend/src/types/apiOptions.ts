@@ -3,7 +3,6 @@ import "firebase/firestore";
 
 export type pagingQuizApiOptions = Partial<{
   channelId: string;
-  lastQuizId: string;
   where: {
     [field: string]: {
       operator: firebase.firestore.WhereFilterOp;
@@ -14,4 +13,6 @@ export type pagingQuizApiOptions = Partial<{
     [field: string]: "desc" | "asc";
   };
   perCount: number;
+  noExecute: boolean;
+  nextQuiz: any;
 }>;

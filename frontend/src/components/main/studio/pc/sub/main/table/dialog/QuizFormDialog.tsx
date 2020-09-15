@@ -202,6 +202,8 @@ const QuizFormDialog: React.FC<State> = ({
       "references",
       oldData?.references?.map((r) => r.requestUrl).join(",") || ""
     );
+    // tagsの初期値設定
+    setValue("tags", oldData?.tags?.join(",") || "");
   }, [register, oldData, setValue]);
 
   // handler

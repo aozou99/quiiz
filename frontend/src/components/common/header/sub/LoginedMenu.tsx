@@ -112,4 +112,4 @@ const LoginedMenu: React.FC<State> = ({
   );
 };
 
-export default LoginedMenu;
+export default React.memo(LoginedMenu);

@@ -55,9 +55,6 @@ const QuizPreviewDialog: React.FC<State> = ({
   useEffect(() => {
     setSelectedQuiz({
       ...quiz,
-      authorId: "",
-      authorName: "",
-      authorImageUrl: "",
       thumbnail: {
         "256x144": imgSrc,
         "640x360": imgSrc,
