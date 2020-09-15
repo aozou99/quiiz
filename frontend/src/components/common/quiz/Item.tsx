@@ -69,7 +69,8 @@ const Item: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const history = useHistory();
-  const handleClickChannelLink = () => {
+  const handleClickChannelLink = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.stopPropagation();
     history.push(`/channel/${authorId}`);
   };
   return (
