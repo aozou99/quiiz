@@ -1,4 +1,4 @@
-import { Container, Typography } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import { GoBackQuiizButton } from "components/common/button/GoBackQuiizButton";
 import { Description } from "components/common/content/Description";
 import React from "react";
