@@ -26,9 +26,3 @@ export default () => {
     </Container>
   );
 };
-
-// 404
-// <a href='https://jp.freepik.com/vectors/business'>Pikisuperstar - jp.freepik.com によって作成された business ベクトル</a>
-
-// 500
-// <a href='https://jp.freepik.com/vectors/web'>Stories - jp.freepik.com によって作成された web ベクトル</a>
