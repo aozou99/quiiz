@@ -26,7 +26,7 @@ const genBaseQuery = async (data: Partial<pagingQuizApiOptions>) => {
   }
 
   // where
-  baseQuery = baseQuery.where("privacy", "==", PRIVACY.PUBLIC);
+  // baseQuery = baseQuery.where("privacy", "==", PRIVACY.PUBLIC);
   if (data.where) {
     Object.entries(data.where).forEach(([field, condition]) => {
       baseQuery = baseQuery.where(field, condition.operator, condition.value);
