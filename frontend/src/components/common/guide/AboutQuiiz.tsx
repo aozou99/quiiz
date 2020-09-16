@@ -44,6 +44,16 @@ export const AboutQuiiz: React.FC<{
             プライバシーポリシー
           </Typography>
         </li>
+        <li
+          onClick={() => {
+            history.push("/credit");
+            onLink && onLink();
+          }}
+        >
+          <Typography variant={"caption"} color={"textSecondary"}>
+            クレジット表記
+          </Typography>
+        </li>
       </ul>
     </Box>
   );

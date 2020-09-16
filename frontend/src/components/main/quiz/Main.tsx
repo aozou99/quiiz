@@ -20,6 +20,7 @@ import Channel from "components/main/quiz/channel/Main";
 import Subscriptions from "components/main/quiz/subscriptions/Main";
 import Terms from "components/main/quiz/terms/Main";
 import Privacy from "components/main/quiz/privacy/Main";
+import Credit from "components/main/quiz/credit/Main";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 
@@ -138,6 +139,9 @@ const Main: React.FC = () => {
                 </Route>
                 <Route path={`/privacy`}>
                   <Privacy />
+                </Route>
+                <Route path={`/credit`}>
+                  <Credit />
                 </Route>
                 <Route path={`*`}>
                   <Redirect to={"/404"} />

@@ -11,16 +11,7 @@ export default () => {
         caption={"ご不便おかけして申し訳ありません。"}
         button={<GoBackQuiizButton />}
         icon={
-          <>
-            <a href="https://jp.freepik.com/vectors/web">
-              <Typography variant="caption">
-                <a href="https://jp.freepik.com/vectors/web">
-                  Stories - jp.freepik.com によって作成された web ベクトル
-                </a>{" "}
-              </Typography>
-            </a>
-            <img width="100%" src="/images/errors/500.jpg" alt={"Page Error"} />
-          </>
+          <img width="100%" src="/images/errors/500.jpg" alt={"Page Error"} />
         }
       />
     </Container>

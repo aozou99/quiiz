@@ -11,19 +11,11 @@ export default () => {
         caption={"「迷わずいけよ」と言っても、俺にも迷う時もある"}
         button={<GoBackQuiizButton />}
         icon={
-          <>
-            <a href="https://jp.freepik.com/vectors/business">
-              <Typography variant="caption">
-                Pikisuperstar - jp.freepik.com によって作成された business
-                ベクトル
-              </Typography>
-            </a>
-            <img
-              width="100%"
-              src="/images/errors/404.jpg"
-              alt={"Page NotFound"}
-            />
-          </>
+          <img
+            width="100%"
+            src="/images/errors/404.jpg"
+            alt={"Page NotFound"}
+          />
         }
       />
     </Container>

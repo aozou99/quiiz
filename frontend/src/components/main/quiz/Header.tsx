@@ -137,7 +137,7 @@ const Header: React.FC<State> = ({ handleDrawer }) => {
               root: classes.inputRoot,
               input: classes.inputInput,
             }}
-            inputProps={{ "aria-label": "search" }}
+            inputProps={{ "aria-label": "search", maxlength: 30 }}
             onChange={(e) => {
               history.push(`/search?keyword=${e.target.value}`);
             }}
