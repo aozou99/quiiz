@@ -1,7 +1,7 @@
 import { pagingQuizApiOptions } from "types/apiOptions";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { PRIVACY } from "utils/costant/InputConst";
+// import { PRIVACY } from "utils/costant/InputConst";
 import { convertQuizResponse } from "services/quiz/convertQuizResponse";
 
 const EMPTY_RESPONSE = {
