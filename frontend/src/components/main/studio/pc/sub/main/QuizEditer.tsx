@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import BookIcon from "@material-ui/icons/Book";
 import CollectionsBookmarkIcon from "@material-ui/icons/CollectionsBookmark";
 import QuizTable from "components/main/studio/pc/sub/main/table/QuizTable";
-import ReadyImage from "components/common/meta/Ready";
+import ReadyDescription from "components/common/meta/ReadyDescription";
 import { BasicTab } from "components/common/tab/BasicTab";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,7 +35,7 @@ const QuizEditer: React.FC = () => {
           {
             tabLabel: "シリーズ",
             tabIcon: <CollectionsBookmarkIcon />,
-            childPannel: <ReadyImage />,
+            childPannel: <ReadyDescription />,
           },
         ]}
       />

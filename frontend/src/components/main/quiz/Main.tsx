@@ -9,7 +9,7 @@ import {
 import { grey } from "@material-ui/core/colors";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Sidebar from "components/main/quiz/SideBar";
-import ReadyImage from "components/common/meta/Ready";
+import ReadyDescription from "components/common/meta/ReadyDescription";
 import Home from "components/main/quiz/home/Main";
 import Search from "components/main/quiz/search/Main";
 import Header from "components/main/quiz/Header";
@@ -120,7 +120,7 @@ const Main: React.FC = () => {
                   <Search />
                 </Route>
                 <Route path={`/trending`}>
-                  <ReadyImage />
+                  <ReadyDescription />
                 </Route>
                 <Route path={`/subscriptions`}>
                   <Subscriptions />

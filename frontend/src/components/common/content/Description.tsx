@@ -37,8 +37,10 @@ export const Description: React.FC<{
     <Box className={classes.root}>
       <Box className={classes.description}>
         {icon}
-        <Typography variant="h5">{title}</Typography>
-        <Typography variant="subtitle2" color="textSecondary">
+        <Typography variant="h5" color="textPrimary">
+          {title}
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
           {caption}
         </Typography>
         {button}

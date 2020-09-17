@@ -8,7 +8,7 @@ import {
   Tab,
   Divider,
 } from "@material-ui/core";
-import React from "react";
+import React, { useMemo } from "react";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -71,6 +71,24 @@ export const BasicTab: React.FC<{
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+  const tabs = useMemo(() => {
+    return tabsprops.map((props, i) => (
+      <Tab
+        key={i}
+        label={props.tabLabel}
+        icon={props.tabIcon}
+        {...a11yProps(i)}
+      />
+    ));
+  }, [tabsprops]);
+  const tabPanel = useMemo(() => {
+    return tabsprops.map((props, i) => (
+      <TabPanel key={i} value={value} index={i}>
+        {props.childPannel}
+      </TabPanel>
+    ));
+  }, [value, tabsprops]);
+
   return (
     <>
       <Tabs
@@ -81,21 +99,10 @@ export const BasicTab: React.FC<{
         textColor="primary"
         className={clsx(classes.paddingLeft, tabsClassName, classes.tabsRoot)}
       >
-        {tabsprops.map((props, i) => (
-          <Tab
-            key={i}
-            label={props.tabLabel}
-            icon={props.tabIcon}
-            {...a11yProps(i)}
-          />
-        ))}
+        {tabs}
       </Tabs>
       <Divider variant="fullWidth" />
-      {tabsprops.map((props, i) => (
-        <TabPanel key={i} value={value} index={i}>
-          {props.childPannel}
-        </TabPanel>
-      ))}
+      {tabPanel}
     </>
   );
 };

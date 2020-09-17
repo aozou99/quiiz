@@ -4,7 +4,7 @@ import Header from "./sub/Header";
 import Sidebar from "components/main/studio/pc/sub/SideBar";
 import { useRouteMatch, Route, Switch } from "react-router-dom";
 import QuizEditer from "./sub/main/QuizEditer";
-import ReadyImage from "components/common/meta/Ready";
+import ReadyDescription from "components/common/meta/ReadyDescription";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +41,7 @@ const Main: React.FC = () => {
 
         <Switch>
           <Route exact path={`${path}`}>
-            <ReadyImage />
+            <ReadyDescription />
           </Route>
           <Route path={`${path}/quiz`}>
             <QuizEditer />

@@ -30,6 +30,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
   },
+  thumbnailBox: {
+    display: "flex",
+    placeContent: "center",
+    placeItems: "center",
+    width: 120,
+    height: 67.5,
+  },
   thumbnail: {
     width: 120,
   },
@@ -85,32 +92,35 @@ const QuizCell: React.FC<State> = ({
 
   return (
     <Box className={classes.root}>
-      {imgSrc ? (
-        <Img
-          src={imgSrc || ""}
-          className={classes.thumbnail}
-          alt={rowData.question}
-          loader={<CircularProgress />}
-          unloader={
-            <IconButton
-              className={classes.thumbnail}
-              classes={{ label: classes.iconButtonLabel }}
-              onClick={() => {
-                imageUrl(rowData.thumbnail, "256x144")
-                  .then((path) => {
-                    setImgSrc(path);
-                  })
-                  .catch((e) => console.error(e));
-              }}
-            >
-              <ReplayIcon />
-              <Typography variant={"caption"}>再読み込み</Typography>
-            </IconButton>
-          }
-        />
-      ) : (
-        <CircularProgress />
-      )}
+      <Box className={classes.thumbnailBox}>
+        {imgSrc ? (
+          <Img
+            src={imgSrc || ""}
+            className={classes.thumbnail}
+            alt={rowData.question}
+            loader={<CircularProgress />}
+            unloader={
+              <IconButton
+                className={classes.thumbnail}
+                classes={{ label: classes.iconButtonLabel }}
+                onClick={() => {
+                  imageUrl(rowData.thumbnail, "256x144")
+                    .then((path) => {
+                      setImgSrc(path);
+                    })
+                    .catch((e) => console.error(e));
+                }}
+              >
+                <ReplayIcon />
+                <Typography variant={"caption"}>再読み込み</Typography>
+              </IconButton>
+            }
+          />
+        ) : (
+          <CircularProgress />
+        )}
+      </Box>
+
       <div className={clsx(classes.description, "hoverHidden")}>
         <Typography variant="subtitle2" gutterBottom>
           {rowData.question}

@@ -109,81 +109,81 @@ const QuizTable = () => {
     setOpenDeleteDialog(true);
   };
   const handleAdd = () => setOpenRegisterFormDialog(true);
-
+  const columns: any[] = useMemo(
+    () => [
+      {
+        title: "クイズ",
+        field: "quiz",
+        customFilterAndSearch: (filter: string, rowData: QuizTableRowData) => {
+          return (
+            rowData.question.includes(filter) ||
+            !!rowData.description?.includes(filter)
+          );
+        },
+        customSort: (a: QuizTableRowData, b: QuizTableRowData) => {
+          if (a.question > b.question) return 1;
+          if (a.question < b.question) return -1;
+          return 0;
+        },
+        render: (rowData: QuizTableRowData) => (
+          <QuizCell
+            rowData={rowData}
+            handleEdit={() => {
+              setSelectedData(rowData);
+              setOpenRegisterFormDialog(true);
+            }}
+            handlePreview={() => {
+              setSelectedData(rowData);
+              setOpenPreviewDialog(true);
+            }}
+            handleDelete={() => {
+              setDeleteTarget([rowData]);
+              setOpenDeleteDialog(true);
+            }}
+            handleAnalyze={() => alert("分析するよ")}
+          />
+        ),
+        cellStyle: {
+          width: 340,
+          maxWidth: 340,
+          minWidth: 340,
+        },
+        headerStyle: {
+          width: 340,
+          maxWidth: 340,
+          minWidth: 340,
+        },
+      },
+      { title: "公開設定", field: "privacyLabel" },
+      {
+        title: "日付",
+        field: "createdAt",
+        type: "datetime",
+      },
+      { title: "制限", field: "limit" },
+      {
+        title: "回答数",
+        field: "answerCount",
+        type: "numeric",
+      },
+      {
+        title: "初回正解率",
+        field: "accuracyRate",
+        type: "numeric",
+      },
+    ],
+    []
+  );
   const MainTable = useMemo(() => {
     return (
       <BasicTable
         isLoading={isLoading}
         actions={actions(handleDelete, handleAdd)}
-        columns={[
-          {
-            title: "クイズ",
-            field: "quiz",
-            customFilterAndSearch: (
-              filter: string,
-              rowData: QuizTableRowData
-            ) => {
-              return (
-                rowData.question.includes(filter) ||
-                !!rowData.description?.includes(filter)
-              );
-            },
-            customSort: (a: QuizTableRowData, b: QuizTableRowData) => {
-              if (a.question > b.question) return 1;
-              if (a.question < b.question) return -1;
-              return 0;
-            },
-            render: (rowData: QuizTableRowData) => (
-              <QuizCell
-                rowData={rowData}
-                handleEdit={() => {
-                  setSelectedData(rowData);
-                  setOpenRegisterFormDialog(true);
-                }}
-                handlePreview={() => {
-                  setSelectedData(rowData);
-                  setOpenPreviewDialog(true);
-                }}
-                handleDelete={() => {
-                  setDeleteTarget([rowData]);
-                  setOpenDeleteDialog(true);
-                }}
-                handleAnalyze={() => alert("分析するよ")}
-              />
-            ),
-            cellStyle: {
-              width: 340,
-              maxWidth: 340,
-              minWidth: 340,
-            },
-            headerStyle: {
-              width: 340,
-              maxWidth: 340,
-              minWidth: 340,
-            },
-          },
-          { title: "公開設定", field: "privacyLabel" },
-          {
-            title: "日付",
-            field: "createdAt",
-            type: "datetime",
-          },
-          { title: "制限", field: "limit" },
-          {
-            title: "回答数",
-            field: "answerCount",
-            type: "numeric",
-          },
-          {
-            title: "初回正解率",
-            field: "accuracyRate",
-            type: "numeric",
-          },
-        ]}
+        columns={columns}
         data={tableData}
       ></BasicTable>
     );
-  }, [tableData, isLoading]);
+  }, [tableData, isLoading, columns]);
   return (
     <React.Fragment>
       {MainTable}
