@@ -38,9 +38,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type pagingParam = {
-  lastListId?: string;
   channelId?: string;
   perCount?: number;
+  nextPlayList?: any;
 };
 export const PlayListTabPannel: React.FC<{ channelId: string }> = ({
   channelId,
@@ -50,14 +50,20 @@ export const PlayListTabPannel: React.FC<{ channelId: string }> = ({
     channelId,
   });
 
-  const { playLists, loaded, hasNext } = useFetchPlayListsWithThumbnail(
-    pagingParam
-  );
+  const {
+    playLists,
+    loaded,
+    hasNext,
+    nextPlayList,
+  } = useFetchPlayListsWithThumbnail(pagingParam);
   const history = useHistory();
   const classes = useStyles();
   const handleLoadMore = () => {
-    setPagingParam({
-      lastListId: playLists[playLists.length - 1].id,
+    setPagingParam((pre) => {
+      return {
+        ...pre,
+        nextPlayList,
+      };
     });
   };
 

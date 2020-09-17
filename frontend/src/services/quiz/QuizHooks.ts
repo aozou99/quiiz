@@ -121,12 +121,14 @@ export const useFetchLike = (quizId: string, authorId: string) => {
 export const usePagenateLikeQuizzes = (parameters: {
   lastLikeId?: string;
   perCount?: number;
+  nextLikeQuiz?: any;
 }) => {
   const [apiOptions, setApiOptions] = useState(parameters);
   const [loaded, setLoaded] = useState(false);
   const [likedQuizzes, setLikedQuizzes] = useState<any>([]);
   const [user, loading] = useAuthState(firebase.auth());
   const [hasNext, setHasNext] = useState(false);
+  const [nextLikeQuiz, setNextLikeQuiz] = useState<any>(null);
   useEffect(() => {
     let mounted = true;
     setLoaded(false);
@@ -136,6 +138,7 @@ export const usePagenateLikeQuizzes = (parameters: {
           if (mounted) {
             setLikedQuizzes((pre: any[]) => [...pre, ...(res.quizzes || [])]);
             setHasNext(res.hasNext);
+            setNextLikeQuiz(res.nextLikeQuiz);
             setLoaded(true);
           }
         })
@@ -156,9 +159,9 @@ export const usePagenateLikeQuizzes = (parameters: {
   }, [user, loading, apiOptions]);
 
   useEffect(() => {
-    if (parameters?.lastLikeId !== apiOptions?.lastLikeId) {
+    if (parameters?.nextLikeQuiz !== apiOptions?.nextLikeQuiz) {
       setApiOptions(parameters);
     }
   }, [parameters, apiOptions]);
-  return { loaded, likedQuizzes, setLikedQuizzes, hasNext };
+  return { loaded, likedQuizzes, setLikedQuizzes, hasNext, nextLikeQuiz };
 };

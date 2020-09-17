@@ -107,12 +107,14 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
   channelId?: string;
   perCount?: number;
   lastListId?: string;
+  nextPlayList?: any;
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [playLists, setPlayLists] = useState<any>([]);
   const [apiOptions, setApiOptions] = useState(parameters);
   const [user, loading] = useAuthState(firebase.auth());
   const [hasNext, setHasNext] = useState(false);
+  const [nextPlayList, setNextPlayList] = useState<any>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -122,6 +124,7 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
         if (mounted) {
           setPlayLists((pre: any[]) => [...pre, ...(res.playLists || [])]);
           setHasNext(res.hasNext);
+          setNextPlayList(res.nextPlayList);
           setLoaded(true);
         }
       });
@@ -138,12 +141,12 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
   }, [apiOptions, loading, user]);
 
   useEffect(() => {
-    if (parameters?.lastListId !== apiOptions?.lastListId) {
+    if (parameters?.nextPlayList !== apiOptions?.nextPlayList) {
       setApiOptions(parameters);
     }
   }, [parameters, apiOptions]);
 
-  return { loaded, playLists, hasNext };
+  return { loaded, playLists, hasNext, nextPlayList };
 };
 
 export const useFetchPlayListContents = (playListId: string) => {

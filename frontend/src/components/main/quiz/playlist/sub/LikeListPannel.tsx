@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type pagingParam = {
-  lastLikeId?: string;
+  nextLikeQuiz?: any;
   perCount?: number;
 };
 
@@ -76,13 +76,14 @@ const LikeListPannel: React.FC<{
     likedQuizzes,
     setLikedQuizzes,
     hasNext,
+    nextLikeQuiz,
   } = usePagenateLikeQuizzes(pagingParam);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [quizList, setQuizList] = useState<QuizDisplay[]>([]);
   const handleLoadMore = () => {
     if (likedQuizzes.length > 0) {
       setPagingParam((pre) => {
-        return { ...pre, lastLikeId: likedQuizzes[likedQuizzes.length - 1].id };
+        return { ...pre, nextLikeQuiz };
       });
     }
   };

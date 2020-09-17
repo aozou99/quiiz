@@ -37,10 +37,6 @@ export const pagingPlayListContents = async (uid: string, data: any) => {
     .collection("playListQuiz")
     .orderBy("createdAt", "desc");
 
-  if (data && data.date) {
-    baseQuery = baseQuery.startAfter(data.date);
-  }
-
   const snapshot = await baseQuery.get();
   const quizzes = await Promise.all(
     snapshot.docs.map(async (quizSummary) => {

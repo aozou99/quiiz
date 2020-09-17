@@ -101,9 +101,17 @@ service cloud.firestore {
     match /{path=**}/quizzes/{quizID} {
       allow read;
     }
-    function isAuthenticated() {
-      return request.auth != null;
+    match /{path=**}/playListQuiz/{quizID} {
+      allow read;
     }
+
+    match /{path=**}/playLists/{playListID} {
+      allow read;
+    }
+    
+    // function isAuthenticated() {
+    //   return request.auth != null;
+    // }
 
     function isUserAuthenticated(userID) {
       return request.auth.uid == userID;

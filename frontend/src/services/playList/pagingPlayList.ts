@@ -4,39 +4,25 @@ import { PRIVACY } from "utils/costant/InputConst";
 import imageUrl from "utils/helper/imageUrl";
 
 const db = firebase.firestore();
-
+const DEFAULT_COUNT = 4;
 const defaultThumbnailPath = "images/default/quiiz-thumbnail.png";
 
-const genBaseQuery = async (
-  uid: string,
-  isMine: boolean,
-  parameters: any,
-  lastPlayList?: any
-) => {
+const genBaseQuery = async (uid: string, isMine: boolean, parameters: any) => {
   let baseQuery = db
     .collection("users")
     .doc(uid)
     .collection("playLists")
-    .orderBy("updatedAt");
+    .orderBy("updatedAt", "desc");
 
   if (!isMine) {
     baseQuery = baseQuery.where("privacy", "==", PRIVACY.PUBLIC);
   }
 
-  if (lastPlayList) {
-    baseQuery = baseQuery.startAfter(lastPlayList);
-  }
-  if (!lastPlayList && parameters?.lastListId) {
-    const snapshot = await db
-      .collection("users")
-      .doc(uid)
-      .collection("playLists")
-      .doc(parameters.lastListId)
-      .get();
-    baseQuery = baseQuery.startAfter(snapshot);
+  if (parameters && parameters.nextPlayList) {
+    baseQuery = baseQuery.startAfter(parameters.nextPlayList);
   }
 
-  return baseQuery.limit(parameters?.perCount || 4);
+  return baseQuery.limit((parameters.perCount || DEFAULT_COUNT) + 1);
 };
 
 export const pagingPlayList = async (uid: string, data: any) => {
@@ -49,19 +35,19 @@ export const pagingPlayList = async (uid: string, data: any) => {
     return {
       playLists: [],
       hasNext: false,
+      nextPlayList: null,
     };
   }
+  let hasNext = false;
+  let nextPlayList = null;
+  const playListDocs = snapshot.docs;
+  if (snapshot.size > (data.perCount || DEFAULT_COUNT)) {
+    hasNext = true;
+    playListDocs.pop();
+    nextPlayList = playListDocs[(data.perCount || DEFAULT_COUNT) - 1];
+  }
 
-  const hasNext = genBaseQuery(
-    uid,
-    isMine,
-    data,
-    snapshot.docs[snapshot.size - 1]
-  )
-    .then((doc) => doc.get())
-    .then((next) => next.size > 0);
-
-  const rs = snapshot.docs.map(async (playList) => {
+  const rs = playListDocs.map(async (playList) => {
     const playListData = playList.data();
     let thumbnail = defaultThumbnailPath;
     if (playListData.quizCount > 0) {
@@ -78,13 +64,14 @@ export const pagingPlayList = async (uid: string, data: any) => {
       ...playListData,
       thumbnail: {
         "256x144": await imageUrl(thumbnail, "256x144"),
-        "640x360": await imageUrl(thumbnail, "256x144"),
+        "640x360": await imageUrl(thumbnail, "640x360"),
       },
     };
   });
 
   return {
     playLists: await Promise.all(rs),
-    hasNext: await hasNext,
+    hasNext: hasNext,
+    nextPlayList,
   };
 };

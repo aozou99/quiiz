@@ -42,7 +42,7 @@ const genBaseQuery = async (data: Partial<pagingQuizApiOptions>) => {
     baseQuery = baseQuery.orderBy("createdAt", "desc");
   }
 
-  if (data && data.nextQuiz) {
+  if (data.nextQuiz) {
     baseQuery = baseQuery.startAfter(data.nextQuiz);
   }
 
