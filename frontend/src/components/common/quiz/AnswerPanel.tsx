@@ -267,6 +267,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
                         src={`https://www.google.com/s2/favicons?domain=${
                           new URL(ref.requestUrl).hostname
                         }`}
+                        loading="lazy"
                         alt={"favicon"}
                       />
                     </ListItemIcon>
@@ -277,6 +278,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
                           <iframe
                             title={ref.ogTitle}
                             src={ref.ogVideo.url}
+                            loading="lazy"
                             width="100%"
                             allow="autoplay; encrypted-media"
                             allowFullScreen
