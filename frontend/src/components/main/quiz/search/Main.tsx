@@ -3,6 +3,7 @@ import { useQuery } from "utils/helper/queryParameter";
 import ListAndAnswer from "components/common/quiz/ListAndAnswer";
 import { Description } from "components/common/content/Description";
 import FindInPageIcon from "@material-ui/icons/FindInPage";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const nGram = require("n-gram");
 
@@ -28,21 +29,24 @@ const Main: React.FC = () => {
   }, [queryKeyword]);
 
   return (
-    <ListAndAnswer
-      where={where}
-      order={{}}
-      dummyOff={true}
-      noExecute={Object.keys(where).length < 1}
-      emptyResulDescription={
-        <Description
-          icon={<FindInPageIcon style={{ fontSize: 120 }} color="action" />}
-          title={"クイズを探してみましょう"}
-          caption={
-            "好奇心というのは道草でもあるわけです。確かに時間の無駄ですが、必ず自分の糧になる。"
-          }
-        />
-      }
-    />
+    <>
+      <MetaTag title={queryKeyword || "キーワード検索"} />
+      <ListAndAnswer
+        where={where}
+        order={{}}
+        dummyOff={true}
+        noExecute={Object.keys(where).length < 1}
+        emptyResulDescription={
+          <Description
+            icon={<FindInPageIcon style={{ fontSize: 120 }} color="action" />}
+            title={"クイズを探してみましょう"}
+            caption={
+              "好奇心というのは道草でもあるわけです。確かに時間の無駄ですが、必ず自分の糧になる。"
+            }
+          />
+        }
+      />
+    </>
   );
 };
 

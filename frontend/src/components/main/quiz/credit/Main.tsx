@@ -1,4 +1,5 @@
 import { Container, makeStyles, Theme, Typography } from "@material-ui/core";
+import { MetaTag } from "components/common/meta/MetaTag";
 import React from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -13,6 +14,7 @@ const Main = () => {
   const classes = useStyles();
   return (
     <Container maxWidth={"lg"} className={classes.root}>
+      <MetaTag title={"クレジット"} />
       <Typography variant="h5" paragraph>
         クレジット
       </Typography>

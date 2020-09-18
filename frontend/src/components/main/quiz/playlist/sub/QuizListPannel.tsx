@@ -24,6 +24,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import PlayListService from "services/playList/PlayListService";
 import DummyQuizListPannel from "components/main/quiz/playlist/sub/DummyQuizListPannel";
 import { EditableTextField } from "components/common/input/EditableTextField";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const privacies = [
   {
@@ -108,6 +109,7 @@ const QuizListPannel: React.FC<{
 
   return (
     <>
+      <MetaTag title={title || "再生リスト"} />
       {loaded && playList && (
         <Box className={classes.listPannel}>
           <Box className={classes.playListInfo}>

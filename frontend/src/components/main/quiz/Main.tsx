@@ -23,6 +23,7 @@ import Privacy from "components/main/quiz/privacy/Main";
 import Credit from "components/main/quiz/credit/Main";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -120,6 +121,7 @@ const Main: React.FC = () => {
                   <Search />
                 </Route>
                 <Route path={`/trending`}>
+                  <MetaTag title={"急上昇"} />
                   <ReadyDescription />
                 </Route>
                 <Route path={`/subscriptions`}>

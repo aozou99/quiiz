@@ -5,6 +5,7 @@ import Sidebar from "components/main/studio/pc/sub/SideBar";
 import { useRouteMatch, Route, Switch } from "react-router-dom";
 import QuizEditer from "./sub/main/QuizEditer";
 import ReadyDescription from "components/common/meta/ReadyDescription";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,9 +42,14 @@ const Main: React.FC = () => {
 
         <Switch>
           <Route exact path={`${path}`}>
+            <MetaTag
+              sufix="Quiiz Studio"
+              title={"チャンネルのダッシュボード"}
+            />
             <ReadyDescription />
           </Route>
           <Route path={`${path}/quiz`}>
+            <MetaTag sufix="Quiiz Studio" title={"チャンネルのクイズ"} />
             <QuizEditer />
           </Route>
         </Switch>

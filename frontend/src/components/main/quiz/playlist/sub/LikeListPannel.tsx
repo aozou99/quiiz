@@ -21,6 +21,7 @@ import DummyQuizListPannel from "components/main/quiz/playlist/sub/DummyQuizList
 import { usePagenateLikeQuizzes } from "services/quiz/QuizHooks";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import QuizService from "services/quiz/QuizService";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -110,6 +111,7 @@ const LikeListPannel: React.FC<{
 
   return (
     <>
+      <MetaTag title="いいねしたクイズ" />
       {likedQuizzes.length > 0 && (
         <Box className={classes.listPannel}>
           <Box className={classes.playListInfo}>

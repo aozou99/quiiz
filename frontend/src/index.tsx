@@ -8,6 +8,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/functions";
+import { Helmet } from "react-helmet";
 
 fetch("/__/firebase/init.json").then(async (response) => {
   const json = await response.json();
@@ -26,6 +27,13 @@ fetch("/__/firebase/init.json").then(async (response) => {
 
   ReactDOM.render(
     <BrowserRouter>
+      <Helmet>
+        <meta
+          name="description"
+          content="Quiizでは興味があるクイズを楽しんだり、オリジナルクイズを投稿して多くの人に新たな知識を共有できます"
+        />
+        <title>Quiiz</title>
+      </Helmet>
       <App />
     </BrowserRouter>,
     document.getElementById("root")

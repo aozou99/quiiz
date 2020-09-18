@@ -9,6 +9,7 @@ import { makeStyles, Theme, createStyles, Container } from "@material-ui/core";
 import { useFetchSubscribeChannels } from "services/subscription/SubscriptionHooks";
 import { SubscChannel } from "components/main/quiz/subscriptions/sub/SubscChannel";
 import { Description } from "components/common/content/Description";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +25,7 @@ const Main: React.FC = () => {
   const { loaded, channels } = useFetchSubscribeChannels();
   return (
     <>
+      <MetaTag title={"登録チャンネル"} />
       {!loaded && <DummySubscChannels />}
       {loaded && user && channels.length > 0 && (
         <Container maxWidth="lg" className={classes.root}>

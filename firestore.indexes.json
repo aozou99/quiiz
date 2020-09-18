@@ -17,6 +17,28 @@
   ],
   "fieldOverrides": [
     {
+      "collectionGroup": "playLists",
+      "fieldPath": "id",
+      "indexes": [
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "DESCENDING",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "arrayConfig": "CONTAINS",
+          "queryScope": "COLLECTION"
+        },
+        {
+          "order": "ASCENDING",
+          "queryScope": "COLLECTION_GROUP"
+        }
+      ]
+    },
+    {
       "collectionGroup": "quizzes",
       "fieldPath": "createdAt",
       "indexes": [
@@ -62,7 +84,7 @@
     },
     {
       "collectionGroup": "quizzes",
-      "fieldPath": "searchTokenMap",
+      "fieldPath": "privacy",
       "indexes": [
         {
           "order": "ASCENDING",
@@ -76,7 +98,7 @@
     },
     {
       "collectionGroup": "quizzes",
-      "fieldPath": "privacy",
+      "fieldPath": "searchTokenMap",
       "indexes": [
         {
           "order": "ASCENDING",

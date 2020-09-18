@@ -17,6 +17,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
 import { GuestDescription } from "components/common/content/GuestDescription";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,6 +48,7 @@ const Main: React.FC = () => {
 
   return (
     <Container maxWidth="xl">
+      <MetaTag title="ライブラリ" />
       {!loading && user && (
         <Box className={clsx(classes.root)}>
           <Container maxWidth="lg" className={clsx(classes.list)}>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Typography, makeStyles, Theme } from "@material-ui/core";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -55,6 +56,7 @@ const Main: React.FC = () => {
   };
   return (
     <Container maxWidth="xl" className={classes.root}>
+      <MetaTag title={"利用規約"} />
       <Typography variant="h4" gutterBottom paragraph>
         利用規約
       </Typography>
