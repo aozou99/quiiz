@@ -46,7 +46,7 @@ export const PlayListTabPannel: React.FC<{ channelId: string }> = ({
   channelId,
 }) => {
   const [pagingParam, setPagingParam] = useState<pagingParam>({
-    perCount: 8,
+    perCount: 16,
     channelId,
   });
 

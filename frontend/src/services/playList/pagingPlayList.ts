@@ -25,12 +25,14 @@ const genBaseQuery = async (uid: string, isMine: boolean, parameters: any) => {
   return baseQuery.limit((parameters.perCount || DEFAULT_COUNT) + 1);
 };
 
-export const pagingPlayList = async (uid: string, data: any) => {
+export const pagingPlayList = async (uid: string | undefined, data: any) => {
   const isMine =
     !data?.channelId || (data?.channelId && data?.channelId === uid);
-  const snapshot = await genBaseQuery(uid, isMine, data).then((doc) =>
-    doc.get()
-  );
+  const snapshot = await genBaseQuery(
+    data.channelId || uid,
+    isMine,
+    data
+  ).then((doc) => doc.get());
   if (snapshot.size < 1) {
     return {
       playLists: [],

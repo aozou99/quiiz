@@ -119,8 +119,8 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
   useEffect(() => {
     let mounted = true;
     setLoaded(false);
-    if (!loading && user) {
-      pagingPlayList(user.uid, apiOptions).then((res) => {
+    if (!loading) {
+      pagingPlayList(user?.uid, apiOptions).then((res) => {
         if (mounted) {
           setPlayLists((pre: any[]) => [...pre, ...(res.playLists || [])]);
           setHasNext(res.hasNext);
@@ -128,12 +128,6 @@ export const useFetchPlayListsWithThumbnail = (parameters?: {
           setLoaded(true);
         }
       });
-    }
-    if (!loading && !user) {
-      if (mounted) {
-        setPlayLists([]);
-        setLoaded(true);
-      }
     }
     return () => {
       mounted = false;

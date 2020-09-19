@@ -17,7 +17,6 @@ export const useFetchChannelHeader = (channelId: string) => {
     if (!loading) {
       getChannelHeader({ channelId })
         .then((res) => {
-          console.log(res);
           if (mounted) {
             setChannelHeader(res);
             setEditable(user?.uid === channelId);
