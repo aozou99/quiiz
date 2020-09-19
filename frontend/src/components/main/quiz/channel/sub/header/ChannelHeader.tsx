@@ -26,6 +26,7 @@ import { LinearWithLabel } from "components/common/feedback/LinearWithLabel";
 import Alert from "@material-ui/lab/Alert";
 import { GoQuizStudioButton } from "components/common/button/GoQuizStudioButton";
 import { SubscribeButton } from "components/common/button/SubscribeButton";
+import { MetaTag } from "components/common/meta/MetaTag";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -127,18 +128,19 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
   };
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && !hasError) {
       setIsSubscribed(initialSubscState);
       setSubscribedUsers(channelHeader.subscribedCount);
       setChannelName(channelHeader.channelName);
       setFullLoaded(true);
     }
-  }, [initialSubscState, loaded, channelHeader]);
+  }, [initialSubscState, loaded, channelHeader, hasError]);
 
-  return fullLoaded && hasError ? (
-    <Redirect to={"/error?src=404"} />
+  return loaded && hasError ? (
+    <Redirect to={"/404"} />
   ) : fullLoaded && !authLoading ? (
     <Box className={classes.root}>
+      <MetaTag title={channelName || ""} />
       <Box className={classes.container}>
         <Box
           className={classes.channelLogo}

@@ -6,7 +6,7 @@ import AuthService from "services/auth/AuthService";
 const db = firebase.firestore();
 
 export const getChannelHeader = async (data: any) => {
-  const [user, subscribedCount] = await Promise.all([
+  return await Promise.all([
     AuthService.userRef.doc(data.channelId).get(),
     getCounter(
       db
@@ -15,11 +15,14 @@ export const getChannelHeader = async (data: any) => {
         .collection("counters")
         .doc("subscribedUser")
     ),
-  ]).catch(() => [undefined, undefined]);
-
-  return {
-    channelName: user?.data()?.displayName,
-    channelLogo: user?.data()?.photoUrl,
-    subscribedCount,
-  };
+  ]).then(([user, subscribedCount]) => {
+    if (!user.exists) {
+      throw new Error("User Not Found");
+    }
+    return {
+      channelName: user?.data()?.displayName,
+      channelLogo: user?.data()?.photoUrl,
+      subscribedCount,
+    };
+  });
 };
