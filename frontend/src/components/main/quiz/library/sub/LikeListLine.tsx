@@ -48,15 +48,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   setSelected: (arg0: any) => any;
-  setResult: (arg0: any) => any;
   selected: QuizDisplay | undefined;
 };
 
-const LikeListLine: React.FC<Props> = ({
-  setSelected,
-  setResult,
-  selected,
-}) => {
+const LikeListLine: React.FC<Props> = ({ setSelected, selected }) => {
   const classes = useStyles();
   const { loaded, likedQuizzes, hasNext } = usePagenateLikeQuizzes({
     perCount: 4,
@@ -94,7 +89,6 @@ const LikeListLine: React.FC<Props> = ({
                     setSelected(undefined);
                   } else {
                     setSelected(item);
-                    setResult(undefined);
                   }
                 }}
                 isSelected={selected === item}

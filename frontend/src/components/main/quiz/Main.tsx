@@ -24,7 +24,7 @@ import Credit from "components/main/quiz/credit/Main";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 import { MetaTag } from "components/common/meta/MetaTag";
-import { BottomBar } from "components/common/bottomBar/bottomBar";
+import { BottomBar } from "components/common/bottomBar/BottomBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {

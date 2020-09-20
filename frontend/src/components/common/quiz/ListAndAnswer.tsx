@@ -7,14 +7,17 @@ import {
   createStyles,
   List,
   CircularProgress,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import clsx from "clsx";
 import Item from "components/common/quiz/Item";
 import AnswerPanel from "components/common/quiz/AnswerPanel";
-import { QuizResult, QuizDisplay } from "types/QuizTypes";
+import { QuizDisplay } from "types/QuizTypes";
 import DummyItem from "components/common/quiz/DummyItem";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { pagingQuizApiOptions } from "types/apiOptions";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,7 +58,12 @@ const ListAndAnswer: React.FC<pagingQuizApiOptions & {
   const { quizzes, loaded, hasNext, nextQuiz } = usePagenateQuiz(pagingParam);
   const classes = useStyles();
   const [selected, setSelected] = useState<QuizDisplay>();
-  const [result, setResult] = useState<QuizResult>(undefined);
+  const theme = useTheme();
+  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"), {
+    noSsr: true,
+  });
+  const history = useHistory();
+
   const handleLoadMore = () => {
     setPagingParam((pre) => {
       return {
@@ -85,17 +93,19 @@ const ListAndAnswer: React.FC<pagingQuizApiOptions & {
         authorName={item.authorName}
         authorImageUrl={item.authorImageUrl}
         handleClick={() => {
+          if (isSmallerSm) {
+            history.push(`/play/${item.id}`);
+          }
           if (selected === item) {
             setSelected(undefined);
           } else {
             setSelected(item);
-            setResult(undefined);
           }
         }}
         isSelected={selected === item}
       />
     ));
-  }, [quizzes, selected]);
+  }, [quizzes, selected, isSmallerSm, history]);
 
   const Dummy = useMemo(() => {
     return Array.from({ length: 32 })
@@ -115,13 +125,7 @@ const ListAndAnswer: React.FC<pagingQuizApiOptions & {
         )}
         {loaded && quizzes.length === 0 && props.emptyResulDescription}
       </List>
-      {selected && (
-        <AnswerPanel
-          selected={selected}
-          result={result}
-          setResult={setResult}
-        />
-      )}
+      {selected && <AnswerPanel selected={selected} />}
     </Box>
   );
 };

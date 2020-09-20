@@ -77,8 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const QuizListPannel: React.FC<{
   setSelected: (quiz?: QuizDisplay) => void;
-  setResult: (result: undefined) => void;
-}> = ({ setSelected, setResult }) => {
+}> = ({ setSelected }) => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
@@ -161,7 +160,6 @@ const QuizListPannel: React.FC<{
                     button
                     selected={selectedIndex === i}
                     onClick={() => {
-                      setResult(undefined);
                       setSelectedIndex(i);
                       setSelected(quiz);
                     }}

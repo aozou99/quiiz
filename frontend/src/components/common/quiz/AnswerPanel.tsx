@@ -34,8 +34,7 @@ import "firebase/auth";
 
 type Props = {
   selected: QuizDisplay;
-  result: QuizResult;
-  setResult: React.Dispatch<React.SetStateAction<QuizResult>>;
+  refresh?: boolean;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -133,8 +132,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
+const AnswerPanel: React.FC<Props> = ({ selected, refresh }) => {
   const classes = useStyles();
+  const [result, setResult] = useState<QuizResult>(undefined);
   const [user, loading] = useAuthState(firebase.auth());
   const borderLeftColors = [
     classes.borderLeftrTertiary,
@@ -203,7 +203,8 @@ const AnswerPanel: React.FC<Props> = ({ selected, result, setResult }) => {
 
   useEffect(() => {
     setIsLike(initialIsLike);
-  }, [initialIsLike, selected.id]);
+    setResult(undefined);
+  }, [initialIsLike, selected.id, refresh]);
 
   return (
     <Paper elevation={1} className={classes.detail}>

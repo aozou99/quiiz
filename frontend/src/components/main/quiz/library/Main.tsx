@@ -10,7 +10,7 @@ import {
 import clsx from "clsx";
 import PlayListLine from "components/main/quiz/library/sub/PlayListLine";
 import LikeListLine from "components/main/quiz/library/sub/LikeListLine";
-import { QuizDisplay, QuizResult } from "types/QuizTypes";
+import { QuizDisplay } from "types/QuizTypes";
 import AnswerPanel from "components/common/quiz/AnswerPanel";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const Main: React.FC = () => {
   const classes = useStyles();
   const [selected, setSelected] = useState<QuizDisplay>();
-  const [result, setResult] = useState<QuizResult>(undefined);
   const [user, loading] = useAuthState(firebase.auth());
 
   return (
@@ -55,19 +54,9 @@ const Main: React.FC = () => {
             <PlayListLine />
             <Divider className={classes.divider} />
 
-            <LikeListLine
-              selected={selected}
-              setSelected={setSelected}
-              setResult={setResult}
-            />
+            <LikeListLine selected={selected} setSelected={setSelected} />
           </Container>
-          {selected && (
-            <AnswerPanel
-              selected={selected}
-              result={result}
-              setResult={setResult}
-            />
-          )}
+          {selected && <AnswerPanel selected={selected} />}
         </Box>
       )}
       {!loading && !user && (

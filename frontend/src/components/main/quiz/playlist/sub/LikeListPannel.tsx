@@ -68,8 +68,7 @@ type pagingParam = {
 
 const LikeListPannel: React.FC<{
   setSelected: (quiz?: QuizDisplay) => void;
-  setResult: (result: undefined) => void;
-}> = ({ setSelected, setResult }) => {
+}> = ({ setSelected }) => {
   const classes = useStyles();
   const [pagingParam, setPagingParam] = useState<pagingParam>({ perCount: 6 });
   const {
@@ -124,7 +123,6 @@ const LikeListPannel: React.FC<{
                   button
                   selected={selectedIndex === i}
                   onClick={() => {
-                    setResult(undefined);
                     setSelectedIndex(i);
                     setSelected(quiz);
                   }}

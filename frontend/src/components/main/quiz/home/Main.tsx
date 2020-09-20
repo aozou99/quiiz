@@ -5,4 +5,4 @@ const Main: React.FC = () => {
   return <ListAndAnswer />;
 };
 
-export default Main;
+export default React.memo(Main);

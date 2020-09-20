@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import { QuizData, QuizResult } from "types/QuizTypes";
+import { QuizData } from "types/QuizTypes";
 import AnswerPanel from "components/common/quiz/AnswerPanel";
 import { useFetchThumbnailUrl } from "services/quiz/QuizHooks";
 import { grey } from "@material-ui/core/colors";
@@ -48,10 +48,9 @@ const QuizPreviewDialog: React.FC<State> = ({
   onClose,
 }) => {
   const classes = useStyles();
-  const [result, setResult] = useState<QuizResult>(undefined);
   const [selectedQuiz, setSelectedQuiz] = useState<any>(undefined);
   const { imgSrc, loaded } = useFetchThumbnailUrl(quiz.thumbnail, "256x144");
-
+  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     setSelectedQuiz({
       ...quiz,
@@ -66,7 +65,6 @@ const QuizPreviewDialog: React.FC<State> = ({
     <Dialog
       open={open}
       onExited={() => {
-        setResult(undefined);
         onClose();
       }}
       fullScreen
@@ -87,7 +85,7 @@ const QuizPreviewDialog: React.FC<State> = ({
         <Button
           className={classes.actionButton}
           variant="outlined"
-          onClick={() => setResult(undefined)}
+          onClick={() => setRefresh(!refresh)}
           startIcon={<RefreshIcon />}
           color="primary"
         >
@@ -97,13 +95,7 @@ const QuizPreviewDialog: React.FC<State> = ({
       <Divider />
       <DialogContent className={classes.content}>
         <Container maxWidth="md" className={classes.container}>
-          {loaded && (
-            <AnswerPanel
-              selected={selectedQuiz}
-              result={result}
-              setResult={setResult}
-            />
-          )}
+          {loaded && <AnswerPanel selected={selectedQuiz} refresh={refresh} />}
         </Container>
       </DialogContent>
     </Dialog>
