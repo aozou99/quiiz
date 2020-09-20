@@ -24,6 +24,7 @@ import Credit from "components/main/quiz/credit/Main";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 import { MetaTag } from "components/common/meta/MetaTag";
+import { BottomBar } from "components/common/bottomBar/bottomBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
     zIndex: 1200,
     minHeight: `calc(100vh - ${theme.spacing(3)}px)`,
     backgroundColor: grey[100],
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: theme.spacing(7),
+    },
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -86,6 +90,9 @@ const Main: React.FC = () => {
 
   const theme = useTheme();
   const isLargerLg = useMediaQuery(theme.breakpoints.up(1320));
+  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"), {
+    noSsr: true,
+  });
   const handleDrawer = () => {
     if (isLargerLg) {
       setFoldSidebar(!foldSidebar);
@@ -93,13 +100,18 @@ const Main: React.FC = () => {
       setOpenSidebar(!openSidebar);
     }
   };
+  window.scrollTo({ top: 0 });
 
   return (
     <BackDropContext.Provider value={{ setOpenBackDrop, setBackDropChildNode }}>
       <div className={classes.root}>
         <Header handleDrawer={handleDrawer} />
-        <TemporarySidebar open={openSidebar} setOpen={setOpenSidebar} />
-        <Sidebar foldSidebar={foldSidebar} />
+        {!isSmallerSm && (
+          <>
+            <TemporarySidebar open={openSidebar} setOpen={setOpenSidebar} />
+            <Sidebar foldSidebar={foldSidebar} />
+          </>
+        )}
         <SignInGuideDialogContext.Provider
           value={{ setOpenSignInDialog, setSignInTitle, setSignInBody }}
         >
@@ -150,6 +162,7 @@ const Main: React.FC = () => {
                 </Route>
               </Switch>
             </main>
+            {isSmallerSm && <BottomBar />}
           </UnSubscribedDialogContext.Provider>
         </SignInGuideDialogContext.Provider>
       </div>
