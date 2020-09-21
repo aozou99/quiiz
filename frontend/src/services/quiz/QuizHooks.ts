@@ -8,6 +8,39 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { pagingQuiz } from "services/quiz/pagingQuiz";
 import { pagingMyLikeQuiz } from "services/quiz/pagingMyLikeQuiz";
 import { pagingQuizApiOptions } from "types/apiOptions";
+import { QuizDisplay } from "types/QuizTypes";
+import { fetchQuiz } from "services/quiz/fetchQuiz";
+
+export const useFetchQuiz = (id: string) => {
+  const [quiz, setQuiz] = useState<QuizDisplay>();
+  const [loaded, setLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  useEffect(() => {
+    let mounted = true;
+    setLoaded(false);
+    fetchQuiz(id)
+      .then((res) => {
+        if (mounted) {
+          setQuiz(res);
+        }
+      })
+      .catch((_e) => {
+        if (mounted) {
+          setHasError(true);
+        }
+      })
+      .finally(() => {
+        if (mounted) {
+          setLoaded(true);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
+
+  return { quiz, loaded, hasError };
+};
 
 export const usePagenateQuiz = (parameters: pagingQuizApiOptions) => {
   const [apiOptions, setApiOptions] = useState(parameters);

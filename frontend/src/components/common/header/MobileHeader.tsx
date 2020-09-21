@@ -152,7 +152,7 @@ const MobileHeader: React.FC = () => {
               variant="circle"
               width={40}
               height={40}
-              style={{ margin: theme.spacing(0, 1.5) }}
+              style={{ margin: theme.spacing(1.5) }}
             />
           )}
         </Box>

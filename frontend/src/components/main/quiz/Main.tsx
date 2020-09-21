@@ -21,6 +21,7 @@ import Subscriptions from "components/main/quiz/subscriptions/Main";
 import Terms from "components/main/quiz/terms/Main";
 import Privacy from "components/main/quiz/privacy/Main";
 import Credit from "components/main/quiz/credit/Main";
+import Play from "components/main/quiz/play/Main";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 import { MetaTag } from "components/common/meta/MetaTag";
@@ -45,6 +46,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: grey[100],
     [theme.breakpoints.down("sm")]: {
       paddingBottom: theme.spacing(7),
+      maxHeight: `calc(100vh - ${theme.spacing(12)}px)`,
+      minHeight: 0,
     },
   },
   backdrop: {
@@ -144,6 +147,9 @@ const Main: React.FC = () => {
                 </Route>
                 <Route path={[`/playlist/:id`, `/playlist`]}>
                   <PlayList />
+                </Route>
+                <Route path={`/play/:id`}>
+                  <Play />
                 </Route>
                 <Route path={`/channel/:id`}>
                   <Channel />

@@ -41,8 +41,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     detail: {
       flex: "3",
-      [theme.breakpoints.down("xs")]: {
+      [theme.breakpoints.down("sm")]: {
         flex: "5",
+        minWidth: theme.spacing(0),
+        margin: theme.spacing(0),
+        height: `calc(100vh - ${theme.spacing(21)}px)`,
+        boxShadow: "none",
       },
       backgroundColor: "white",
       margin: theme.spacing(1),
@@ -58,6 +62,8 @@ const useStyles = makeStyles((theme: Theme) =>
         margin: "auto",
         marginBottom: theme.spacing(1),
         borderRadius: theme.spacing(1),
+        height: 144,
+        width: 256,
       },
       "& > hr": {
         margin: theme.spacing(1),

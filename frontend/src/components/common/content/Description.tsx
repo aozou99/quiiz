@@ -5,6 +5,8 @@ import {
   Theme,
   createStyles,
   Box,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,15 +34,19 @@ export const Description: React.FC<{
   button?: ReactNode;
 }> = ({ icon, title, caption, button }) => {
   const classes = useStyles();
-
+  const theme = useTheme();
+  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Box className={classes.root}>
       <Box className={classes.description}>
         {icon}
-        <Typography variant="h5" color="textPrimary">
+        <Typography variant={isSmallerSm ? "h6" : "h5"} color="textPrimary">
           {title}
         </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
+        <Typography
+          variant={isSmallerSm ? "subtitle2" : "subtitle1"}
+          color="textSecondary"
+        >
           {caption}
         </Typography>
         {button}
