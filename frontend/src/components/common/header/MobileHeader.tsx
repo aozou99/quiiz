@@ -146,6 +146,18 @@ const MobileHeader: React.FC = () => {
               </IconButton>
             </>
           )}
+          {!loading && !user && (
+            <>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <Avatar alt={""} src={"guest user"} />
+              </IconButton>
+            </>
+          )}
           {loading && (
             <Skeleton
               animation="wave"

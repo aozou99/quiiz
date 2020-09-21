@@ -8,7 +8,6 @@ import {
   ListItem,
   List,
   Typography,
-  Fab,
 } from "@material-ui/core";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
@@ -18,7 +17,6 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import React from "react";
 import { themeColors } from "components/core/CustomeTheme";
 import { useHistory } from "react-router-dom";
-import AddIcon from "@material-ui/icons/Add";
 
 const listItems = [
   {
@@ -84,16 +82,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "column",
       textAlign: "center",
     },
-    fabButton: {
-      position: "absolute",
-      zIndex: 1,
-      top: theme.spacing(-8),
-      right: theme.spacing(2),
-      color: "white",
-      [theme.breakpoints.up("sm")]: {
-        display: "none",
-      },
-    },
   })
 );
 
@@ -124,14 +112,6 @@ export const BottomBar = () => {
             </ListItem>
           ))}
         </List>
-        <Fab
-          color="primary"
-          aria-label="add"
-          className={classes.fabButton}
-          onClick={() => history.push("/studio/quiz")}
-        >
-          <AddIcon />
-        </Fab>
       </Toolbar>
     </AppBar>
   );
