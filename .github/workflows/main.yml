@@ -23,6 +23,8 @@ jobs:
           npm install
           npm run build
           cd ../
+        env:
+          GENERATE_SOURCEMAP: false
       - name: Function Setup
         run: |
           cd ./functions
