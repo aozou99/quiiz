@@ -35,6 +35,7 @@ import "firebase/auth";
 type Props = {
   selected: QuizDisplay;
   refresh?: boolean;
+  elevation?: number;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,7 +47,6 @@ const useStyles = makeStyles((theme: Theme) =>
         minWidth: theme.spacing(0),
         margin: theme.spacing(0),
         height: `calc(100vh - ${theme.spacing(21)}px)`,
-        boxShadow: "none",
       },
       backgroundColor: "white",
       margin: theme.spacing(1),
@@ -138,7 +138,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const AnswerPanel: React.FC<Props> = ({ selected, refresh }) => {
+const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
   const classes = useStyles();
   const [result, setResult] = useState<QuizResult>(undefined);
   const [user, loading] = useAuthState(firebase.auth());
@@ -213,7 +213,10 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh }) => {
   }, [initialIsLike, selected.id, refresh]);
 
   return (
-    <Paper elevation={1} className={classes.detail}>
+    <Paper
+      elevation={elevation !== undefined ? elevation : 1}
+      className={classes.detail}
+    >
       <img src={selected.thumbnail["256x144"]} alt={selected.question} />
       <Typography align="center" variant="subtitle1">
         {selected.question}

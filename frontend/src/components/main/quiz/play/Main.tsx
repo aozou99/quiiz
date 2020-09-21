@@ -28,7 +28,7 @@ const Play: React.FC = () => {
     <Container className={classes.container}>
       {hasError && <Redirect to="/404" />}
       {loaded && selected !== undefined ? (
-        <AnswerPanel selected={selected} />
+        <AnswerPanel selected={selected} elevation={0} />
       ) : (
         <DummyAnswerPanel />
       )}
