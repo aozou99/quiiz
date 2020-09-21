@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import clsx from "clsx";
 import PostAddIcon from "@material-ui/icons/PostAdd";
-import React from "react";
+import React, { useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,6 +15,7 @@ import { Skeleton } from "@material-ui/lab";
 import { useAuthState } from "react-firebase-hooks/auth";
 import SearchIcon from "@material-ui/icons/Search";
 import { useQuery } from "utils/helper/queryParameter";
+import GuestMenu from "components/common/header/sub/GuestMenu";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -91,6 +92,15 @@ const MobileHeader: React.FC = () => {
   const theme = useTheme();
   const query = useQuery();
   const [user, loading] = useAuthState(firebase.auth());
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
 
   return (
     <AppBar
@@ -153,9 +163,15 @@ const MobileHeader: React.FC = () => {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 color="inherit"
+                onClick={handleMenu}
               >
                 <Avatar alt={""} src={"guest user"} />
               </IconButton>
+              <GuestMenu
+                anchorEl={anchorEl}
+                open={open}
+                handleClose={handleClose}
+              />
             </>
           )}
           {loading && (
