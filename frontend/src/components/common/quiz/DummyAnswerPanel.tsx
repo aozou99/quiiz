@@ -61,7 +61,7 @@ const AnswerPanel: React.FC = () => {
           height={62}
         />
       ));
-  }, []);
+  }, [classes.choice]);
 
   return (
     <Paper elevation={1} className={classes.detail}>

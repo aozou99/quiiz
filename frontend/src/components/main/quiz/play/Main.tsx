@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { Redirect, useParams } from "react-router-dom";
 import { useFetchQuiz } from "services/quiz/QuizHooks";
 import { QuizDisplay } from "types/QuizTypes";
-import { useQuery } from "utils/helper/queryParameter";
 
 const useStyles = makeStyles((_theme: Theme) => ({
   container: {
