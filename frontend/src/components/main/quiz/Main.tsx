@@ -46,8 +46,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: grey[100],
     [theme.breakpoints.down("sm")]: {
       paddingBottom: theme.spacing(7),
-      maxHeight: `calc(100vh - ${theme.spacing(12)}px)`,
-      minHeight: 0,
+      minHeight: `calc(100vh - ${theme.spacing(12)}px)`,
     },
   },
   backdrop: {
