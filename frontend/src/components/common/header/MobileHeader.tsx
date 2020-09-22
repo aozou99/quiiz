@@ -16,6 +16,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import SearchIcon from "@material-ui/icons/Search";
 import { useQuery } from "utils/helper/queryParameter";
 import GuestMenu from "components/common/header/sub/GuestMenu";
+import LoginedMenu from "components/common/header/sub/LoginedMenu";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -147,6 +148,7 @@ const MobileHeader: React.FC = () => {
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
+                onClick={handleMenu}
                 color="inherit"
               >
                 <Avatar
@@ -154,6 +156,12 @@ const MobileHeader: React.FC = () => {
                   src={user.photoURL || ""}
                 />
               </IconButton>
+              <LoginedMenu
+                anchorEl={anchorEl}
+                open={open}
+                handleClose={handleClose}
+                userId={user.uid}
+              />
             </>
           )}
           {!loading && !user && (
