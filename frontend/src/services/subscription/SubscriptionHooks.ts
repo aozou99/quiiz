@@ -18,9 +18,13 @@ export const useFetchSubscribeChannels = () => {
             setChannels(res);
           }
         })
-        .finally(() => setLoaded(true));
+        .finally(() => {
+          if (mounted) {
+            setLoaded(true);
+          }
+        });
     }
-    if (!loading) {
+    if (!loading && mounted) {
       setLoaded(true);
     }
     return () => {

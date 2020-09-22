@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import {
   makeStyles,
   Theme,
@@ -11,17 +12,29 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3, 12),
+      [theme.breakpoints.down("sm")]: {
+        padding: theme.spacing(1.5, 1.5),
+      },
     },
     avator: {
       width: theme.spacing(17),
       height: theme.spacing(17),
       marginRight: theme.spacing(8),
+      [theme.breakpoints.down("sm")]: {
+        width: theme.spacing(6),
+        height: theme.spacing(6),
+        marginRight: theme.spacing(1.5),
+      },
     },
     channel: {
       display: "flex",
       placeContent: "center",
       placeItems: "center",
       marginBottom: theme.spacing(4),
+      [theme.breakpoints.down("sm")]: {
+        marginBottom: theme.spacing(1.5),
+        placeContent: "start",
+      },
     },
     title: {
       width: theme.spacing(24),
@@ -33,6 +46,11 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: "auto",
       width: theme.spacing(11.5),
     },
+    mobileHidden: {
+      [theme.breakpoints.down("sm")]: {
+        display: "none",
+      },
+    },
   })
 );
 export const DummySubscChannel = () => {
@@ -42,7 +60,11 @@ export const DummySubscChannel = () => {
       <Skeleton animation="wave" variant="circle" className={classes.avator} />
       <Box>
         <Skeleton animation="wave" height={48} className={classes.title} />
-        <Skeleton animation="wave" height={32} className={classes.body} />
+        <Skeleton
+          animation="wave"
+          height={32}
+          className={clsx(classes.body, classes.mobileHidden)}
+        />
       </Box>
       <Skeleton
         animation="wave"

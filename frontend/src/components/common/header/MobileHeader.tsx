@@ -107,7 +107,7 @@ const MobileHeader: React.FC = () => {
       position="fixed"
       className={classes.appBar}
       color="inherit"
-      elevation={0}
+      elevation={1}
     >
       <Toolbar className={classes.toolBar}>
         <IconButton onClick={() => history.push(url)}>

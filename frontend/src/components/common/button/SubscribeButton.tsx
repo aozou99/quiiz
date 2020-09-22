@@ -1,5 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import { makeStyles, Theme, createStyles, Button } from "@material-ui/core";
+import clsx from "clsx";
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  Button,
+  useTheme,
+} from "@material-ui/core";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import ChannelService from "services/channel/ChannelService";
 import firebase from "firebase/app";
@@ -57,7 +64,14 @@ export const SubscribeButton: React.FC<{
   channelName: string;
   initialIsSubscribed: boolean;
   onCompleted: (latestIsSubscribed: boolean) => {} | void;
-}> = ({ initialIsSubscribed, channelId, channelName, onCompleted }) => {
+  className?: string;
+}> = ({
+  initialIsSubscribed,
+  channelId,
+  channelName,
+  className,
+  onCompleted,
+}) => {
   const classes = useStyles();
   const [isSubscribed, setIsSubscribed] = useState(initialIsSubscribed);
   const { handleSubscribeOrCancel } = useSubscriptionAction(
@@ -72,6 +86,8 @@ export const SubscribeButton: React.FC<{
     setUnsubscDialogOpen,
     setHandleSubscribeOrCancel,
   } = useContext(UnSubscribedDialogContext);
+  const theme = useTheme();
+  const isSmallerXs = theme.breakpoints.down("xs");
 
   useEffect(() => {
     setIsSubscribed(initialIsSubscribed);
@@ -84,7 +100,7 @@ export const SubscribeButton: React.FC<{
       endIcon={isSubscribed ? undefined : <SubscriptionsIcon />}
       size={isSubscribed ? "medium" : "large"}
       disableElevation
-      className={classes.subscribeButton}
+      className={clsx(classes.subscribeButton, className)}
       onClick={
         isSubscribed
           ? (e: React.MouseEvent) => {
@@ -96,7 +112,7 @@ export const SubscribeButton: React.FC<{
           : handleSubscribeOrCancel
       }
     >
-      {isSubscribed ? "登録済み" : "チャンネル登録"}
+      {isSubscribed ? "登録済み" : isSmallerXs ? "登録" : "チャンネル登録"}
     </Button>
   );
 };

@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingBottom: theme.spacing(7),
       minHeight: `calc(100vh - ${theme.spacing(12)}px)`,
+      backgroundColor: "white",
     },
   },
   backdrop: {

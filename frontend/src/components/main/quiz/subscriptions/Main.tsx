@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3, 12),
+      [theme.breakpoints.down("sm")]: {
+        padding: theme.spacing(1.5, 1.5),
+      },
     },
   })
 );
@@ -29,8 +32,8 @@ const Main: React.FC = () => {
       {!loaded && <DummySubscChannels />}
       {loaded && user && channels.length > 0 && (
         <Container maxWidth="lg" className={classes.root}>
-          {channels.map((channel) => (
-            <SubscChannel channel={channel} />
+          {channels.map((channel, i) => (
+            <SubscChannel key={i} channel={channel} />
           ))}
         </Container>
       )}
