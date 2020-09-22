@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
       placeContent: "center",
       minHeight: `calc(100vh - ${theme.spacing(12)}px)`,
       textAlign: "center",
+      [theme.breakpoints.down("xs")]: {
+        minHeight: `calc(100vh - ${theme.spacing(15)}px)`,
+      },
     },
     description: {
       marginTop: theme.spacing(-16),

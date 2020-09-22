@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paddingLeft: {
       paddingLeft: theme.spacing(3),
+      [theme.breakpoints.down("xs")]: {
+        paddingLeft: theme.spacing(0),
+      },
     },
   })
 );

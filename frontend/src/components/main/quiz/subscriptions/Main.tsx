@@ -30,14 +30,14 @@ const Main: React.FC = () => {
     <>
       <MetaTag title={"登録チャンネル"} />
       {!loaded && <DummySubscChannels />}
-      {loaded && user && channels.length > 0 && (
+      {loaded && user && channels && channels.length > 0 && (
         <Container maxWidth="lg" className={classes.root}>
           {channels.map((channel, i) => (
             <SubscChannel key={i} channel={channel} />
           ))}
         </Container>
       )}
-      {loaded && user && channels.length === 0 && (
+      {loaded && user && channels?.length === 0 && (
         <Description
           icon={<SubscriptionsIcon style={{ fontSize: 120 }} color="action" />}
           title="新作クイズをお見逃しなく"

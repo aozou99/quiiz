@@ -38,15 +38,25 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down("sm")]: {
         padding: theme.spacing(3, 8, 1),
       },
+      [theme.breakpoints.down("xs")]: {
+        padding: theme.spacing(1.5),
+      },
     },
     avator: {
       width: theme.spacing(10),
       height: theme.spacing(10),
+      [theme.breakpoints.down("xs")]: {
+        width: theme.spacing(6),
+        height: theme.spacing(6),
+      },
     },
     container: {
       display: "flex",
       placeContent: "center",
       placeItems: "center",
+      [theme.breakpoints.down("xs")]: {
+        placeContent: "start",
+      },
     },
     channelLogo: {
       display: "flex",
@@ -68,6 +78,11 @@ const useStyles = makeStyles((theme: Theme) =>
       opacity: 0,
       appearance: "none",
       position: "absolute",
+    },
+    mobileHidden: {
+      [theme.breakpoints.down("xs")]: {
+        display: "none",
+      },
     },
   })
 );
@@ -204,12 +219,12 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
               })
             }
           />
-          <Typography variant={"subtitle2"}>
+          <Typography variant={"subtitle2"} color="textSecondary">
             チャンネル登録者数 {subscribedUsers}人
           </Typography>
         </Box>
         {editable ? (
-          <GoQuizStudioButton />
+          <GoQuizStudioButton className={classes.mobileHidden} />
         ) : (
           <SubscribeButton
             channelId={channelId}
