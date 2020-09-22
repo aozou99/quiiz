@@ -82,6 +82,10 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "column",
       textAlign: "center",
     },
+    toolbar: {
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
   })
 );
 
@@ -91,7 +95,7 @@ export const BottomBar = () => {
 
   return (
     <AppBar position="fixed" color="inherit" className={classes.appBar}>
-      <Toolbar>
+      <Toolbar className={classes.toolbar}>
         <List className={classes.list}>
           {listItems.map((item) => (
             <ListItem

@@ -9,7 +9,7 @@ const ReadyDescription: React.FC = () => {
         <AirlineSeatFlatAngledIcon style={{ fontSize: 120 }} color="action" />
       }
       title="準備中です"
-      caption="待つだけの忍耐さえあれば、結局はすべてうまく行くでしょう"
+      caption={"待つだけの忍耐さえあれば、\n結局はすべてうまく行くでしょう"}
     />
   );
 };

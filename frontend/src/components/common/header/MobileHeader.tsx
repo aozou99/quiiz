@@ -173,7 +173,7 @@ const MobileHeader: React.FC = () => {
                 color="inherit"
                 onClick={handleMenu}
               >
-                <Avatar alt={""} src={"guest user"} />
+                <Avatar alt={"guest user"} src={""} />
               </IconButton>
               <GuestMenu
                 anchorEl={anchorEl}

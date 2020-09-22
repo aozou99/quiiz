@@ -12,11 +12,18 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down("sm")]: {
         padding: theme.spacing(3, 8, 1),
       },
+      [theme.breakpoints.down("xs")]: {
+        padding: theme.spacing(1.5),
+      },
     },
     avator: {
       width: theme.spacing(10),
       height: theme.spacing(10),
       marginRight: theme.spacing(3),
+      [theme.breakpoints.down("xs")]: {
+        width: theme.spacing(6),
+        height: theme.spacing(6),
+      },
     },
     subscribeButton: {
       marginLeft: "auto",
@@ -25,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       placeContent: "center",
       placeItems: "center",
+      [theme.breakpoints.down("xs")]: {
+        placeContent: "start",
+      },
     },
   })
 );
@@ -41,13 +51,13 @@ export const DummyChannelHeader: React.FC = () => {
           animation="wave"
         />
         <Box>
-          <Skeleton variant="text" height={40} width={250} animation="wave" />
-          <Skeleton variant="text" height={30} width={200} animation="wave" />
+          <Skeleton variant="text" height={40} width={180} animation="wave" />
+          <Skeleton variant="text" height={30} width={130} animation="wave" />
         </Box>
         <Skeleton
           variant="rect"
           height={40}
-          width={160}
+          width={64}
           className={classes.subscribeButton}
           animation="wave"
         />

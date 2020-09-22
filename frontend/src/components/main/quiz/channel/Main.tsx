@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       backgroundColor: "inherit",
       minHeight: `calc(100vh - ${theme.spacing(12)}px)`,
+      [theme.breakpoints.down("xs")]: {
+        minHeight: `calc(100vh - ${theme.spacing(15)}px)`,
+      },
     },
     paddingLeft: {
       paddingLeft: theme.spacing(3),

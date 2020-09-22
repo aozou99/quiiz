@@ -62,8 +62,10 @@ const Main: React.FC = () => {
       {!loading && !user && (
         <GuestDescription
           icon={<LocalLibraryIcon style={{ fontSize: 120 }} color="action" />}
-          title="お気に入りのクイズをお楽しみいただけます"
-          caption="ログインすると、いいねやお気に入り登録したクイズにアクセスできます"
+          title={"お気に入りのクイズを\nお楽しみいただけます"}
+          caption={
+            "ログインすると「いいね」や\n「お気に入り登録」したクイズにアクセスできます"
+          }
         />
       )}
     </Container>

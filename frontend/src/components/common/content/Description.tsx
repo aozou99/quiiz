@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
       [theme.breakpoints.down("xs")]: {
         minHeight: `calc(100vh - ${theme.spacing(15)}px)`,
+        whiteSpace: "pre-wrap",
       },
     },
     description: {
@@ -38,7 +39,9 @@ export const Description: React.FC<{
 }> = ({ icon, title, caption, button }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"), {
+    noSsr: true,
+  });
   return (
     <Box className={classes.root}>
       <Box className={classes.description}>

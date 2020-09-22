@@ -48,7 +48,9 @@ const Main: React.FC = () => {
         <GuestDescription
           icon={<SubscriptionsIcon style={{ fontSize: 120 }} color="action" />}
           title="新作クイズをお見逃しなく"
-          caption="ログインすると、お気に入りのチャンネルの最新情報をチェックできます"
+          caption={
+            "ログインするとお気に入りの\nチャンネルの最新情報をチェックできます"
+          }
         />
       )}
     </>

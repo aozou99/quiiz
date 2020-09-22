@@ -41,7 +41,7 @@ const Main: React.FC = () => {
             icon={<FindInPageIcon style={{ fontSize: 120 }} color="action" />}
             title={"クイズを探してみましょう"}
             caption={
-              "好奇心というのは道草でもあるわけです。確かに時間の無駄ですが、必ず自分の糧になる。"
+              "好奇心というのは道草でもあるわけです。\n確かに時間の無駄ですが、必ず自分の糧になる。"
             }
           />
         }
