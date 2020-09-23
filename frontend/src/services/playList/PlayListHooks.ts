@@ -153,10 +153,10 @@ export const useFetchPlayListContents = (playListId: string) => {
 
   useEffect(() => {
     let mounted = true;
-    if (!loading && user) {
-      pagingPlayListContents(user.uid, { id: playListId }).then((res) => {
+    if (!loading) {
+      pagingPlayListContents(user?.uid, { id: playListId }).then((res) => {
         if (mounted) {
-          setEditable(user.uid === res.playList?.authorId);
+          setEditable(user?.uid === res.playList?.authorId);
           setPlayList(res.playList);
           setQuizzes(res.quizzes);
           setLoaded(true);

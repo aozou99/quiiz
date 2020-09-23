@@ -4,7 +4,10 @@ import { PRIVACY } from "utils/costant/InputConst";
 import { convertQuizResponse } from "services/quiz/convertQuizResponse";
 
 const db = firebase.firestore();
-export const pagingPlayListContents = async (uid: string, data: any) => {
+export const pagingPlayListContents = async (
+  uid: string | undefined,
+  data: any
+) => {
   const playLists = await db
     .collectionGroup("playLists")
     .where("id", "==", data.id)
