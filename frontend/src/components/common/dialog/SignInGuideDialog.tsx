@@ -7,6 +7,9 @@ import {
   DialogActions,
   Button,
   DialogContent,
+  createStyles,
+  makeStyles,
+  Theme,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
@@ -17,6 +20,17 @@ type State = {
   bodyText: string;
 };
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      [theme.breakpoints.down("xs")]: {
+        whiteSpace: "pre-wrap",
+        textAlign: "center",
+      },
+    },
+  })
+);
+
 export const SignInGuideDialog: React.FC<State> = ({
   open,
   onClose,
@@ -24,9 +38,14 @@ export const SignInGuideDialog: React.FC<State> = ({
   bodyText,
 }) => {
   const history = useHistory();
-
+  const classes = useStyles();
   return (
-    <Dialog onClose={onClose} aria-labelledby="dialog-title" open={open}>
+    <Dialog
+      onClose={onClose}
+      aria-labelledby="dialog-title"
+      open={open}
+      className={classes.root}
+    >
       <DialogTitle id="dialog-title" disableTypography>
         {title}
       </DialogTitle>

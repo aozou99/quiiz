@@ -182,7 +182,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
     if (
       validateSignInDialog(
         "このクイズにいいねをする",
-        "いいねするには、ログインをしてください"
+        "いいねするには、\nログインをしてください"
       )
     ) {
       return;
@@ -199,7 +199,7 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
     if (
       validateSignInDialog(
         "再生リストに追加する",
-        "再生リストに追加するには、ログインをしてください"
+        "再生リストに追加するには、\nログインをしてください"
       )
     ) {
       return;
