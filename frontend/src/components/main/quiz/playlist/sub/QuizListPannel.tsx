@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
-  Theme,
-  createStyles,
   List,
   ListItem,
   ListItemAvatar,
@@ -19,12 +16,12 @@ import {
 import { useParams, useHistory } from "react-router-dom";
 import { useFetchPlayListContents } from "services/playList/PlayListHooks";
 import { QuizDisplay } from "types/QuizTypes";
-import { grey } from "@material-ui/core/colors";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PlayListService from "services/playList/PlayListService";
 import DummyQuizListPannel from "components/main/quiz/playlist/sub/DummyQuizListPannel";
 import { EditableTextField } from "components/common/input/EditableTextField";
 import { MetaTag } from "components/common/meta/MetaTag";
+import { useListPannelStyles } from "components/main/quiz/playlist/sub/style/ListPannelStyle";
 
 const privacies = [
   {
@@ -37,48 +34,10 @@ const privacies = [
   },
 ];
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    avator: {
-      height: theme.spacing(9),
-      width: theme.spacing(16),
-    },
-    listPannel: {
-      backgroundColor: grey[50],
-      "&>nav.MuiList-padding": {
-        paddingTop: 0,
-        paddingBottom: 0,
-      },
-      minHeight: `calc(100vh - ${theme.spacing(8)}px)`,
-      marginRight: theme.spacing(1),
-      width: theme.spacing(73),
-    },
-    listText: {
-      height: theme.spacing(9),
-      paddingLeft: theme.spacing(2),
-    },
-    playListInfo: {
-      padding: theme.spacing(1, 2),
-    },
-    noUnderLine: {
-      "& .MuiInput-underline:before": {
-        borderBottom: 0,
-      },
-    },
-    center: {
-      width: "100%",
-      display: "flex",
-      placeContent: "center",
-      placeItems: "center",
-      padding: theme.spacing(2),
-    },
-  })
-);
-
 const QuizListPannel: React.FC<{
   setSelected: (quiz?: QuizDisplay) => void;
 }> = ({ setSelected }) => {
-  const classes = useStyles();
+  const classes = useListPannelStyles();
   const history = useHistory();
   const { id } = useParams();
   const { loaded, playList, quizzes, editable } = useFetchPlayListContents(id);

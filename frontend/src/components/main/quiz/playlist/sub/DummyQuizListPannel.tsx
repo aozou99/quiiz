@@ -30,10 +30,18 @@ const useStyles = makeStyles((theme: Theme) =>
       minHeight: `calc(100vh - ${theme.spacing(8)}px)`,
       marginRight: theme.spacing(1),
       width: theme.spacing(73),
+      [theme.breakpoints.down("xs")]: {
+        width: "100%",
+        paddingBottom: theme.spacing(2),
+      },
     },
     listText: {
       height: theme.spacing(9),
       paddingLeft: theme.spacing(2),
+      [theme.breakpoints.down("xs")]: {
+        paddingLeft: theme.spacing(1),
+        height: "auto",
+      },
     },
     playListInfo: {
       padding: theme.spacing(1, 2),
@@ -97,7 +105,7 @@ const DummyQuizListPannel: React.FC = () => {
       </Box>
 
       <List component="nav" aria-label="quiz lists">
-        {Array.from({ length: 4 })
+        {Array.from({ length: 6 })
           .fill(null)
           .map((_, i) => (
             <React.Fragment key={i}>
