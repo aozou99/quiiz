@@ -127,7 +127,7 @@ const QuizListPannel: React.FC<{
                     onClick={() => {
                       if (isSmallerSm) {
                         return history.push(
-                          `/play/${quiz.id}?list=LL&index=${i}`
+                          `/play/${quiz.id}?list=${playList.id}&index=${i}`
                         );
                       }
                       setSelectedIndex(i);
