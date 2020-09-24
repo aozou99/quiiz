@@ -10,6 +10,8 @@ import {
   ListItemSecondaryAction,
   IconButton,
   Typography,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 import { QuizDisplay } from "types/QuizTypes";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -19,6 +21,7 @@ import useInfiniteScroll from "react-infinite-scroll-hook";
 import QuizService from "services/quiz/QuizService";
 import { MetaTag } from "components/common/meta/MetaTag";
 import { useListPannelStyles } from "components/main/quiz/playlist/sub/style/ListPannelStyle";
+import { useHistory } from "react-router-dom";
 
 type pagingParam = {
   nextLikeQuiz?: any;
@@ -29,6 +32,11 @@ const LikeListPannel: React.FC<{
   setSelected: (quiz?: QuizDisplay) => void;
 }> = ({ setSelected }) => {
   const classes = useListPannelStyles();
+  const theme = useTheme();
+  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"), {
+    noSsr: true,
+  });
+  const history = useHistory();
   const [pagingParam, setPagingParam] = useState<pagingParam>({ perCount: 6 });
   const {
     loaded,
@@ -82,6 +90,11 @@ const LikeListPannel: React.FC<{
                   button
                   selected={selectedIndex === i}
                   onClick={() => {
+                    if (isSmallerSm) {
+                      return history.push(
+                        `/play/${quiz.id}?list=LL&index=${i}`
+                      );
+                    }
                     setSelectedIndex(i);
                     setSelected(quiz);
                   }}

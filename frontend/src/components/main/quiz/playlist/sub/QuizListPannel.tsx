@@ -12,6 +12,8 @@ import {
   TextField,
   MenuItem,
   Typography,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 import { useParams, useHistory } from "react-router-dom";
 import { useFetchPlayListContents } from "services/playList/PlayListHooks";
@@ -38,6 +40,10 @@ const QuizListPannel: React.FC<{
   setSelected: (quiz?: QuizDisplay) => void;
 }> = ({ setSelected }) => {
   const classes = useListPannelStyles();
+  const theme = useTheme();
+  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"), {
+    noSsr: true,
+  });
   const history = useHistory();
   const { id } = useParams();
   const { loaded, playList, quizzes, editable } = useFetchPlayListContents(id);
@@ -119,6 +125,11 @@ const QuizListPannel: React.FC<{
                     button
                     selected={selectedIndex === i}
                     onClick={() => {
+                      if (isSmallerSm) {
+                        return history.push(
+                          `/play/${quiz.id}?list=LL&index=${i}`
+                        );
+                      }
                       setSelectedIndex(i);
                       setSelected(quiz);
                     }}

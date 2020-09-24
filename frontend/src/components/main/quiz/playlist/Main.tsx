@@ -8,13 +8,16 @@ import { QuizDisplay } from "types/QuizTypes";
 import { useQuery } from "utils/helper/queryParameter";
 import LikeListPannel from "components/main/quiz/playlist/sub/LikeListPannel";
 
-const useStyles = makeStyles((_theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
       flexWrap: "nowrap",
       alignItems: "start",
       backgroundColor: "inherit",
+      [theme.breakpoints.down("xs")]: {
+        backgroundColor: "inherit",
+      },
     },
   })
 );

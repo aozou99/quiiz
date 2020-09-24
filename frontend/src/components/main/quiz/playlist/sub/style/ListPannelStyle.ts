@@ -20,6 +20,7 @@ export const useListPannelStyles = makeStyles((theme: Theme) =>
         width: "100%",
         paddingBottom: theme.spacing(2),
         minHeight: "inherit",
+        backgroundColor: "white",
       },
     },
     listText: {
