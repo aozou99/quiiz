@@ -19,6 +19,7 @@ export const useListPannelStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down("xs")]: {
         width: "100%",
         paddingBottom: theme.spacing(2),
+        minHeight: "inherit",
       },
     },
     listText: {
