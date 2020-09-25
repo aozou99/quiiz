@@ -6,6 +6,7 @@ import {
   Typography,
   Box,
   Avatar,
+  Grow,
 } from "@material-ui/core";
 import { SubscribeButton } from "components/common/button/SubscribeButton";
 import { useHistory } from "react-router-dom";
@@ -61,33 +62,35 @@ export const SubscChannel: React.FC<{
   );
   const history = useHistory();
   return (
-    <Box
-      className={classes.channel}
-      onClick={() => history.push(`/channel/${channel.id}`)}
-    >
-      <Avatar src={channel.channelLogo} className={classes.avator} />
-      <Box>
-        <Typography
-          variant="subtitle1"
-          className={classes.channelName}
-          gutterBottom
-        >
-          {channel.channelName}
-        </Typography>
-        <Typography
-          className={classes.mobileHidden}
-          variant="body2"
-          color="textSecondary"
-        >{`チャンネル登録者数 ${subscribedCount}人・${channel.hasQuizCount}個のクイズ`}</Typography>
+    <Grow in={true}>
+      <Box
+        className={classes.channel}
+        onClick={() => history.push(`/channel/${channel.id}`)}
+      >
+        <Avatar src={channel.channelLogo} className={classes.avator} />
+        <Box>
+          <Typography
+            variant="subtitle1"
+            className={classes.channelName}
+            gutterBottom
+          >
+            {channel.channelName}
+          </Typography>
+          <Typography
+            className={classes.mobileHidden}
+            variant="body2"
+            color="textSecondary"
+          >{`チャンネル登録者数 ${subscribedCount}人・${channel.hasQuizCount}個のクイズ`}</Typography>
+        </Box>
+        <SubscribeButton
+          channelId={channel.id}
+          channelName={channel.channelName}
+          initialIsSubscribed={true}
+          onCompleted={(latestIsSubscribed: boolean) =>
+            setSubscribedCount((pre) => (latestIsSubscribed ? ++pre : --pre))
+          }
+        />
       </Box>
-      <SubscribeButton
-        channelId={channel.id}
-        channelName={channel.channelName}
-        initialIsSubscribed={true}
-        onCompleted={(latestIsSubscribed: boolean) =>
-          setSubscribedCount((pre) => (latestIsSubscribed ? ++pre : --pre))
-        }
-      />
-    </Box>
+    </Grow>
   );
 };

@@ -5,7 +5,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import { Avatar, Grid, Theme, createStyles } from "@material-ui/core";
+import { Avatar, Grid, Theme, createStyles, Grow } from "@material-ui/core";
 import clsx from "clsx";
 import { themeColors } from "components/core/CustomeTheme";
 
@@ -66,37 +66,39 @@ const Item: React.FC<Props> = ({
   const classes = useStyles();
 
   return (
-    <Card className={clsx(classes.root)} onClick={handleClick}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={thumbnail}
-          title={playListName}
-        />
-        <CardContent className={classes.content}>
-          <Grid container spacing={0}>
-            <Grid item xs={9}>
-              <Typography
-                gutterBottom
-                variant="subtitle1"
-                component="h4"
-                className={classes.title}
-              >
-                {playListName}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {description}
-              </Typography>
+    <Grow in={true}>
+      <Card className={clsx(classes.root)} onClick={handleClick}>
+        <CardActionArea>
+          <CardMedia
+            className={classes.media}
+            image={thumbnail}
+            title={playListName}
+          />
+          <CardContent className={classes.content}>
+            <Grid container spacing={0}>
+              <Grid item xs={9}>
+                <Typography
+                  gutterBottom
+                  variant="subtitle1"
+                  component="h4"
+                  className={classes.title}
+                >
+                  {playListName}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {description}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Avatar alt={"NumberOfQuizzes"} className={classes.count}>
+                  {count}
+                </Avatar>
+              </Grid>
             </Grid>
-            <Grid item xs={3}>
-              <Avatar alt={"NumberOfQuizzes"} className={classes.count}>
-                {count}
-              </Avatar>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Grow>
   );
 };
 

@@ -39,16 +39,15 @@ export const pagingPlayListContents = async (
   let baseQuery = playList.ref
     .collection("playListQuiz")
     .orderBy("createdAt", "desc");
-
-  const snapshot = await baseQuery.get();
-  const quizzes = await Promise.all(
-    snapshot.docs.map(async (quizSummary) => {
-      return await quizSummary.data().quizRef.get();
-    })
-  );
-
   return {
     playList: playList.data(),
-    quizzes: await Promise.all(quizzes.map(convertQuizResponse)),
+    quizzes: await baseQuery
+      .get()
+      .then((snapshot) =>
+        Promise.all(
+          snapshot.docs.map((quizSummary) => quizSummary.data().quizRef.get())
+        )
+      )
+      .then((quizzes) => Promise.all(quizzes.map(convertQuizResponse))),
   };
 };

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-export const DummySubscChannel = () => {
+const DummySubscChannel = () => {
   const classes = useStyles();
   return (
     <Box className={classes.channel}>

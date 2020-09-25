@@ -31,6 +31,8 @@ import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
 import "firebase/auth";
+import { useQuery } from "utils/helper/queryParameter";
+import ListContetnts from "components/common/playList/ListContetnts";
 
 type Props = {
   selected: QuizDisplay;
@@ -140,13 +142,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
   const classes = useStyles();
-  const [result, setResult] = useState<QuizResult>(undefined);
-  const [user, loading] = useAuthState(firebase.auth());
   const borderLeftColors = [
     classes.borderLeftrTertiary,
     classes.borderLeftQuaternary,
     classes.borderLeftPrimary,
   ];
+  const [result, setResult] = useState<QuizResult>(undefined);
+  const [user, loading] = useAuthState(firebase.auth());
   const [isOpenList, setIsOpenList] = useState(false);
   const {
     loaded: likeLoaded,
@@ -161,7 +163,9 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
   const [openSignInDialog, setOpenSignInDialog] = useState(false);
   const [signInTitle, setSignInTitle] = useState("");
   const [signInBody, setSignInBody] = useState("");
-
+  const query = useQuery();
+  const listId = query.get("list");
+  const index = Number.parseInt(query.get("index") || "");
   const choices = (e: QuizDisplay): [string, string, string, string] => [
     e.selectA,
     e.selectB,
@@ -326,6 +330,9 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
           </IconButton>
         </Tooltip>
       </Box>
+      {listId && !isNaN(index) && (
+        <ListContetnts listId={listId} index={index} />
+      )}
       <PlayListDialog
         open={isOpenList}
         onClose={() => setIsOpenList(false)}
