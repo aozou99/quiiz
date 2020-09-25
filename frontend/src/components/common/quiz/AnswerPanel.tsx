@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Grow,
 } from "@material-ui/core";
 import clsx from "clsx";
 import React, { useState, useEffect } from "react";
@@ -217,135 +218,139 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
   }, [initialIsLike, selected.id, refresh]);
 
   return (
-    <Paper
-      elevation={elevation !== undefined ? elevation : 1}
-      className={classes.detail}
-    >
-      <img src={selected.thumbnail["256x144"]} alt={selected.question} />
-      <Typography align="center" variant="subtitle1">
-        {selected.question}
-      </Typography>
-      <Divider />
-      <Choices
-        result={result}
-        setResult={setResult}
-        choices={choices(selected)}
-        answer={selected.answer}
-      />
-      <Collapse
-        in={!!result && (selected?.description?.length || 0) > 0}
-        timeout="auto"
+    <Grow in={true}>
+      <Paper
+        elevation={elevation !== undefined ? elevation : 1}
+        className={classes.detail}
       >
-        <Card className={classes.description} elevation={2}>
-          <CardHeader
-            title={
-              <Typography
-                variant={"subtitle1"}
-                className={classes.borderBottom}
-              >
-                解説
-              </Typography>
-            }
-          />
-          <CardContent>
-            <Typography variant={"body1"}>{selected.description}</Typography>
-          </CardContent>
-          {selected.references?.length > 0 && (
-            <>
-              <CardHeader
-                title={
-                  <Typography
-                    variant={"subtitle1"}
-                    className={clsx(classes.reference, classes.borderBottom)}
-                  >
-                    参考記事
-                  </Typography>
-                }
-              />
-              <CardContent>
-                {selected.references.map((ref, i) => (
-                  <ListItem
-                    key={i}
-                    button
-                    component="a"
-                    href={ref.requestUrl}
-                    target={"_blank"}
-                    rel={"noopener noreferrer"}
-                    className={clsx(
-                      borderLeftColors[i % 3],
-                      classes.referenceLink
-                    )}
-                  >
-                    <ListItemIcon className={classes.referenceIcon}>
-                      <img
-                        src={`https://www.google.com/s2/favicons?domain=${
-                          new URL(ref.requestUrl).hostname
-                        }`}
-                        loading="lazy"
-                        alt={"favicon"}
+        <img src={selected.thumbnail["256x144"]} alt={selected.question} />
+        <Typography align="center" variant="subtitle1">
+          {selected.question}
+        </Typography>
+        <Divider />
+        <Choices
+          result={result}
+          setResult={setResult}
+          choices={choices(selected)}
+          answer={selected.answer}
+        />
+        <Collapse
+          in={!!result && (selected?.description?.length || 0) > 0}
+          timeout="auto"
+        >
+          <Card className={classes.description} elevation={2}>
+            <CardHeader
+              title={
+                <Typography
+                  variant={"subtitle1"}
+                  className={classes.borderBottom}
+                >
+                  解説
+                </Typography>
+              }
+            />
+            <CardContent>
+              <Typography variant={"body1"}>{selected.description}</Typography>
+            </CardContent>
+            {selected.references?.length > 0 && (
+              <>
+                <CardHeader
+                  title={
+                    <Typography
+                      variant={"subtitle1"}
+                      className={clsx(classes.reference, classes.borderBottom)}
+                    >
+                      参考記事
+                    </Typography>
+                  }
+                />
+                <CardContent>
+                  {selected.references.map((ref, i) => (
+                    <ListItem
+                      key={i}
+                      button
+                      component="a"
+                      href={ref.requestUrl}
+                      target={"_blank"}
+                      rel={"noopener noreferrer"}
+                      className={clsx(
+                        borderLeftColors[i % 3],
+                        classes.referenceLink
+                      )}
+                    >
+                      <ListItemIcon className={classes.referenceIcon}>
+                        <img
+                          src={`https://www.google.com/s2/favicons?domain=${
+                            new URL(ref.requestUrl).hostname
+                          }`}
+                          loading="lazy"
+                          alt={"favicon"}
+                        />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={ref.ogTitle}
+                        secondary={
+                          ref.ogVideo && (
+                            <iframe
+                              title={ref.ogTitle}
+                              src={ref.ogVideo.url}
+                              loading="lazy"
+                              width="100%"
+                              allow="autoplay; encrypted-media"
+                              allowFullScreen
+                            />
+                          )
+                        }
                       />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={ref.ogTitle}
-                      secondary={
-                        ref.ogVideo && (
-                          <iframe
-                            title={ref.ogTitle}
-                            src={ref.ogVideo.url}
-                            loading="lazy"
-                            width="100%"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen
-                          />
-                        )
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </CardContent>
-            </>
-          )}
-        </Card>
-      </Collapse>
-      <Box className={classes.icons}>
-        <Tooltip title="いいね">
-          <IconButton aria-label="good" onClick={handleLike}>
-            <FavoriteIcon
-              className={clsx(likeLoaded && isLike && classes.iconSelectedPink)}
-            />
-            <Typography variant={"subtitle1"} className={classes.likeCount}>
-              {likeLoaded ? likeCount : 0}
-            </Typography>
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="リストに追加">
-          <IconButton aria-label="addPlayList" onClick={handleAddPlayList}>
-            <FolderIcon
-              className={clsx(
-                checkListLoaded &&
-                  checked.length > 0 &&
-                  classes.iconSelectedYellow
-              )}
-            />
-          </IconButton>
-        </Tooltip>
-      </Box>
-      {listId && !isNaN(index) && (
-        <ListContetnts listId={listId} index={index} />
-      )}
-      <PlayListDialog
-        open={isOpenList}
-        onClose={() => setIsOpenList(false)}
-        quiz={{ id: selected.id, authorId: selected.authorId }}
-        afterChecked={update}
-      />
-      <SignInGuideDialog
-        open={openSignInDialog}
-        title={signInTitle}
-        bodyText={signInBody}
-        onClose={() => setOpenSignInDialog(false)}
-      />
-    </Paper>
+                    </ListItem>
+                  ))}
+                </CardContent>
+              </>
+            )}
+          </Card>
+        </Collapse>
+        <Box className={classes.icons}>
+          <Tooltip title="いいね">
+            <IconButton aria-label="good" onClick={handleLike}>
+              <FavoriteIcon
+                className={clsx(
+                  likeLoaded && isLike && classes.iconSelectedPink
+                )}
+              />
+              <Typography variant={"subtitle1"} className={classes.likeCount}>
+                {likeLoaded ? likeCount : 0}
+              </Typography>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="リストに追加">
+            <IconButton aria-label="addPlayList" onClick={handleAddPlayList}>
+              <FolderIcon
+                className={clsx(
+                  checkListLoaded &&
+                    checked.length > 0 &&
+                    classes.iconSelectedYellow
+                )}
+              />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        {listId && !isNaN(index) && (
+          <ListContetnts listId={listId} index={index} />
+        )}
+        <PlayListDialog
+          open={isOpenList}
+          onClose={() => setIsOpenList(false)}
+          quiz={{ id: selected.id, authorId: selected.authorId }}
+          afterChecked={update}
+        />
+        <SignInGuideDialog
+          open={openSignInDialog}
+          title={signInTitle}
+          bodyText={signInBody}
+          onClose={() => setOpenSignInDialog(false)}
+        />
+      </Paper>
+    </Grow>
   );
 };
 

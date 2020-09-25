@@ -1,4 +1,4 @@
-import { Container, makeStyles, Theme } from "@material-ui/core";
+import { Container, Grow, makeStyles, Theme } from "@material-ui/core";
 import AnswerPanel from "components/common/quiz/AnswerPanel";
 import DummyAnswerPanel from "components/common/quiz/DummyAnswerPanel";
 import React, { useEffect, useState } from "react";
@@ -25,14 +25,16 @@ const Play: React.FC = () => {
     setSelected(quiz);
   }, [quiz]);
   return (
-    <Container className={classes.container}>
-      {hasError && <Redirect to="/404" />}
-      {loaded && selected !== undefined ? (
-        <AnswerPanel selected={selected} elevation={0} />
-      ) : (
-        <DummyAnswerPanel />
-      )}
-    </Container>
+    <Grow in={true}>
+      <Container className={classes.container}>
+        {hasError && <Redirect to="/404" />}
+        {loaded && selected !== undefined ? (
+          <AnswerPanel selected={selected} elevation={0} />
+        ) : (
+          <DummyAnswerPanel />
+        )}
+      </Container>
+    </Grow>
   );
 };
 
