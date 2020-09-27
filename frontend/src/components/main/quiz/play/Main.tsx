@@ -12,7 +12,6 @@ const useStyles = makeStyles((_theme: Theme) => ({
     justifyContent: "center",
     padding: 0,
     margin: 0,
-    backgroundColor: "white",
   },
 }));
 

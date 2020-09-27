@@ -7,6 +7,15 @@ export const useListPannelStyles = makeStyles((theme: Theme) =>
       height: theme.spacing(9),
       width: theme.spacing(16),
     },
+    list: {
+      "&>.MuiListItem-gutters": {
+        [theme.breakpoints.down("xs")]: {
+          paddingTop: 0,
+          paddingLeft: 0,
+          paddingRight: 0,
+        },
+      },
+    },
     listPannel: {
       backgroundColor: grey[50],
       "&>nav.MuiList-padding": {
@@ -45,6 +54,24 @@ export const useListPannelStyles = makeStyles((theme: Theme) =>
       placeContent: "center",
       placeItems: "center",
       padding: theme.spacing(2),
+    },
+    accordionRoot: {
+      "&.MuiPaper-elevation1": {
+        boxShadow: "initial",
+      },
+    },
+    accordionSummaryRoot: {
+      padding: 0,
+    },
+    accordionSummaryContent: {
+      margin: 0,
+      display: "initial",
+      "&.Mui-expanded": {
+        margin: 0,
+      },
+    },
+    accordionDetailsRoot: {
+      padding: 0,
     },
   })
 );

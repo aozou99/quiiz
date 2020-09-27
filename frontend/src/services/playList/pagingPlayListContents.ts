@@ -39,8 +39,16 @@ export const pagingPlayListContents = async (
   let baseQuery = playList.ref
     .collection("playListQuiz")
     .orderBy("createdAt", "desc");
+
   return {
-    playList: playList.data(),
+    playList: {
+      ...(playList.data() as any),
+      authorName: await db
+        .collection("users")
+        .doc(playList.data().authorId)
+        .get()
+        .then((user) => user?.data()?.displayName),
+    },
     quizzes: await baseQuery
       .get()
       .then((snapshot) =>
