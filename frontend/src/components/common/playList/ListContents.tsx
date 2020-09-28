@@ -16,25 +16,18 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useListPannelStyles } from "components/main/quiz/playlist/sub/style/ListPannelStyle";
-import React, { useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import { useFetchPlayListContents } from "services/playList/PlayListHooks";
 import { QuizDisplay } from "types/QuizTypes";
 
-const ListContetnts: React.FC<{ listId: string; index: number }> = ({
-  listId,
-  index,
-}) => {
+const ListContetnts: React.FC<{
+  loaded: boolean;
+  playList: any;
+  quizzes: any;
+  index: number;
+}> = ({ loaded, playList, quizzes, index }) => {
   const classes = useListPannelStyles();
   const history = useHistory();
-  const { loaded, playList, quizzes } = useFetchPlayListContents(listId);
-  const [quizList, setQuizList] = React.useState<QuizDisplay[]>();
-
-  useEffect(() => {
-    if (loaded && playList) {
-      setQuizList(quizzes);
-    }
-  }, [loaded, playList, quizzes]);
 
   return (
     <Box>
@@ -48,11 +41,8 @@ const ListContetnts: React.FC<{ listId: string; index: number }> = ({
             }}
           >
             <Typography variant="subtitle2">{playList.listName}</Typography>
-            <Typography
-              variant="caption"
-              component="p"
-              gutterBottom
-            >{`${index} / ${quizList?.length} ${playList.authorName}`}</Typography>
+            <Typography variant="caption" component="p" gutterBottom>{`${index +
+              1} / ${quizzes?.length} ${playList.authorName}`}</Typography>
             <Divider />
           </AccordionSummary>
           <AccordionDetails classes={{ root: classes.accordionDetailsRoot }}>
@@ -61,7 +51,7 @@ const ListContetnts: React.FC<{ listId: string; index: number }> = ({
               aria-label="quiz lists"
               className={classes.list}
             >
-              {quizList?.map((quiz: QuizDisplay, i: number) => (
+              {quizzes?.map((quiz: QuizDisplay, i: number) => (
                 <React.Fragment key={quiz.id}>
                   <Grow in={true}>
                     <ListItem

@@ -5,6 +5,8 @@ import {
   Typography,
   Box,
   Button,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import React from "react";
@@ -57,6 +59,10 @@ const LikeListLine: React.FC<Props> = ({ setSelected, selected }) => {
     perCount: 4,
   });
   const history = useHistory();
+  const theme = useTheme();
+  const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"), {
+    noSsr: true,
+  });
 
   return (
     <>
@@ -76,7 +82,7 @@ const LikeListLine: React.FC<Props> = ({ setSelected, selected }) => {
       </Box>
       <Box className={classes.list}>
         {loaded && likedQuizzes
-          ? likedQuizzes.map((item: QuizDisplay) => (
+          ? likedQuizzes.map((item: QuizDisplay, i: number) => (
               <Item
                 key={item.id}
                 thumbnail={item.thumbnail["640x360"]}
@@ -85,6 +91,9 @@ const LikeListLine: React.FC<Props> = ({ setSelected, selected }) => {
                 authorName={item.authorName}
                 authorImageUrl={item.authorImageUrl}
                 handleClick={() => {
+                  if (isSmallerSm) {
+                    return history.push(`/play/${item.id}?list=LL&index=${i}`);
+                  }
                   if (selected === item) {
                     setSelected(undefined);
                   } else {

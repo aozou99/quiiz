@@ -33,7 +33,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { useQuery } from "utils/helper/queryParameter";
-import ListContetnts from "components/common/playList/ListContetnts";
+import PlayListContents from "components/common/playList/PlayListContents";
+import LikeListContents from "components/common/playList/LikeListContents";
 
 type Props = {
   selected: QuizDisplay;
@@ -334,8 +335,11 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
             </IconButton>
           </Tooltip>
         </Box>
-        {listId && !isNaN(index) && (
-          <ListContetnts listId={listId} index={index} />
+        {listId && !isNaN(index) && listId !== "LL" && (
+          <PlayListContents listId={listId} index={index} />
+        )}
+        {listId && !isNaN(index) && listId === "LL" && (
+          <LikeListContents index={index} />
         )}
         <PlayListDialog
           open={isOpenList}
