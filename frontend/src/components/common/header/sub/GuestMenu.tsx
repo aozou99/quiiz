@@ -12,6 +12,7 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import InputIcon from "@material-ui/icons/Input";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import { AboutSiteMenu } from "components/common/header/sub/AboutSiteMenu";
 
 type State = {
   anchorEl: null | HTMLElement;
@@ -67,6 +68,7 @@ const GuestMenu: React.FC<State> = ({ anchorEl, open, handleClose }) => {
           </Typography>
         </Link>
       </MenuItem>
+      <AboutSiteMenu handleClose={handleClose} />
     </Menu>
   );
 };

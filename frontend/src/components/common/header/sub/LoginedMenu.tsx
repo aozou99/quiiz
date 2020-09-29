@@ -13,6 +13,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import AuthService from "services/auth/AuthService";
 import TvIcon from "@material-ui/icons/Tv";
+import { AboutSiteMenu } from "components/common/header/sub/AboutSiteMenu";
 
 type State = {
   anchorEl: null | HTMLElement;
@@ -26,6 +27,14 @@ const useStyles = makeStyles((theme: Theme) =>
     listIcon: {
       minWidth: "inherit",
       marginRight: theme.spacing(2),
+    },
+    aboutSite: {
+      display: "flex",
+      placeContent: "center",
+      placeItems: "center",
+    },
+    divider: {
+      marginBottom: theme.spacing(1),
     },
   })
 );
@@ -94,6 +103,7 @@ const LoginedMenu: React.FC<State> = ({
           ログアウト
         </Typography>
       </MenuItem>
+      <AboutSiteMenu handleClose={handleClose} />
     </Menu>
   );
 };
