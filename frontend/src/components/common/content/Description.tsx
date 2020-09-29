@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,6 +21,11 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down("xs")]: {
         minHeight: `calc(100vh - ${theme.spacing(15)}px)`,
         whiteSpace: "pre-wrap",
+      },
+    },
+    inTab: {
+      [theme.breakpoints.down("xs")]: {
+        minHeight: `calc(100vh - ${theme.spacing(30)}px)`,
       },
     },
     description: {
@@ -36,14 +42,15 @@ export const Description: React.FC<{
   caption: string;
   icon: ReactNode;
   button?: ReactNode;
-}> = ({ icon, title, caption, button }) => {
+  inTab?: boolean;
+}> = ({ icon, title, caption, button, inTab }) => {
   const classes = useStyles();
   const theme = useTheme();
   const isSmallerSm = useMediaQuery(theme.breakpoints.down("sm"), {
     noSsr: true,
   });
   return (
-    <Box className={classes.root}>
+    <Box className={clsx(classes.root, inTab && classes.inTab)}>
       <Box className={classes.description}>
         {icon}
         <Typography variant={isSmallerSm ? "h6" : "h5"} color="textPrimary">

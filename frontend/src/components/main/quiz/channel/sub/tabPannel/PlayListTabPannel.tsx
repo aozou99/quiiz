@@ -1,17 +1,12 @@
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  Box,
-  Typography,
-  List,
-} from "@material-ui/core";
+import { makeStyles, Theme, createStyles, Box, List } from "@material-ui/core";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Item from "components/common/playList/Item";
 import DummyItem from "components/common/playList/DummyItem";
 import { useFetchPlayListsWithThumbnail } from "services/playList/PlayListHooks";
 import useInfiniteScroll from "react-infinite-scroll-hook";
+import { Description } from "components/common/content/Description";
+import LocalHotelIcon from "@material-ui/icons/LocalHotel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -94,11 +89,12 @@ export const PlayListTabPannel: React.FC<{ channelId: string }> = ({
               .map((_, i) => <DummyItem key={i} />)}
       </List>
       {loaded && playLists.length === 0 && (
-        <Box className={classes.center}>
-          <Typography variant={"subtitle2"} color="textSecondary">
-            このチャンネルには再生リストがありません
-          </Typography>
-        </Box>
+        <Description
+          icon={<LocalHotelIcon style={{ fontSize: 120 }} color="action" />}
+          title={"このチャンネルには\n再生リストがありません"}
+          caption={"いつか再生リストが生まれるかも"}
+          inTab={true}
+        />
       )}
     </Box>
   );

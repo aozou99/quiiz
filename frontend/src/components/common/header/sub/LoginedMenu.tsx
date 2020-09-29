@@ -11,7 +11,6 @@ import {
 import { useHistory } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import PostAddIcon from "@material-ui/icons/PostAdd";
 import AuthService from "services/auth/AuthService";
 import TvIcon from "@material-ui/icons/Tv";
 
@@ -27,11 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
     listIcon: {
       minWidth: "inherit",
       marginRight: theme.spacing(2),
-    },
-    smDisplayNone: {
-      [theme.breakpoints.up("sm")]: {
-        display: "none",
-      },
     },
   })
 );
@@ -60,14 +54,6 @@ const LoginedMenu: React.FC<State> = ({
       open={open}
       onClose={handleClose}
     >
-      <MenuItem className={classes.smDisplayNone}>
-        <ListItemIcon className={classes.listIcon}>
-          <PostAddIcon fontSize="small" />
-        </ListItemIcon>
-        <Typography variant="body1" color="textSecondary">
-          クイズを作成する
-        </Typography>
-      </MenuItem>
       <MenuItem
         onClick={(e) => {
           history.push(`/channel/${userId}`);
