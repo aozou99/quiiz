@@ -28,7 +28,7 @@ jobs:
       - name: Function Setup
         run: |
           cd ./functions
-          npm install
+          npm install --arch=x64 --platform=linuxmusl
           cd ../
       - name: Deploy To Firebase
         uses: w9jds/firebase-action@master
