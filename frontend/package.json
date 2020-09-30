@@ -37,8 +37,8 @@
     }
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "dotenv -e .env.local react-scripts start",
+    "build": "dotenv -e .env.prod react-scripts build",
     "watch": "npm-watch",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -82,6 +82,7 @@
     "@types/testing-library__jest-dom": "^5.9.1",
     "@types/testing-library__react": "^10.2.0",
     "@types/valid-url": "^1.0.3",
+    "dotenv-cli": "^4.0.0",
     "npm-watch": "^0.6.0",
     "typescript": "~3.9.6",
     "typesync": "^0.7.0"

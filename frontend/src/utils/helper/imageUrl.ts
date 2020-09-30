@@ -1,8 +1,5 @@
 import pathParse from "path-parse";
-import firebase from "firebase/app";
-import "firebase/storage";
 type size = "256x144" | "640x360";
-const storageRef = firebase.storage().ref();
 
 const imageUrl = async (filePath: string, size: size) => {
   if (!filePath) return undefined;
@@ -16,7 +13,7 @@ const imageUrl = async (filePath: string, size: size) => {
   } else {
     path = `${dir}/${name}_${size}${ext}`;
   }
-  return storageRef.child(decodeURIComponent(path)).getDownloadURL();
+  return `${process.env.REACT_APP_FREE_PIC_ENDPOINT}${path}`;
 };
 
 export default imageUrl;

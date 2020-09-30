@@ -142,7 +142,7 @@ const QuizFormDialog: React.FC<State> = ({
   const [croppedImage, setCroppedImage] = useState<string | undefined>(
     undefined
   );
-  const oldThumbnailRef = useRef(null);
+  const oldThumbnailRef = useRef<string | undefined>(undefined);
   // 入力フォーム系
   const {
     register,

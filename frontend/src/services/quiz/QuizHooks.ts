@@ -83,7 +83,7 @@ export const useFetchThumbnailUrl = (
   uri: string,
   size: "256x144" | "640x360"
 ) => {
-  const [imgSrc, setImgSrc] = useState();
+  const [imgSrc, setImgSrc] = useState<string | undefined>();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
