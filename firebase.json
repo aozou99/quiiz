@@ -33,10 +33,6 @@
     ],
     "rewrites": [
       {
-        "source": "/freepic/**",
-        "function": "transPicture"
-      },
-      {
         "source": "**",
         "destination": "/index.html"
       }
