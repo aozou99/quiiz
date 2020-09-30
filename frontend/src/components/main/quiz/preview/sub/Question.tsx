@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       maxWidth: "100%",
-      marginTop: theme.spacing(2)
-    }
+      marginTop: theme.spacing(2),
+    },
   })
 );
 
@@ -28,15 +28,15 @@ const Question: React.FC<State> = ({
   result,
   thumbnail,
   question,
-  answerLabel
+  answerLabel,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down("sm"));
-  const [img, setImg] = useState(undefined);
+  const [img, setImg] = useState<string | undefined>(undefined);
   useEffect(() => {
     const size = matches ? "256x144" : "640x360";
-    imageUrl(thumbnail, size).then(url => setImg(url));
+    imageUrl(thumbnail, size).then((url) => setImg(url));
   }, [matches, thumbnail]);
 
   return (
@@ -56,7 +56,7 @@ const Question: React.FC<State> = ({
             in={!!result}
             style={{
               transitionDelay: result ? "100ms" : "0ms",
-              display: result ? "block" : "none"
+              display: result ? "block" : "none",
             }}
           >
             <Typography variant="h6" component="span">

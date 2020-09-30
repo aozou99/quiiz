@@ -69,7 +69,7 @@ const QuizCell: React.FC<State> = ({
   handlePreview,
 }) => {
   const classes = useStyles();
-  const [imgSrc, setImgSrc] = useState();
+  const [imgSrc, setImgSrc] = useState<string | undefined>();
   useEffect(() => {
     let unmounted = false;
     const loadUrl = () => {
