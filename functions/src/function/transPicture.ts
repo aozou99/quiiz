@@ -9,7 +9,7 @@ const storage = admin.storage();
 const prefixPath = "/freepic/";
 
 module.exports = functions
-  .region("asia-northeast1")
+  .region("us-central1")
   .runWith({
     timeoutSeconds: 30,
     memory: "2GB",
@@ -24,7 +24,6 @@ module.exports = functions
 
     res.set("Content-Type", contentType);
     res.set("Cache-Control", `public, max-age=${age}, s-maxage=${age}`);
-    res.set("Access-Control-Allow-Origin", "https://quiiz.space");
     // add Vary header only for reqs that need auto detection
     // res.set("Vary", "Accept-Encoding, Accept");
     res.status(200).send(buffer);
