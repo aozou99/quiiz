@@ -25,14 +25,14 @@
     "node-fetch": "^2.6.1",
     "open-graph-scraper": "^4.5.1",
     "path-parse": "^1.0.6",
-    "sharp": "^0.26.1"
+    "sharp": "^0.26.1",
+    "typesync": "^0.7.0"
   },
   "devDependencies": {
     "@types/path-parse": "^1.0.19",
     "firebase-functions-test": "^0.2.1",
     "tslint": "^6.1.2",
-    "typescript": "^3.9.6",
-    "typesync": "^0.7.0"
+    "typescript": "^3.9.6"
   },
   "private": true
 }
