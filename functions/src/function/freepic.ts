@@ -6,7 +6,6 @@ import sharp from "sharp";
 import fs from "fs";
 
 const storage = admin.storage();
-const prefixPath = "/freepic/";
 
 module.exports = functions
   .region("asia-northeast1")
@@ -15,7 +14,7 @@ module.exports = functions
     memory: "2GB",
   })
   .https.onRequest(async (req, res) => {
-    const sourcePath = req.path.split(prefixPath)[1];
+    const sourcePath = req.path.substr(1);
     const tempPath = await loadImageFile(sourcePath);
     const buffer = await loadImageBuffer(tempPath);
     fs.unlinkSync(tempPath);
