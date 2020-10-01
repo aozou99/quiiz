@@ -185,25 +185,25 @@ const CropDialog: React.FC<State> = ({
             />
           </div>
         </div>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            onClick={handleClose}
+            startIcon={<CancelIcon />}
+            color="secondary"
+          >
+            キャンセル
+          </Button>
+          <Button
+            onClick={showCroppedImage}
+            variant="outlined"
+            color="primary"
+            startIcon={<CheckIcon />}
+          >
+            決定
+          </Button>
+        </DialogActions>
       </DialogContent>
-      <DialogActions>
-        <Button
-          variant="outlined"
-          onClick={handleClose}
-          startIcon={<CancelIcon />}
-          color="secondary"
-        >
-          キャンセル
-        </Button>
-        <Button
-          onClick={showCroppedImage}
-          variant="outlined"
-          color="primary"
-          startIcon={<CheckIcon />}
-        >
-          決定
-        </Button>
-      </DialogActions>
       <Backdrop className={classes.backdrop} open={openBackDrop}>
         <CircularProgress />
       </Backdrop>
