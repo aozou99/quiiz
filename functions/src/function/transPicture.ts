@@ -1,11 +1,7 @@
 import * as functions from "firebase-functions";
-import admin from "../core/admin";
-import path from "path";
-import os from "os";
 import sharp from "sharp";
-import fs from "fs";
+import fetch from "node-fetch";
 
-const storage = admin.storage();
 const prefixPath = "/freepic/";
 
 module.exports = functions
@@ -15,10 +11,12 @@ module.exports = functions
     memory: "2GB",
   })
   .https.onRequest(async (req, res) => {
+    const domain = req.query.domain as string;
+    const version = req.query.version as string;
+    console.log(version);
     const sourcePath = req.path.split(prefixPath)[1];
-    const tempPath = await loadImageFile(sourcePath);
-    const buffer = await loadImageBuffer(tempPath);
-    fs.unlinkSync(tempPath);
+    const imgBuffer = await loadImageFile(domain, sourcePath, version);
+    const buffer = await loadImageBuffer(imgBuffer);
     const contentType = `image/webp`;
     const age = 86400 * 30;
 
@@ -29,28 +27,20 @@ module.exports = functions
     res.status(200).send(buffer);
   });
 
-const loadImageFile = async (sourcePath: string) => {
-  const bucket = storage.bucket();
-  const tempPath = path.join(
-    os.tmpdir(),
-    `dl_${Math.random()}_${Math.random()}`
-  );
-  await bucket
-    .file(sourcePath)
-    .download({
-      destination: tempPath,
-    })
-    .catch((err) => {
-      console.warn(err);
-      return;
-    });
-  return tempPath;
+const loadImageFile = async (
+  domain: string,
+  sourcePath: string,
+  version: string
+) => {
+  return await fetch(
+    `https://storage.googleapis.com/${domain}/${sourcePath}?${version}`
+  ).then((res) => res.buffer());
 };
 
-const loadImageBuffer = async (tempPath: string) => {
-  const buffer = sharp(tempPath);
+const loadImageBuffer = async (imgBuffer: Buffer) => {
+  const buffer = sharp(imgBuffer);
   buffer.webp({
-    quality: 70,
+    quality: 80,
   });
   return await buffer.toBuffer();
 };

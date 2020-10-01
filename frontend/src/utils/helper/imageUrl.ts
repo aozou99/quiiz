@@ -1,7 +1,9 @@
 import pathParse from "path-parse";
-type size = "256x144" | "640x360";
 
-const imageUrl = async (filePath: string, size: size) => {
+export const quizThumbImgUrl = async (
+  filePath: string,
+  size: "256x144" | "640x360"
+) => {
   if (!filePath) return undefined;
   let path = "";
   const { ext, name, dir } = pathParse(filePath);
@@ -13,7 +15,17 @@ const imageUrl = async (filePath: string, size: size) => {
   } else {
     path = `${dir}/${name}_${size}${ext}`;
   }
-  return `${process.env.REACT_APP_FREE_PIC_ENDPOINT}${path}`;
+  return `${process.env.REACT_APP_FREE_PIC_ENDPOINT}${path}?domain=quiiz-b06ee.appspot.com`;
 };
 
-export default imageUrl;
+export const userProfileImgUrl = (
+  filePath: string,
+  version: string,
+  size: "512x512" | "256x256" | "128x128" | "64x64"
+) => {
+  if (!filePath) return "";
+  if (filePath.indexOf("http") === 0) return filePath;
+  return `${
+    process.env.REACT_APP_FREE_PIC_ENDPOINT
+  }${filePath}?domain=quiiz-b06ee&size=${size}&version=${version || ""}`;
+};

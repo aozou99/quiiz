@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { Zoom, useTheme, useMediaQuery } from "@material-ui/core";
-import imageUrl from "utils/helper/imageUrl";
+import { quizThumbImgUrl } from "utils/helper/imageUrl";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,7 +36,7 @@ const Question: React.FC<State> = ({
   const [img, setImg] = useState<string | undefined>(undefined);
   useEffect(() => {
     const size = matches ? "256x144" : "640x360";
-    imageUrl(thumbnail, size).then((url) => setImg(url));
+    quizThumbImgUrl(thumbnail, size).then((url) => setImg(url));
   }, [matches, thumbnail]);
 
   return (

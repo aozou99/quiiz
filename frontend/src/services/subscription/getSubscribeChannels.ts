@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { getCounter } from "utils/helper/counter";
 import AuthService from "services/auth/AuthService";
+import { userProfileImgUrl } from "utils/helper/imageUrl";
 
 const db = firebase.firestore();
 
@@ -30,7 +31,11 @@ export const getSubscribeChannels = async (uid: string) => {
         return {
           id: doc.id,
           channelName: user?.data()?.displayName,
-          channelLogo: user?.data()?.photoUrl,
+          channelLogo: userProfileImgUrl(
+            user?.data()?.photoPath,
+            user?.data()?.photoVersion,
+            "256x256"
+          ),
           hasQuizCount: userDoc?.data()?.hasQuizCount || 0,
           subscribedCount,
         };

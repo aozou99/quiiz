@@ -82,7 +82,7 @@ const ListAndAnswer: React.FC<pagingQuizApiOptions & {
 
   useEffect(() => {
     setPagingParam(props);
-  }, [props, props.where]);
+  }, [props, props.where, props.channelId]);
 
   const QuizList = useMemo(() => {
     return quizzes.map((item: QuizDisplay) => (
@@ -131,4 +131,7 @@ const ListAndAnswer: React.FC<pagingQuizApiOptions & {
   );
 };
 
-export default React.memo(ListAndAnswer);
+export default React.memo(
+  ListAndAnswer,
+  (prev, next) => prev.channelId === next.channelId
+);

@@ -70,11 +70,9 @@ class AuthService extends Service {
     onCompleted?: () => void
   ) {
     const user = this.logInUserOrFailed();
-
+    const imagePath = `images/user-profile/${user.uid}.jpg`;
     const userProfileStorage = firebase.app().storage("gs://quiiz-b06ee");
-    const storageRef = userProfileStorage.ref(
-      `images/user-profile/${user.uid}.jpg`
-    );
+    const storageRef = userProfileStorage.ref(imagePath);
     const jimpImg = await Jimp.read(imageUrl);
     const resizedImgUrl = await jimpImg
       .resize(512, 512)
@@ -94,10 +92,11 @@ class AuthService extends Service {
           storageRef.getDownloadURL().then((url) => {
             Promise.all([
               user.updateProfile({
-                photoURL: url,
+                photoURL: `https://storage.googleapis.com/quiiz-b06ee/${imagePath}?${new Date().getTime()}`,
               }),
               this.userRef.doc(user.uid).update({
-                photoUrl: url,
+                photoPath: imagePath,
+                photoVersion: new Date().getTime(),
               }),
             ]).then(() => {
               onCompleted && onCompleted();

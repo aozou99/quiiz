@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import { useState, useEffect } from "react";
-import imageUrl from "utils/helper/imageUrl";
+import { quizThumbImgUrl } from "utils/helper/imageUrl";
 import { getCounter } from "utils/helper/counter";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { pagingQuiz } from "services/quiz/pagingQuiz";
@@ -66,7 +66,10 @@ export const usePagenateQuiz = (parameters: pagingQuizApiOptions) => {
   }, [apiOptions]);
 
   useEffect(() => {
-    if (parameters?.where !== apiOptions?.where) {
+    if (
+      parameters?.where !== apiOptions?.where ||
+      parameters?.channelId !== apiOptions?.channelId
+    ) {
       setQuizzes([]);
       setApiOptions(parameters);
       return;
@@ -88,7 +91,7 @@ export const useFetchThumbnailUrl = (
 
   useEffect(() => {
     let mounted = true;
-    imageUrl(uri, size).then((path) => {
+    quizThumbImgUrl(uri, size).then((path) => {
       if (mounted) {
         setImgSrc(path);
         setLoaded(true);

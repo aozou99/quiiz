@@ -8,18 +8,21 @@
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "postinstall": "typesync"
   },
   "engines": {
     "node": "10"
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@types/node-fetch": "^2.5.7",
     "@types/open-graph-scraper": "^4.3.0",
     "@types/sharp": "^0.26.0",
     "firebase-admin": "^8.13.0",
     "firebase-functions": "^3.11.0",
     "n-gram": "^1.1.2",
+    "node-fetch": "^2.6.1",
     "open-graph-scraper": "^4.5.1",
     "path-parse": "^1.0.6",
     "sharp": "^0.26.1"
@@ -28,7 +31,8 @@
     "@types/path-parse": "^1.0.19",
     "firebase-functions-test": "^0.2.1",
     "tslint": "^6.1.2",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.6",
+    "typesync": "^0.7.0"
   },
   "private": true
 }

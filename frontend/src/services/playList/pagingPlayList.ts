@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { PRIVACY } from "utils/costant/InputConst";
-import imageUrl from "utils/helper/imageUrl";
+import { quizThumbImgUrl } from "utils/helper/imageUrl";
 
 const db = firebase.firestore();
 const DEFAULT_COUNT = 4;
@@ -65,8 +65,8 @@ export const pagingPlayList = async (uid: string | undefined, data: any) => {
       id: playList.id,
       ...playListData,
       thumbnail: {
-        "256x144": await imageUrl(thumbnail, "256x144"),
-        "640x360": await imageUrl(thumbnail, "640x360"),
+        "256x144": await quizThumbImgUrl(thumbnail, "256x144"),
+        "640x360": await quizThumbImgUrl(thumbnail, "640x360"),
       },
     };
   });

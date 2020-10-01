@@ -26,7 +26,7 @@ import ChipInput from "material-ui-chip-input";
 import QuizService from "services/quiz/QuizService";
 import CropDialog from "components/common/dialog/CropDialog";
 import doMatchRatios from "utils/helper/doMatchRatios";
-import imageUrl from "utils/helper/imageUrl";
+import { quizThumbImgUrl } from "utils/helper/imageUrl";
 import validUrl from "valid-url";
 import OgpService from "services/ogp/OgpService";
 
@@ -158,7 +158,7 @@ const QuizFormDialog: React.FC<State> = ({
   const fields = watch();
 
   useEffect(() => {
-    imageUrl(oldData?.thumbnail || "", "256x144").then((path) => {
+    quizThumbImgUrl(oldData?.thumbnail || "", "256x144").then((path) => {
       setCroppedImage(path);
       oldThumbnailRef.current = path;
     });

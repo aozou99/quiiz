@@ -10,7 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { Img } from "react-image";
 import ReplayIcon from "@material-ui/icons/Replay";
-import imageUrl from "utils/helper/imageUrl";
+import { quizThumbImgUrl } from "utils/helper/imageUrl";
 import clsx from "clsx";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -73,7 +73,7 @@ const QuizCell: React.FC<State> = ({
   useEffect(() => {
     let unmounted = false;
     const loadUrl = () => {
-      imageUrl(rowData.thumbnail, "256x144")
+      quizThumbImgUrl(rowData.thumbnail, "256x144")
         .then((path) => {
           if (!unmounted) {
             setImgSrc(path);
@@ -104,7 +104,7 @@ const QuizCell: React.FC<State> = ({
                 className={classes.thumbnail}
                 classes={{ label: classes.iconButtonLabel }}
                 onClick={() => {
-                  imageUrl(rowData.thumbnail, "256x144")
+                  quizThumbImgUrl(rowData.thumbnail, "256x144")
                     .then((path) => {
                       setImgSrc(path);
                     })

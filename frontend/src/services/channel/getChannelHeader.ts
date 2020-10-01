@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { getCounter } from "utils/helper/counter";
 import AuthService from "services/auth/AuthService";
+import { userProfileImgUrl } from "utils/helper/imageUrl";
 
 const db = firebase.firestore();
 
@@ -21,7 +22,11 @@ export const getChannelHeader = async (data: any) => {
     }
     return {
       channelName: user?.data()?.displayName,
-      channelLogo: user?.data()?.photoUrl,
+      channelLogo: userProfileImgUrl(
+        user?.data()?.photoPath,
+        user?.data()?.photoVersion,
+        "512x512"
+      ),
       subscribedCount,
     };
   });
