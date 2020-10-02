@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     media: {
       height: 140,
+      backgroundImage: `url("/images/loading/loading.gif")`,
+      backgroundSize: "initial",
     },
     selected: {
       border: "1px solid",
@@ -84,6 +86,7 @@ const Item: React.FC<Props> = ({
             className={classes.media}
             image={thumbnail}
             title={question}
+            component="img"
           />
           <CardContent>
             <Grid container spacing={0}>
