@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme: Theme) =>
         borderRadius: theme.spacing(1),
         height: 144,
         width: 256,
+        backgroundImage: `url("/images/loading/loading.gif")`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
       },
       "& > hr": {
         margin: theme.spacing(1),
