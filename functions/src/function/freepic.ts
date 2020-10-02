@@ -2,10 +2,8 @@ import * as functions from "firebase-functions";
 import sharp from "sharp";
 import fetch from "node-fetch";
 
-const prefixPath = "/freepic/";
-
 module.exports = functions
-  .region("us-central1")
+  .region("asia-northeast1")
   .runWith({
     timeoutSeconds: 30,
     memory: "2GB",
@@ -13,8 +11,7 @@ module.exports = functions
   .https.onRequest(async (req, res) => {
     const domain = req.query.domain as string;
     const version = req.query.version as string;
-    console.log(version);
-    const sourcePath = req.path.split(prefixPath)[1];
+    const sourcePath = req.path.substr(1);
     const imgBuffer = await loadImageFile(domain, sourcePath, version);
     const buffer = await loadImageBuffer(imgBuffer);
     const contentType = `image/webp`;
@@ -22,6 +19,7 @@ module.exports = functions
 
     res.set("Content-Type", contentType);
     res.set("Cache-Control", `public, max-age=${age}, s-maxage=${age}`);
+    res.set("Access-Control-Allow-Origin", "https://quiiz.space");
     // add Vary header only for reqs that need auto detection
     // res.set("Vary", "Accept-Encoding, Accept");
     res.status(200).send(buffer);
