@@ -18,6 +18,7 @@ import DummyItem from "components/common/quiz/DummyItem";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import { pagingQuizApiOptions } from "types/apiOptions";
 import { useHistory } from "react-router-dom";
+import equal from "fast-deep-equal";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -131,7 +132,4 @@ const ListAndAnswer: React.FC<pagingQuizApiOptions & {
   );
 };
 
-export default React.memo(
-  ListAndAnswer,
-  (prev, next) => prev.channelId === next.channelId
-);
+export default React.memo(ListAndAnswer, (prev, next) => equal(prev, next));
