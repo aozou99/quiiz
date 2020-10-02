@@ -6,6 +6,10 @@ export const useListPannelStyles = makeStyles((theme: Theme) =>
     avator: {
       height: theme.spacing(9),
       width: theme.spacing(16),
+      backgroundImage: `url("/images/loading/loading.gif")`,
+      backgroundSize: "initial",
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "center",
     },
     list: {
       "&>.MuiListItem-gutters": {
