@@ -14,8 +14,9 @@ import "firebase/auth";
 import { useQuery } from "utils/helper/queryParameter";
 import PlayListContents from "components/common/playList/PlayListContents";
 import LikeListContents from "components/common/playList/LikeListContents";
-import { AnswerMenubar } from "components/common/quiz/answer/sub/AnswerMenubar";
-import { AnswerDescription } from "components/common/quiz/answer/sub/AnswerDescription";
+import { Menubar } from "components/common/quiz/answer/sub/Menubar";
+import { Description } from "components/common/quiz/answer/sub/Description";
+import { AuthorProfile } from "components/common/quiz/answer/sub/AuthorProfile";
 
 type Props = {
   selected: QuizDisplay;
@@ -94,11 +95,19 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
           choices={choices(selected)}
           answer={selected.answer}
         />
-        <AnswerDescription
+        <Description
           open={!!result && (selected?.description?.length || 0) > 0}
           selected={selected}
         />
-        <AnswerMenubar selected={selected} />
+        <Menubar selected={selected} />
+        <Divider />
+        <AuthorProfile
+          author={{
+            id: selected.authorId,
+            imgUrl: selected.authorImageUrl,
+            name: selected.authorName,
+          }}
+        />
         {listId && !isNaN(index) && listId !== "LL" && (
           <PlayListContents listId={listId} index={index} />
         )}

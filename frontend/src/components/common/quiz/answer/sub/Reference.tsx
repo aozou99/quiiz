@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-export const AnswerReference = ({ references }: { references: any[] }) => {
+export const Reference = ({ references }: { references: any[] }) => {
   const classes = useStyles();
   const borderLeftColors = [
     classes.borderLeftrTertiary,

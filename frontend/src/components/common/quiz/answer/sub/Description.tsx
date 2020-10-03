@@ -8,7 +8,7 @@ import {
   Collapse,
   Typography,
 } from "@material-ui/core";
-import { AnswerReference } from "components/common/quiz/answer/sub/AnswerReference";
+import { Reference } from "components/common/quiz/answer/sub/Reference";
 import { themeColors } from "components/core/CustomeTheme";
 import React from "react";
 import { QuizDisplay } from "types/QuizTypes";
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-export const AnswerDescription = ({
+export const Description = ({
   open,
   selected,
 }: {
@@ -62,7 +62,7 @@ export const AnswerDescription = ({
           <Typography variant={"body1"}>{selected.description}</Typography>
         </CardContent>
         {selected.references?.length > 0 && (
-          <AnswerReference references={selected.references} />
+          <Reference references={selected.references} />
         )}
       </Card>
     </Collapse>

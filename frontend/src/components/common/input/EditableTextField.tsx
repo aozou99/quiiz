@@ -132,7 +132,7 @@ export const EditableTextField: React.FC<{
             id={"editableInput"}
             name={"editableInput"}
             defaultValue={value}
-            label={errors["editableInput"]?.message}
+            label={errors["editableInput"]?.message || valueName}
             type="text"
             inputRef={(e) => {
               editableRegister(e);
@@ -149,8 +149,8 @@ export const EditableTextField: React.FC<{
             error={!!errors["editableInput"]}
             FormHelperTextProps={{ className: classes.helperText }}
             onKeyDown={(e) => {
-              if (e.which === 13) handleSave();
-              if (e.which === 27) setEdit(false);
+              if (e.key === "Enter") handleSave();
+              if (["Escape", "Esc"].includes(e.key)) setEdit(false);
             }}
           />
         }

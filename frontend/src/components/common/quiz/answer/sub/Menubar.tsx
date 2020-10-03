@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-export const AnswerMenubar = ({ selected }: { selected: QuizDisplay }) => {
+export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
   const classes = useStyles();
   const {
     loaded: likeLoaded,
