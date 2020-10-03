@@ -11,7 +11,7 @@ import clsx from "clsx";
 import PlayListLine from "components/main/quiz/library/sub/PlayListLine";
 import LikeListLine from "components/main/quiz/library/sub/LikeListLine";
 import { QuizDisplay } from "types/QuizTypes";
-import AnswerPanel from "components/common/quiz/AnswerPanel";
+import AnswerPanel from "components/common/quiz/answer/AnswerPanel";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "firebase/app";
 import "firebase/auth";

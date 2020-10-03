@@ -1,6 +1,6 @@
 import { Container, Grow, makeStyles, Theme } from "@material-ui/core";
-import AnswerPanel from "components/common/quiz/AnswerPanel";
-import DummyAnswerPanel from "components/common/quiz/DummyAnswerPanel";
+import AnswerPanel from "components/common/quiz/answer/AnswerPanel";
+import DummyAnswerPanel from "components/common/quiz/answer/DummyAnswerPanel";
 import React, { useEffect, useState } from "react";
 import { Redirect, useParams } from "react-router-dom";
 import { useFetchQuiz } from "services/quiz/QuizHooks";

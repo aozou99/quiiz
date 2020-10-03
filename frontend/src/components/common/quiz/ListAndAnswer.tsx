@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 import Item from "components/common/quiz/Item";
-import AnswerPanel from "components/common/quiz/AnswerPanel";
+import AnswerPanel from "components/common/quiz/answer/AnswerPanel";
 import { QuizDisplay } from "types/QuizTypes";
 import DummyItem from "components/common/quiz/DummyItem";
 import useInfiniteScroll from "react-infinite-scroll-hook";

@@ -12,7 +12,7 @@ import {
 import CheckIcon from "@material-ui/icons/Check";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import { QuizData } from "types/QuizTypes";
-import AnswerPanel from "components/common/quiz/AnswerPanel";
+import AnswerPanel from "components/common/quiz/answer/AnswerPanel";
 import { useFetchThumbnailUrl } from "services/quiz/QuizHooks";
 import { grey } from "@material-ui/core/colors";
 
