@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   makeStyles,
@@ -15,6 +15,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { useForm } from "react-hook-form";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 import DeleteIcon from "@material-ui/icons/Delete";
+import validUrl from "valid-url";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,6 +26,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       placeItems: "center",
     },
+    onMultiLineEditableValue: {
+      placeItems: "initial",
+      position: "relative",
+    },
     inputTitleButtonGroup: {
       display: "flex",
       justifyContent: "flex-end",
@@ -32,6 +37,11 @@ const useStyles = makeStyles((theme: Theme) =>
     editIcon: {
       marginLeft: "auto",
       marginRight: theme.spacing(-1.5),
+    },
+    onMultiLineEditIcon: {
+      position: "absolute",
+      right: theme.spacing(1.5),
+      bottom: theme.spacing(0.5),
     },
     helperText: {
       textAlign: "right",
@@ -44,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) =>
     displayNone: {
       display: "none",
     },
+    placeholder: {
+      color: theme.palette.text.secondary,
+    },
   })
 );
 
@@ -51,16 +64,44 @@ export const EditableTextField: React.FC<{
   editable: boolean;
   value: string;
   valueName: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValueState: React.Dispatch<React.SetStateAction<string>>;
   maxLength: number;
+  type?: "link" | "twitter" | "text";
+  fontSize?:
+    | "button"
+    | "caption"
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "h5"
+    | "h6"
+    | "subtitle1"
+    | "subtitle2"
+    | "body1"
+    | "body2";
+  required?: boolean;
+  variant?: "outlined" | "filled";
+  placeholder?: string;
+  multiline?: boolean;
+  maxRows?: number;
+  rows?: number;
   onSave: (value: string) => Promise<any> | undefined;
   onDelete?: (value?: string) => Promise<any> | void;
 }> = ({
   editable,
   value,
   valueName,
-  setValue,
+  setValueState,
+  type = "text",
+  fontSize = "h6",
+  required = true,
+  variant,
+  placeholder,
   maxLength,
+  multiline = false,
+  maxRows,
+  rows,
   onSave,
   onDelete,
 }) => {
@@ -69,15 +110,23 @@ export const EditableTextField: React.FC<{
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const classes = useStyles();
   const editableInputRef = useRef<HTMLInputElement>();
-  const { register, watch, errors } = useForm<{ editableInput: string }>({
+  const { register, watch, errors, setValue } = useForm<{
+    editableInput: string;
+  }>({
     mode: "onBlur",
   });
   const fields = watch();
   const editableRegister = register({
-    required: `${valueName}を入力してください`,
+    required: required && `${valueName}を入力してください`,
     maxLength: {
       value: maxLength,
       message: `${valueName}が長すぎます`,
+    },
+    validate: {
+      urlFormat: (value: string) => {
+        if (type !== "link") return true;
+        return !!validUrl.isWebUri(value) || `${value}がURL形式ではありません`;
+      },
     },
   });
   const handleSave = () => {
@@ -85,18 +134,64 @@ export const EditableTextField: React.FC<{
       return;
     }
     onSave(fields["editableInput"])?.then(() => {
-      setValue(fields["editableInput"]);
+      setValueState(fields["editableInput"]);
       setEdit(false);
     });
   };
 
+  useEffect(() => {
+    setValue("editableInput", value);
+  }, [value, setValue]);
+
   return (
     <Box className={clsx(edit && classes.rootOnEdit)}>
       {!edit && (
-        <Box className={clsx(classes.editableValue)}>
-          <Typography variant={"h6"}>{value}</Typography>
+        <Box
+          className={clsx(
+            classes.editableValue,
+            variant === "filled" && classes.onMultiLineEditableValue
+          )}
+        >
+          <Typography
+            variant={fontSize}
+            style={
+              rows
+                ? {
+                    minHeight: rows * theme.spacing(2.5),
+                    width: "100%",
+                    backgroundColor: theme.palette.action.hover,
+                    borderRadius: theme.spacing(2),
+                    padding: theme.spacing(2),
+                    whiteSpace: "break-spaces",
+                  }
+                : {}
+            }
+          >
+            {["twitter", "link"].includes(type) && value ? (
+              <span
+                className={classes.placeholder}
+                onClick={() =>
+                  window.open(
+                    type === "twitter" ? `https://twitter.com/${value}` : value,
+                    "_blank"
+                  )
+                }
+              >
+                {type === "twitter" ? `@${value}` : value}
+              </span>
+            ) : (
+              value || (
+                <span className={classes.placeholder}>{placeholder}</span>
+              )
+            )}
+          </Typography>
           {editable && (
-            <Box className={clsx(classes.editIcon)}>
+            <Box
+              className={clsx(
+                classes.editIcon,
+                variant === "filled" && classes.onMultiLineEditIcon
+              )}
+            >
               <IconButton
                 aria-label="edit"
                 size="medium"
@@ -129,7 +224,7 @@ export const EditableTextField: React.FC<{
           <TextField
             required
             margin="dense"
-            id={"editableInput"}
+            id={`editableInput-${valueName}`}
             name={"editableInput"}
             defaultValue={value}
             label={errors["editableInput"]?.message || valueName}
@@ -140,16 +235,21 @@ export const EditableTextField: React.FC<{
             }}
             inputProps={{
               style: {
-                fontSize: theme.typography.h6.fontSize,
+                fontSize: theme.typography[fontSize].fontSize,
+                lineHeight: theme.typography[fontSize].lineHeight,
               },
             }}
             fullWidth
-            variant="standard"
+            multiline={multiline}
+            rowsMax={maxRows}
+            placeholder={placeholder}
+            rows={rows}
+            variant={variant}
             helperText={`${fields["editableInput"]?.length || 0}/${maxLength}`}
             error={!!errors["editableInput"]}
             FormHelperTextProps={{ className: classes.helperText }}
             onKeyDown={(e) => {
-              if (e.key === "Enter") handleSave();
+              if (!multiline && e.key === "Enter") handleSave();
               if (["Escape", "Esc"].includes(e.key)) setEdit(false);
             }}
           />

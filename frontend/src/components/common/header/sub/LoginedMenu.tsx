@@ -78,7 +78,7 @@ const LoginedMenu: React.FC<State> = ({
       </MenuItem>
       <MenuItem
         onClick={(e) => {
-          history.push(`/profile`);
+          history.push(`/channel/${userId}?tabIndex=2`);
           handleClose(e);
         }}
       >
@@ -86,7 +86,7 @@ const LoginedMenu: React.FC<State> = ({
           <AccountBoxIcon fontSize="small" />
         </ListItemIcon>
         <Typography variant="body1" color="textSecondary">
-          メールアドレス・パスワード変更
+          プロフィール設定
         </Typography>
       </MenuItem>
       <MenuItem

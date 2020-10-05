@@ -204,7 +204,7 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
             editable={editable}
             value={channelName}
             valueName={"チャンネル名"}
-            setValue={setChannelName}
+            setValueState={setChannelName}
             maxLength={50}
             onSave={(newChannelName) =>
               Promise.all([

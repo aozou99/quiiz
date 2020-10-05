@@ -81,7 +81,7 @@ const QuizListPannel: React.FC<{
               editable={editable}
               value={title}
               valueName={"再生リスト"}
-              setValue={setTitle}
+              setValueState={setTitle}
               onSave={handleSaveTitle}
               maxLength={50}
               onDelete={() => {

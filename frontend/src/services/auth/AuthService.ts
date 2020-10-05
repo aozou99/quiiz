@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
+import "firebase/firestore";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import Service from "services/Service";
@@ -12,12 +13,26 @@ type AuthArgs = {
   email: string;
   password: string;
 };
+const db = firebase.firestore();
 
 class AuthService extends Service {
   ui!: firebaseui.auth.AuthUI;
 
-  async onAuthStateChanged(callback: (user: firebase.User | null) => any) {
-    firebase.auth().onAuthStateChanged(callback);
+  async updateQuiizAuth(
+    model: Partial<{
+      description: string;
+      twitterAccount: string;
+      mySiteUrl: string;
+    }>
+  ) {
+    const user = this.logInUserOrFailed();
+    return db
+      .collection("users")
+      .doc(user.uid)
+      .update({
+        ...model,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      });
   }
 
   async signIn({ email, password }: AuthArgs) {

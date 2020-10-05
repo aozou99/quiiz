@@ -8,7 +8,7 @@ import {
   Tab,
   Divider,
 } from "@material-ui/core";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -92,6 +92,9 @@ export const BasicTab: React.FC<{
     ));
   }, [value, tabsprops]);
 
+  useEffect(() => {
+    setValue(selectedTab);
+  }, [selectedTab]);
   return (
     <>
       <Tabs

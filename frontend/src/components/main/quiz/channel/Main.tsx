@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Theme, createStyles } from "@material-ui/core";
 import clsx from "clsx";
@@ -8,6 +8,7 @@ import { BasicTab } from "components/common/tab/BasicTab";
 import { QuizTabPannel } from "components/main/quiz/channel/sub/tabPannel/QuizTabPannel";
 import { PlayListTabPannel } from "components/main/quiz/channel/sub/tabPannel/PlayListTabPannel";
 import { useQuery } from "utils/helper/queryParameter";
+import { ProfileTabPannel } from "components/main/quiz/channel/sub/tabPannel/ProfileTabPannel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +32,12 @@ const Main: React.FC = () => {
   const classes = useStyles();
   const { id } = useParams();
   const query = useQuery();
-  const selectedTab = Number.parseInt(query.get("tabIndex") || "0") || 0;
+  const queryTabIndex = Number.parseInt(query.get("tabIndex") || "0") || 0;
+  const [selectedTab, setSelectedTab] = useState(queryTabIndex);
+
+  useEffect(() => {
+    setSelectedTab(queryTabIndex);
+  }, [queryTabIndex]);
 
   return (
     <Box className={clsx(classes.root)}>
@@ -45,6 +51,10 @@ const Main: React.FC = () => {
           {
             tabLabel: "再生リスト",
             childPannel: <PlayListTabPannel channelId={id} />,
+          },
+          {
+            tabLabel: "プロフィール",
+            childPannel: <ProfileTabPannel channelId={id} />,
           },
         ]}
         tabsClassName={classes.tabs}

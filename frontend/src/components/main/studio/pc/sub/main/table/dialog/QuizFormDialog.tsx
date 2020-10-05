@@ -186,7 +186,7 @@ const QuizFormDialog: React.FC<State> = ({
           urlFormat: (value: string) => {
             const notUrls = value
               ?.split(",")
-              .filter((el) => el.length !== 0 && !validUrl.isUri(el));
+              .filter((el) => el.length !== 0 && !validUrl.isWebUri(el));
             return (
               notUrls?.length < 1 ||
               `${notUrls.join(",")}がURL形式ではありません`
