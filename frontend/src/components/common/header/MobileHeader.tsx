@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import clsx from "clsx";
 import PostAddIcon from "@material-ui/icons/PostAdd";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -93,15 +93,21 @@ const MobileHeader: React.FC = () => {
   const theme = useTheme();
   const query = useQuery();
   const [user, loading] = useAuthState(firebase.auth());
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const queryKeyword = query.get("keyword");
+  const [keyword, setKeyword] = useState(queryKeyword);
 
   const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
+
+  useEffect(() => {
+    setKeyword(queryKeyword);
+  }, [queryKeyword]);
 
   return (
     <AppBar
@@ -129,9 +135,10 @@ const MobileHeader: React.FC = () => {
             }}
             inputProps={{ "aria-label": "search", maxLength: 30 }}
             onChange={(e) => {
+              setKeyword(e.target.value);
               history.push(`/search?keyword=${e.target.value}`);
             }}
-            defaultValue={query.get("keyword")}
+            value={keyword || ""}
           />
         </div>
         <div className={classes.grow} />

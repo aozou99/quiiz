@@ -17,6 +17,7 @@ import LikeListContents from "components/common/playList/LikeListContents";
 import { Menubar } from "components/common/quiz/answer/sub/Menubar";
 import { Description } from "components/common/quiz/answer/sub/Description";
 import { AuthorProfile } from "components/common/quiz/answer/sub/AuthorProfile";
+import { TagList } from "components/common/quiz/answer/sub/TagList";
 
 type Props = {
   selected: QuizDisplay;
@@ -100,6 +101,8 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
           selected={selected}
         />
         <Menubar selected={selected} />
+        <Divider />
+        <TagList tags={selected.tags} />
         <Divider />
         <AuthorProfile
           author={{

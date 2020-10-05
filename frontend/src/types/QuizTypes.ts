@@ -59,4 +59,5 @@ export type QuizDisplay = {
   answer: 0 | 1 | 2 | 3;
   description: string;
   references: any[];
+  tags: string[];
 };

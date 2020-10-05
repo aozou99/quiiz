@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -94,17 +94,22 @@ const DeskTopHeader: React.FC<State> = ({ handleDrawer }) => {
   const query = useQuery();
   const history = useHistory();
   const { url } = useRouteMatch();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [user, loading] = useAuthState(firebase.auth());
-
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const queryKeyword = query.get("keyword");
+  const [keyword, setKeyword] = useState(queryKeyword);
 
   const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
+
+  useEffect(() => {
+    setKeyword(queryKeyword);
+  }, [queryKeyword]);
 
   return (
     <AppBar
@@ -141,9 +146,10 @@ const DeskTopHeader: React.FC<State> = ({ handleDrawer }) => {
             }}
             inputProps={{ "aria-label": "search", maxLength: 30 }}
             onChange={(e) => {
+              setKeyword(e.target.value);
               history.push(`/search?keyword=${e.target.value}`);
             }}
-            defaultValue={query.get("keyword")}
+            value={keyword}
           />
         </div>
         <div className={classes.grow} />
