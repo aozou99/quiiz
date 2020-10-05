@@ -56,7 +56,11 @@ export const AuthorProfile = ({ author }: { author: any }) => {
       />
       <Box>
         <Box className={classes.nameBox}>
-          <Typography variant="subtitle1" className={classes.name}>
+          <Typography
+            variant="subtitle1"
+            className={classes.name}
+            onClick={handleClickChannelLink}
+          >
             {author.name}
           </Typography>
           {loaded && user.twitterAccount && (

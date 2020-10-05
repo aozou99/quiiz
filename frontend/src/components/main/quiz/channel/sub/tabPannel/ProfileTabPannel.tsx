@@ -76,7 +76,9 @@ export const ProfileTabPannel = ({ channelId }: { channelId: string }) => {
         required={false}
         variant={"filled"}
         maxLength={150}
-        placeholder={"自己紹介を書いてみましょう！"}
+        placeholder={
+          isMe ? "自己紹介を書いてみましょう！" : "まだ自己紹介はありません"
+        }
         multiline
         rows={4}
         onSave={handleSaveDescription}
@@ -96,7 +98,7 @@ export const ProfileTabPannel = ({ channelId }: { channelId: string }) => {
           required={false}
           variant={"filled"}
           maxLength={15}
-          placeholder={"@なしで入力"}
+          placeholder={isMe ? "@なしで入力" : "未設定"}
           rows={1}
           onSave={handleSaveTwitterAccount}
         />
@@ -116,7 +118,7 @@ export const ProfileTabPannel = ({ channelId }: { channelId: string }) => {
           required={false}
           variant={"filled"}
           maxLength={50}
-          placeholder={"https://example.com/"}
+          placeholder={isMe ? "https://example.com/" : "未設定"}
           rows={1}
           onSave={handleSaveMySiteUrl}
         />

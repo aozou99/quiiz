@@ -24,12 +24,16 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     inTab: {
+      minHeight: `calc(100vh - ${theme.spacing(35)}px)`,
+      [theme.breakpoints.down("sm")]: {
+        minHeight: `calc(100vh - ${theme.spacing(38)}px)`,
+      },
       [theme.breakpoints.down("xs")]: {
-        minHeight: `calc(100vh - ${theme.spacing(30)}px)`,
+        minHeight: `calc(100vh - ${theme.spacing(33)}px)`,
       },
     },
     description: {
-      marginTop: theme.spacing(-16),
+      marginTop: theme.spacing(-2),
       "&>*": {
         margin: theme.spacing(1),
       },

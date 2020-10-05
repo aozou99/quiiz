@@ -6,6 +6,7 @@ import {
   createStyles,
   Button,
   useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import ChannelService from "services/channel/ChannelService";
@@ -87,7 +88,7 @@ export const SubscribeButton: React.FC<{
     setHandleSubscribeOrCancel,
   } = useContext(UnSubscribedDialogContext);
   const theme = useTheme();
-  const isSmallerXs = theme.breakpoints.down("xs");
+  const isSmallerXs = useMediaQuery(theme.breakpoints.down("xs"));
 
   useEffect(() => {
     setIsSubscribed(initialIsSubscribed);
