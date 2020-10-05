@@ -75,7 +75,7 @@ export const ProfileTabPannel = ({ channelId }: { channelId: string }) => {
         fontSize="body1"
         required={false}
         variant={"filled"}
-        maxLength={200}
+        maxLength={150}
         placeholder={"自己紹介を書いてみましょう！"}
         multiline
         rows={4}
@@ -95,7 +95,7 @@ export const ProfileTabPannel = ({ channelId }: { channelId: string }) => {
           fontSize="body1"
           required={false}
           variant={"filled"}
-          maxLength={50}
+          maxLength={15}
           placeholder={"@なしで入力"}
           rows={1}
           onSave={handleSaveTwitterAccount}

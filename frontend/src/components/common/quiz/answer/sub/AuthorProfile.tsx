@@ -2,18 +2,22 @@ import {
   Avatar,
   Box,
   createStyles,
+  IconButton,
   makeStyles,
   Theme,
   Typography,
 } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useFetchQuiizUser } from "services/auth/AuthHooks";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import LinkIcon from "@material-ui/icons/Link";
+import { twitterLink } from "utils/helper/link";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
-      placeItems: "center",
       padding: theme.spacing(1.5),
     },
     avator: {
@@ -21,12 +25,23 @@ const useStyles = makeStyles((theme: Theme) =>
       width: theme.spacing(8),
       height: theme.spacing(8),
     },
+    nameBox: {
+      display: "flex",
+      placeItems: "center",
+    },
+    name: {
+      fontWeight: "bold",
+    },
+    description: {
+      whiteSpace: "break-spaces",
+    },
   })
 );
 
 export const AuthorProfile = ({ author }: { author: any }) => {
   const classes = useStyles();
   const history = useHistory();
+  const { user, loaded } = useFetchQuiizUser(author.id);
   const handleClickChannelLink = (e: React.MouseEvent<HTMLInputElement>) => {
     e.stopPropagation();
     history.push(`/channel/${author.id}`);
@@ -40,11 +55,37 @@ export const AuthorProfile = ({ author }: { author: any }) => {
         className={classes.avator}
       />
       <Box>
-        <Typography variant="subtitle1" gutterBottom>
-          {author.name}
-        </Typography>
-        <Typography variant="subtitle2" color="textSecondary">
-          {author.description || ""}
+        <Box className={classes.nameBox}>
+          <Typography variant="subtitle1" className={classes.name}>
+            {author.name}
+          </Typography>
+          {loaded && user.twitterAccount && (
+            <IconButton
+              edge="end"
+              onClick={() => {
+                window.open(twitterLink(user.twitterAccount), "_blank");
+              }}
+            >
+              <TwitterIcon color="primary" />
+            </IconButton>
+          )}
+          {loaded && user.mySiteUrl && (
+            <IconButton
+              edge="end"
+              onClick={() => {
+                window.open(user.mySiteUrl, "_blank");
+              }}
+            >
+              <LinkIcon />
+            </IconButton>
+          )}
+        </Box>
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          className={classes.description}
+        >
+          {(loaded && user.description) || ""}
         </Typography>
       </Box>
     </Box>
