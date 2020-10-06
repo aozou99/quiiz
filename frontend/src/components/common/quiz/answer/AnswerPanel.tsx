@@ -102,8 +102,12 @@ const AnswerPanel: React.FC<Props> = ({ selected, refresh, elevation }) => {
         />
         <Menubar selected={selected} />
         <Divider />
-        <TagList tags={selected.tags} />
-        <Divider />
+        {selected?.tags?.length > 0 && (
+          <>
+            <TagList tags={selected.tags} />
+            <Divider />
+          </>
+        )}
         <AuthorProfile
           author={{
             id: selected.authorId,
