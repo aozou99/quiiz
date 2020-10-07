@@ -8,6 +8,7 @@ const endpoints = [
   "deleteQuiz",
   "getOgpListByUrl",
   "freepic",
+  "dynamicOgp",
 ];
 // デプロイ時にすべて読み込む
 if (!process.env.FUNCTION_NAME) {

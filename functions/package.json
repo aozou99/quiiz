@@ -19,7 +19,7 @@
     "@types/node-fetch": "^2.5.7",
     "@types/open-graph-scraper": "^4.3.0",
     "@types/sharp": "^0.26.0",
-    "firebase-admin": "^8.13.0",
+    "firebase-admin": "^9.2.0",
     "firebase-functions": "^3.11.0",
     "n-gram": "^1.1.2",
     "node-fetch": "^2.6.1",
