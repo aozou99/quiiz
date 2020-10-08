@@ -6,6 +6,7 @@ import {
   Tooltip,
   IconButton,
   Typography,
+  Snackbar,
 } from "@material-ui/core";
 import { themeColors } from "components/core/CustomeTheme";
 import React, { useEffect, useState } from "react";
@@ -21,6 +22,10 @@ import QuizService from "services/quiz/QuizService";
 import clsx from "clsx";
 import PlayListDialog from "components/common/dialog/PlayListDialog";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import { shareQuizLink, twitterShare } from "utils/helper/link";
+import LinkIcon from "@material-ui/icons/Link";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,6 +47,12 @@ const useStyles = makeStyles((theme: Theme) =>
       "0%": { transform: "rotateY(0deg)" },
       "100%": { transform: "rotateY(360deg)" },
     },
+    snackbar: {
+      zIndex: 10000,
+      [theme.breakpoints.down("sm")]: {
+        bottom: "50%",
+      },
+    },
   })
 );
 export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
@@ -61,6 +72,7 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
   const [signInTitle, setSignInTitle] = useState("");
   const [signInBody, setSignInBody] = useState("");
   const [isOpenList, setIsOpenList] = useState(false);
+  const [snakOpen, setSnakOpen] = useState(false);
   const validateSignInDialog = (title: string, body: string) => {
     const isNg = !loading && !user;
     if (isNg) {
@@ -83,9 +95,9 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
     QuizService.likeOrCancel({
       quizId: selected.id,
       authorId: selected.authorId,
-    }).then((isCancel) => {
+    }).then(isCancel => {
       setIsLike(isCancel);
-      setLikeCount((pre) => (isCancel ? pre + 1 : pre - 1));
+      setLikeCount(pre => (isCancel ? pre + 1 : pre - 1));
     });
   };
   const handleAddPlayList = () => {
@@ -128,11 +140,35 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
             />
           </IconButton>
         </Tooltip>
+        <Tooltip title="Twitterでシェア">
+          <IconButton
+            aria-label="shareTwitter"
+            onClick={() => {
+              window.open(twitterShare(selected), "_blank");
+            }}
+          >
+            <TwitterIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="リンクをコピー">
+          <IconButton
+            aria-label="copyLink"
+            onClick={() => {
+              navigator.clipboard.writeText(shareQuizLink(selected.id));
+              setSnakOpen(true);
+            }}
+          >
+            <LinkIcon color="action" />
+          </IconButton>
+        </Tooltip>
       </Box>
       <PlayListDialog
         open={isOpenList}
         onClose={() => setIsOpenList(false)}
-        quiz={{ id: selected.id, authorId: selected.authorId }}
+        quiz={{
+          id: selected.id,
+          authorId: selected.authorId,
+        }}
         afterChecked={update}
       />
       <SignInGuideDialog
@@ -141,6 +177,14 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
         bodyText={signInBody}
         onClose={() => setOpenSignInDialog(false)}
       />
+      <Snackbar
+        open={snakOpen}
+        autoHideDuration={1500}
+        onClose={() => setSnakOpen(false)}
+        className={classes.snackbar}
+      >
+        <Alert severity="info">このクイズのURLをコピーしました</Alert>
+      </Snackbar>
     </>
   );
 };

@@ -5,43 +5,43 @@ import {
   makeStyles,
   createStyles,
   Theme,
-} from "@material-ui/core";
-import React, { useMemo } from "react";
-import { Skeleton } from "@material-ui/lab";
+} from '@material-ui/core';
+import React, { useMemo } from 'react';
+import { Skeleton } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     detail: {
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down('sm')]: {
         margin: theme.spacing(0),
         height: `calc(100vh - ${theme.spacing(21)}px)`,
-        boxShadow: "none",
+        boxShadow: 'none',
       },
-      backgroundColor: "white",
+      backgroundColor: 'white',
       margin: theme.spacing(1),
       padding: theme.spacing(2),
       width: `clamp(${theme.spacing(40)}px, 80vw, ${theme.spacing(70)}px)`,
-      position: "sticky",
+      position: 'sticky',
       top: theme.spacing(10),
-      overflowY: "auto",
+      overflowY: 'auto',
       height: `calc(100vh - ${theme.spacing(16)}px)`,
     },
     img: {
-      display: "block",
-      margin: "auto",
+      display: 'block',
+      margin: 'auto',
       marginBottom: theme.spacing(1),
       borderRadius: theme.spacing(1),
     },
     question: {
-      margin: theme.spacing(1, "auto"),
+      margin: theme.spacing(1, 'auto'),
     },
     icons: {
       marginTop: theme.spacing(2),
-      display: "flex",
-      justifyContent: "space-evenly",
+      display: 'flex',
+      justifyContent: 'space-evenly',
     },
     choice: {
-      margin: "auto",
+      margin: 'auto',
     },
   })
 );
@@ -81,6 +81,8 @@ const AnswerPanel: React.FC = () => {
       <Divider />
       {DummyChoices}
       <Box className={classes.icons}>
+        <Skeleton animation="wave" variant="circle" width={40} height={40} />
+        <Skeleton animation="wave" variant="circle" width={40} height={40} />
         <Skeleton animation="wave" variant="circle" width={40} height={40} />
         <Skeleton animation="wave" variant="circle" width={40} height={40} />
       </Box>
