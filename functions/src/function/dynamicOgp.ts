@@ -32,7 +32,7 @@ module.exports = functions
     res.status(200).send(
       buildHtml(quizId, {
         title: quiz.question,
-        text: `①${quiz.selectA}, ②${quiz.selectB}, ③${quiz.selectC}, ④${quiz.selectD}`,
+        text: `①${quiz.selectA} ②${quiz.selectB} ③${quiz.selectC} ④${quiz.selectD}`,
         img: quiz.thumbnail['640x360'],
       })
     );
