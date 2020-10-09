@@ -170,6 +170,7 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
       <img
         src={shareQuizLink(selected.id, query)}
         style={{ display: "none" }}
+        alt={"pre-request"}
       />
       <PlayListDialog
         open={isOpenList}
