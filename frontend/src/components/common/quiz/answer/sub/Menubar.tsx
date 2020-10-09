@@ -26,6 +26,7 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import { shareQuizLink, twitterShare } from "utils/helper/link";
 import LinkIcon from "@material-ui/icons/Link";
 import { Alert } from "@material-ui/lab";
+import { useQuery } from "utils/helper/queryParameter";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,10 +54,14 @@ const useStyles = makeStyles((theme: Theme) =>
         bottom: "50%",
       },
     },
+    iframe: {
+      display: "none",
+    },
   })
 );
 export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
   const classes = useStyles();
+  const query = useQuery();
   const {
     loaded: likeLoaded,
     isLike: initialIsLike,
@@ -144,7 +149,7 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
           <IconButton
             aria-label="shareTwitter"
             onClick={() => {
-              window.open(twitterShare(selected), "_blank");
+              window.open(twitterShare(selected, query), "_blank");
             }}
           >
             <TwitterIcon color="primary" />
@@ -154,7 +159,7 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
           <IconButton
             aria-label="copyLink"
             onClick={() => {
-              navigator.clipboard.writeText(shareQuizLink(selected.id));
+              navigator.clipboard.writeText(shareQuizLink(selected.id, query));
               setSnakOpen(true);
             }}
           >
@@ -162,6 +167,10 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
           </IconButton>
         </Tooltip>
       </Box>
+      <img
+        src={shareQuizLink(selected.id, query)}
+        style={{ display: "none" }}
+      />
       <PlayListDialog
         open={isOpenList}
         onClose={() => setIsOpenList(false)}
