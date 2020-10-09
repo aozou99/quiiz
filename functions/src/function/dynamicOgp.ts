@@ -14,7 +14,9 @@ module.exports = functions
   .https.onRequest(async (req, res) => {
     const list = req.query.list as string;
     const index = req.query.index as string;
-    const queryString = new URLSearchParams({ list, index }).toString();
+    const queryString = new URLSearchParams(
+      filterQueryString({ list, index })
+    ).toString();
     const quizId = req.path.split(prefixPath)[1];
     const result = await db
       .collectionGroup("quizzes")
@@ -63,4 +65,12 @@ const buildHtml = (id: string, obj: any, queryString: string) => {
   }";</script>
     </body>
   </html>`;
+};
+
+const filterQueryString = (queryObj: any) => {
+  const rs: any = {};
+  for (const key in queryObj) {
+    if (queryObj[key]) rs[key] = queryObj[key];
+  }
+  return rs;
 };
