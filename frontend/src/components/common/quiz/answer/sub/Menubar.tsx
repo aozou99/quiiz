@@ -7,6 +7,7 @@ import {
   IconButton,
   Typography,
   Snackbar,
+  Popover,
 } from "@material-ui/core";
 import { themeColors } from "components/core/CustomeTheme";
 import React, { useEffect, useState } from "react";
@@ -23,10 +24,12 @@ import clsx from "clsx";
 import PlayListDialog from "components/common/dialog/PlayListDialog";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import { shareQuizLink, twitterShare } from "utils/helper/link";
+import { contactUsLink, shareQuizLink, twitterShare } from "utils/helper/link";
 import LinkIcon from "@material-ui/icons/Link";
 import { Alert } from "@material-ui/lab";
 import { useQuery } from "utils/helper/queryParameter";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import ReportProblemIcon from "@material-ui/icons/ReportProblem";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,8 +57,14 @@ const useStyles = makeStyles((theme: Theme) =>
         bottom: "50%",
       },
     },
-    iframe: {
-      display: "none",
+    popoverBox: {
+      display: "flex",
+      placeContent: "center",
+      placeItems: "center",
+      padding: theme.spacing(2),
+      "&>svg": {
+        marginRight: theme.spacing(1),
+      },
     },
   })
 );
@@ -117,6 +126,18 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
     setIsOpenList(!isOpenList);
   };
 
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
     setIsLike(initialIsLike);
   }, [initialIsLike, selected.id]);
@@ -166,6 +187,35 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
             <LinkIcon color="action" />
           </IconButton>
         </Tooltip>
+        <Tooltip title="その他">
+          <IconButton aria-label="copyLink" onClick={handleClick}>
+            <MoreHorizIcon color="action" />
+          </IconButton>
+        </Tooltip>
+        <Popover
+          open={!!anchorEl}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Box
+            className={classes.popoverBox}
+            onClick={() => {
+              window.open(contactUsLink(), "_blank");
+              handleClose();
+            }}
+          >
+            <ReportProblemIcon color="error" />
+            <Typography>違反の報告</Typography>
+          </Box>
+        </Popover>
       </Box>
       <img
         src={shareQuizLink(selected.id, query)}
