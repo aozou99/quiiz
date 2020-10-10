@@ -47,7 +47,7 @@ const buildHtml = (id: string, obj: any, queryString: string) => {
   <!DOCTYPE html>
     <head>
       <title>${obj.title}</title>
-      <meta property="og:title" content="${obj.title}>
+      <meta property="og:title" content="${obj.title}">
       <meta property="og:image" content="${obj.img}">
       <meta
         property="og:description"
