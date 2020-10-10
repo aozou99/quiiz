@@ -15,7 +15,17 @@ export const contactUsLink = () => {
   return "https://forms.gle/Rj1a8TQ6aDfRMeUu9";
 };
 
-const queryString = (query: URLSearchParams, encode = false) =>
-  query.toString()
-    ? `?${encode ? encodeURIComponent(query.toString()) : query.toString()}`
+const queryString = (query: URLSearchParams, encode = false) => {
+  const WHITE_LIST_KEY = ["list", "index"];
+  const qsObj: any = {};
+  WHITE_LIST_KEY.forEach(key => {
+    const value = query.get(key);
+    if (value) {
+      qsObj[key] = value;
+    }
+  });
+  const qs = new URLSearchParams(qsObj);
+  return qs.toString() && qs.get("list") !== "LL"
+    ? `?${encode ? encodeURIComponent(qs.toString()) : qs.toString()}`
     : "";
+};
