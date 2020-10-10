@@ -11,6 +11,10 @@ export const twitterShare = (quiz: any, query: URLSearchParams) =>
 export const shareQuizLink = (quizId: string, query: URLSearchParams) =>
   `${process.env.REACT_APP_QUIZ_SHARE_URL}${quizId}${queryString(query)}`;
 
+export const contactUsLink = () => {
+  return "https://forms.gle/Rj1a8TQ6aDfRMeUu9";
+};
+
 const queryString = (query: URLSearchParams, encode = false) =>
   query.toString()
     ? `?${encode ? encodeURIComponent(query.toString()) : query.toString()}`

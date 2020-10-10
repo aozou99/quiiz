@@ -18,7 +18,7 @@ import { useQuery } from "utils/helper/queryParameter";
 import GuestMenu from "components/common/header/sub/GuestMenu";
 import LoginedMenu from "components/common/header/sub/LoginedMenu";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
   },
   toolBar: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       padding: theme.spacing(0, 0),
     },
     [theme.breakpoints.up("sm")]: {
@@ -134,7 +134,7 @@ const MobileHeader: React.FC = () => {
               input: classes.inputInput,
             }}
             inputProps={{ "aria-label": "search", maxLength: 30 }}
-            onChange={(e) => {
+            onChange={e => {
               setKeyword(e.target.value);
               history.push(`/search?keyword=${e.target.value}`);
             }}

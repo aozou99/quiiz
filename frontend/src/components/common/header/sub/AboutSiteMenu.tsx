@@ -8,14 +8,18 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { contactUsLink } from "utils/helper/link";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    box: {
+      padding: theme.spacing(1, 2),
+    },
     aboutSite: {
       display: "flex",
       placeContent: "center",
       placeItems: "center",
-      padding: theme.spacing(1, 2),
     },
     divider: {
       marginBottom: theme.spacing(1),
@@ -33,11 +37,11 @@ export const AboutSiteMenu = ({
   return (
     <>
       <Divider className={classes.divider} />
-      <Box className={classes.aboutSite}>
+      <Box className={clsx(classes.box, classes.aboutSite)}>
         <Typography
           variant="caption"
           color="textSecondary"
-          onClick={(e) => {
+          onClick={e => {
             history.push("/privacy");
             handleClose(e);
           }}
@@ -50,12 +54,25 @@ export const AboutSiteMenu = ({
         <Typography
           variant="caption"
           color="textSecondary"
-          onClick={(e) => {
+          onClick={e => {
             history.push("/terms");
             handleClose(e);
           }}
         >
           利用規約
+        </Typography>
+      </Box>
+      <Box className={classes.box}>
+        <Typography
+          component={"p"}
+          variant="caption"
+          color="textSecondary"
+          onClick={(e: any) => {
+            window.open(contactUsLink(), "_blank");
+            handleClose(e);
+          }}
+        >
+          お問い合わせ
         </Typography>
       </Box>
     </>

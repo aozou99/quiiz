@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography, Theme, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import { contactUsLink } from "utils/helper/link";
 
 const useStyles = makeStyles((theme: Theme) => ({
   listRoot: {
@@ -52,6 +53,16 @@ export const AboutQuiiz: React.FC<{
         >
           <Typography variant={"caption"} color={"textSecondary"}>
             クレジット表記
+          </Typography>
+        </li>
+        <li
+          onClick={() => {
+            window.open(contactUsLink(), "_blank");
+            onLink && onLink();
+          }}
+        >
+          <Typography variant={"caption"} color={"textSecondary"}>
+            お問い合わせ
           </Typography>
         </li>
       </ul>
