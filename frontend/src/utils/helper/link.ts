@@ -20,7 +20,7 @@ const queryString = (query: URLSearchParams, encode = false) => {
   const qsObj: any = {};
   WHITE_LIST_KEY.forEach(key => {
     const value = query.get(key);
-    if (value) {
+    if (value && value !== "undefined") {
       qsObj[key] = value;
     }
   });
