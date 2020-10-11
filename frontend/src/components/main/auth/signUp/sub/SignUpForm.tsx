@@ -10,11 +10,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import AuthService from "services/auth/AuthService";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Snackbar, Backdrop, CircularProgress } from "@material-ui/core";
+import {
+  Snackbar,
+  Backdrop,
+  CircularProgress,
+  FormHelperText,
+} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { Link as RouterLink } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
@@ -36,6 +41,7 @@ type FormData = {
   password: string;
   userName: string;
   user: boolean;
+  agreeTerms: boolean;
 };
 
 const SignUpForm = () => {
@@ -148,9 +154,29 @@ const SignUpForm = () => {
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
-            control={<Checkbox value="allowExtraEmails" color="primary" />}
-            label="メールでQuiizからのお知らせを受け取る"
+            value="agreeTerms"
+            name="agreeTerms"
+            inputRef={register({
+              required:
+                "登録には利用規約・プライバシーポリシーに同意が必要になります",
+            })}
+            control={<Checkbox color="primary" />}
+            label={
+              <Typography variant="body2">
+                <Link href="/terms" target="_blank" rel="noreferrer">
+                  利用規約
+                </Link>
+                、
+                <Link href="/privacy" target="_blank" rel="noreferrer">
+                  プライバシーポリシー
+                </Link>
+                に同意しました
+              </Typography>
+            }
           />
+          {!!errors.agreeTerms && (
+            <FormHelperText error>{errors.agreeTerms.message}</FormHelperText>
+          )}
         </Grid>
       </Grid>
       <Button

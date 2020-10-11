@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 import DeleteIcon from "@material-ui/icons/Delete";
 import validUrl from "valid-url";
+import { openAnotherTab } from "utils/helper/link";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -171,9 +172,8 @@ export const EditableTextField: React.FC<{
               <span
                 className={classes.placeholder}
                 onClick={() =>
-                  window.open(
-                    type === "twitter" ? `https://twitter.com/${value}` : value,
-                    "_blank"
+                  openAnotherTab(
+                    type === "twitter" ? `https://twitter.com/${value}` : value
                   )
                 }
               >
@@ -229,7 +229,7 @@ export const EditableTextField: React.FC<{
             defaultValue={value}
             label={errors["editableInput"]?.message || valueName}
             type="text"
-            inputRef={(e) => {
+            inputRef={e => {
               editableRegister(e);
               editableInputRef.current = e;
             }}
@@ -248,7 +248,7 @@ export const EditableTextField: React.FC<{
             helperText={`${fields["editableInput"]?.length || 0}/${maxLength}`}
             error={!!errors["editableInput"]}
             FormHelperTextProps={{ className: classes.helperText }}
-            onKeyDown={(e) => {
+            onKeyDown={e => {
               if (!multiline && e.key === "Enter") handleSave();
               if (["Escape", "Esc"].includes(e.key)) setEdit(false);
             }}

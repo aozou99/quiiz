@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { contactUsLink } from "utils/helper/link";
+import { contactUsLink, openAnotherTab } from "utils/helper/link";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -68,7 +68,7 @@ export const AboutSiteMenu = ({
           variant="caption"
           color="textSecondary"
           onClick={(e: any) => {
-            window.open(contactUsLink(), "_blank");
+            openAnotherTab(contactUsLink());
             handleClose(e);
           }}
         >

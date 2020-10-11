@@ -24,7 +24,12 @@ import clsx from "clsx";
 import PlayListDialog from "components/common/dialog/PlayListDialog";
 import { SignInGuideDialog } from "components/common/dialog/SignInGuideDialog";
 import TwitterIcon from "@material-ui/icons/Twitter";
-import { contactUsLink, shareQuizLink, twitterShare } from "utils/helper/link";
+import {
+  contactUsLink,
+  openAnotherTab,
+  shareQuizLink,
+  twitterShare,
+} from "utils/helper/link";
 import LinkIcon from "@material-ui/icons/Link";
 import { Alert } from "@material-ui/lab";
 import { useQuery } from "utils/helper/queryParameter";
@@ -170,7 +175,7 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
           <IconButton
             aria-label="shareTwitter"
             onClick={() => {
-              window.open(twitterShare(selected, query), "_blank");
+              openAnotherTab(twitterShare(selected, query));
             }}
           >
             <TwitterIcon color="primary" />
@@ -208,7 +213,7 @@ export const Menubar = ({ selected }: { selected: QuizDisplay }) => {
           <Box
             className={classes.popoverBox}
             onClick={() => {
-              window.open(contactUsLink(), "_blank");
+              openAnotherTab(contactUsLink());
               handleClose();
             }}
           >

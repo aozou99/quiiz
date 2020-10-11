@@ -15,6 +15,9 @@ export const contactUsLink = () => {
   return "https://forms.gle/Rj1a8TQ6aDfRMeUu9";
 };
 
+export const openAnotherTab = (url: string) =>
+  window.open(url, "_blank", "noopener");
+
 const queryString = (query: URLSearchParams, encode = false) => {
   const WHITE_LIST_KEY = ["list", "index"];
   const qsObj: any = {};

@@ -24,7 +24,7 @@ type State = {
   handleDrawer: (event: {}) => void;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
@@ -145,11 +145,11 @@ const DeskTopHeader: React.FC<State> = ({ handleDrawer }) => {
               input: classes.inputInput,
             }}
             inputProps={{ "aria-label": "search", maxLength: 30 }}
-            onChange={(e) => {
+            onChange={e => {
               setKeyword(e.target.value);
               history.push(`/search?keyword=${e.target.value}`);
             }}
-            value={keyword}
+            value={keyword || ""}
           />
         </div>
         <div className={classes.grow} />

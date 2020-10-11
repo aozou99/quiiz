@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 import { useFetchQuiizUser } from "services/auth/AuthHooks";
 import TwitterIcon from "@material-ui/icons/Twitter";
 import LinkIcon from "@material-ui/icons/Link";
-import { twitterLink } from "utils/helper/link";
+import { openAnotherTab, twitterLink } from "utils/helper/link";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,7 +67,7 @@ export const AuthorProfile = ({ author }: { author: any }) => {
             <IconButton
               edge="end"
               onClick={() => {
-                window.open(twitterLink(user.twitterAccount), "_blank");
+                openAnotherTab(twitterLink(user.twitterAccount));
               }}
             >
               <TwitterIcon color="primary" />
@@ -77,7 +77,7 @@ export const AuthorProfile = ({ author }: { author: any }) => {
             <IconButton
               edge="end"
               onClick={() => {
-                window.open(user.mySiteUrl, "_blank");
+                openAnotherTab(user.mySiteUrl);
               }}
             >
               <LinkIcon />
