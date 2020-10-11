@@ -13,9 +13,11 @@ import AuthService from "services/auth/AuthService";
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: "white",
+    height: "100vh",
+    width: "100vw",
   },
   paper: {
-    marginTop: theme.spacing(2),
+    paddingTop: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -36,30 +38,32 @@ const SignUp = () => {
   }, []);
 
   return (
-    <Container component="main" maxWidth="xs" className={classes.root}>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography
-          className={classes.title}
-          component="h1"
-          variant="h4"
-          color="primary"
-        >
-          Quiiz
-          <Typography component="span" variant="h5" color="textSecondary">
-            に登録する
+    <Box className={classes.root}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography
+            className={classes.title}
+            component="h1"
+            variant="h4"
+            color="primary"
+          >
+            Quiiz
+            <Typography component="span" variant="h5" color="textSecondary">
+              に登録する
+            </Typography>
           </Typography>
-        </Typography>
-        <SignUpForm />
-        <div id="firebaseui-auth-container"></div>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+          <SignUpForm />
+          <div id="firebaseui-auth-container"></div>
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
