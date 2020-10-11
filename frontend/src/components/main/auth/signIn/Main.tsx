@@ -10,7 +10,10 @@ import SignInForm from "components/main/auth/signIn/sub/SignInForm";
 import Copyright from "components/common/guide/Copyright";
 import AuthService from "services/auth/AuthService";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundColor: "white",
+  },
   paper: {
     marginTop: theme.spacing(2),
     display: "flex",
@@ -41,7 +44,7 @@ const SignIn = () => {
   }, []);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.root}>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
