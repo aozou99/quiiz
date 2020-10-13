@@ -122,7 +122,7 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
     setOpenBackDrop(true);
     AuthService.updatePhotoUrl(
       imageUrl,
-      (snapshot) => {
+      snapshot => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setBackDropChildNode(
@@ -206,7 +206,7 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
             valueName={"チャンネル名"}
             setValueState={setChannelName}
             maxLength={50}
-            onSave={(newChannelName) =>
+            onSave={newChannelName =>
               Promise.all([
                 user?.updateProfile({
                   displayName: newChannelName,
@@ -231,7 +231,7 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
             channelName={channelHeader.channelName}
             initialIsSubscribed={isSubscribed}
             onCompleted={(latestIsSubscribed: boolean) =>
-              setSubscribedUsers((a) => (latestIsSubscribed ? ++a : --a))
+              setSubscribedUsers(a => (latestIsSubscribed ? ++a : --a))
             }
           />
         )}
@@ -246,7 +246,7 @@ export const ChannelHeader: React.FC<{ channelId: string }> = ({
       />
       <Snackbar
         open={openSnackBar}
-        autoHideDuration={3000}
+        autoHideDuration={1500}
         onClose={() => setOpenSnackBar(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >

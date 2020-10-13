@@ -18,9 +18,9 @@ module.exports = functions.https.onCall(async (data, context) => {
       const oldData = doc.data();
       // サムネの更新があったら、古いサムネを削除する
       if (
-        data.thumbnailUpdate &&
+        data.isUpdate &&
         oldData?.thumbnail &&
-        oldData.thumbnail !== data.thumbnail
+        oldData.thumbnail !== data.postData.thumbnail
       ) {
         deleteThumbnail(oldData.thumbnail)?.catch((e) => console.error(e));
       }

@@ -9,6 +9,7 @@ import {
   Theme,
   Backdrop,
   CircularProgress,
+  Container,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -126,87 +127,89 @@ const CropDialog: React.FC<State> = ({
       aria-labelledby="crop-dialog-title"
       aria-describedby="crop-dialog-description"
     >
-      <DialogTitle id="crop-dialog-title">範囲を選択してください</DialogTitle>
-      <DialogContent>
-        <div className={classes.cropContainer}>
-          <Cropper
-            image={imgUrl}
-            crop={crop}
-            rotation={rotation}
-            zoom={zoom}
-            aspect={aspect}
-            onCropChange={setCrop}
-            onRotationChange={setRotation}
-            onCropComplete={onCropComplete}
-            onZoomChange={setZoom}
-          />
-        </div>
-        <div className={classes.controls}>
-          <div className={classes.sliderContainer}>
-            <Typography
-              variant="overline"
-              classes={{ root: classes.sliderLabel }}
-            >
-              拡大
-            </Typography>
-            <Slider
-              value={zoom}
-              min={1}
-              max={3}
-              step={0.1}
-              aria-labelledby="Zoom"
-              className={classes.slider}
-              onChange={(_e, zoom) => {
-                if (!Array.isArray(zoom)) {
-                  setZoom(zoom);
-                }
-              }}
+      <Container maxWidth="md">
+        <DialogTitle id="crop-dialog-title">範囲を選択してください</DialogTitle>
+        <DialogContent>
+          <div className={classes.cropContainer}>
+            <Cropper
+              image={imgUrl}
+              crop={crop}
+              rotation={rotation}
+              zoom={zoom}
+              aspect={aspect}
+              onCropChange={setCrop}
+              onRotationChange={setRotation}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
             />
           </div>
-          <div className={classes.sliderContainer}>
-            <Typography
-              variant="overline"
-              classes={{ root: classes.sliderLabel }}
-            >
-              回転
-            </Typography>
-            <Slider
-              value={rotation}
-              min={0}
-              max={360}
-              step={90}
-              aria-labelledby="Rotation"
-              className={classes.slider}
-              onChange={(_e, rotation) => {
-                if (!Array.isArray(rotation)) {
-                  setRotation(rotation);
-                }
-              }}
-            />
+          <div className={classes.controls}>
+            <div className={classes.sliderContainer}>
+              <Typography
+                variant="overline"
+                classes={{ root: classes.sliderLabel }}
+              >
+                拡大
+              </Typography>
+              <Slider
+                value={zoom}
+                min={1}
+                max={3}
+                step={0.1}
+                aria-labelledby="Zoom"
+                className={classes.slider}
+                onChange={(_e, zoom) => {
+                  if (!Array.isArray(zoom)) {
+                    setZoom(zoom);
+                  }
+                }}
+              />
+            </div>
+            <div className={classes.sliderContainer}>
+              <Typography
+                variant="overline"
+                classes={{ root: classes.sliderLabel }}
+              >
+                回転
+              </Typography>
+              <Slider
+                value={rotation}
+                min={0}
+                max={360}
+                step={90}
+                aria-labelledby="Rotation"
+                className={classes.slider}
+                onChange={(_e, rotation) => {
+                  if (!Array.isArray(rotation)) {
+                    setRotation(rotation);
+                  }
+                }}
+              />
+            </div>
           </div>
-        </div>
-        <DialogActions>
-          <Button
-            variant="outlined"
-            onClick={handleClose}
-            startIcon={<CancelIcon />}
-            color="secondary"
-          >
-            キャンセル
-          </Button>
-          <Button
-            onClick={showCroppedImage}
-            variant="outlined"
-            color="primary"
-            startIcon={<CheckIcon />}
-          >
-            決定
-          </Button>
-        </DialogActions>
-      </DialogContent>
-      <Backdrop className={classes.backdrop} open={openBackDrop}>
-        <CircularProgress />
-      </Backdrop>
+          <DialogActions>
+            <Button
+              variant="outlined"
+              onClick={handleClose}
+              startIcon={<CancelIcon />}
+              color="secondary"
+            >
+              キャンセル
+            </Button>
+            <Button
+              onClick={showCroppedImage}
+              variant="outlined"
+              color="primary"
+              startIcon={<CheckIcon />}
+            >
+              決定
+            </Button>
+          </DialogActions>
+        </DialogContent>
+        <Backdrop className={classes.backdrop} open={openBackDrop}>
+          <CircularProgress />
+        </Backdrop>
+      </Container>
     </Dialog>
   );
 };

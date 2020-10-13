@@ -10,10 +10,12 @@ module.exports = functions
   })
   .https.onRequest(async (req, res) => {
     const domain = req.query.domain as string;
+    const size = fileterSize(req.query.size as string);
+
     const version = req.query.version as string;
     const sourcePath = req.path.substr(1);
     const imgBuffer = await loadImageFile(domain, sourcePath, version);
-    const buffer = await loadImageBuffer(imgBuffer);
+    const buffer = await loadImageBuffer(imgBuffer, size);
     const contentType = `image/webp`;
     const age = 86400 * 30;
 
@@ -25,18 +27,37 @@ module.exports = functions
     res.status(200).send(buffer);
   });
 
+const fileterSize = (size: string) => {
+  const [width, height] = size.split("x");
+  if (Number.isInteger(Number(width)) && Number.isInteger(Number(height))) {
+    return {
+      width: Number(width),
+      height: Number(height),
+    };
+  }
+  return null;
+};
+
 const loadImageFile = async (
   domain: string,
   sourcePath: string,
-  version: string
+  version?: string
 ) => {
   return await fetch(
-    `https://storage.googleapis.com/${domain}/${sourcePath}?${version}`
+    `https://storage.googleapis.com/${domain}/${sourcePath}${
+      version ? `?${version}` : ""
+    }`
   ).then((res) => res.buffer());
 };
 
-const loadImageBuffer = async (imgBuffer: Buffer) => {
-  const buffer = sharp(imgBuffer);
+const loadImageBuffer = async (
+  imgBuffer: Buffer,
+  resize: { height: number; width: number } | null
+) => {
+  let buffer = sharp(imgBuffer);
+  if (resize) {
+    buffer = buffer.resize(resize.width, resize.height);
+  }
   buffer.webp({
     quality: 80,
   });

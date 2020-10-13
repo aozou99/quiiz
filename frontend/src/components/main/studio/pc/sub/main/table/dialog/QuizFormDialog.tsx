@@ -29,6 +29,7 @@ import doMatchRatios from "utils/helper/doMatchRatios";
 import { quizThumbImgUrl } from "utils/helper/imageUrl";
 import validUrl from "valid-url";
 import OgpService from "services/ogp/OgpService";
+import Resizer from "react-image-file-resizer";
 
 type State = {
   noOnClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -68,7 +69,7 @@ const privacies = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   dialogContent: {
     "&:first-child": {
       paddingTop: 0,
@@ -129,6 +130,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const resizeFile = (file: any) =>
+  new Promise(resolve => {
+    Resizer.imageFileResizer(
+      file,
+      640,
+      640,
+      "JPEG",
+      100,
+      0,
+      uri => {
+        resolve(uri as string);
+      },
+      "base64"
+    );
+  });
+
 const QuizFormDialog: React.FC<State> = ({
   noOnClick,
   open,
@@ -158,7 +175,7 @@ const QuizFormDialog: React.FC<State> = ({
   const fields = watch();
 
   useEffect(() => {
-    quizThumbImgUrl(oldData?.thumbnail || "", "256x144").then((path) => {
+    quizThumbImgUrl(oldData?.thumbnail || "", "256x144").then(path => {
       setCroppedImage(path);
       oldThumbnailRef.current = path;
     });
@@ -186,7 +203,7 @@ const QuizFormDialog: React.FC<State> = ({
           urlFormat: (value: string) => {
             const notUrls = value
               ?.split(",")
-              .filter((el) => el.length !== 0 && !validUrl.isWebUri(el));
+              .filter(el => el.length !== 0 && !validUrl.isWebUri(el));
             return (
               notUrls?.length < 1 ||
               `${notUrls.join(",")}がURL形式ではありません`
@@ -200,7 +217,7 @@ const QuizFormDialog: React.FC<State> = ({
     // referencesの初期値設定
     setValue(
       "references",
-      oldData?.references?.map((r) => r.requestUrl).join(",") || ""
+      oldData?.references?.map(r => r.requestUrl).join(",") || ""
     );
     // tagsの初期値設定
     setValue("tags", oldData?.tags?.join(",") || "");
@@ -212,7 +229,7 @@ const QuizFormDialog: React.FC<State> = ({
     setCroppedImage(undefined);
     setOldData(undefined);
   };
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async data => {
     setProgressing(true);
     // validate
     let ogps;
@@ -223,7 +240,7 @@ const QuizFormDialog: React.FC<State> = ({
         const ogpSuccessUrls = ogps.map(
           (ogp: { requestUrl: string }) => ogp.requestUrl
         );
-        const errorUrls = urls.filter((url) => !ogpSuccessUrls.includes(url));
+        const errorUrls = urls.filter(url => !ogpSuccessUrls.includes(url));
         setError("references", {
           type: "validate",
           message: `${errorUrls.join(",")}のページが開けません`,
@@ -352,7 +369,7 @@ const QuizFormDialog: React.FC<State> = ({
                   label="正解の選択肢"
                   helperText="正解の選択肢を選んでください"
                 >
-                  {answers.map((option) => (
+                  {answers.map(option => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -373,7 +390,7 @@ const QuizFormDialog: React.FC<State> = ({
                   label="公開/非公開"
                   helperText="公開するか選択してください"
                 >
-                  {privacies.map((option) => (
+                  {privacies.map(option => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -406,7 +423,7 @@ const QuizFormDialog: React.FC<State> = ({
                     e.target.files !== null &&
                     (e.target.files?.length || 0) > 0
                   ) {
-                    const url = URL.createObjectURL(e.target.files[0]);
+                    const url = (await resizeFile(e.target.files[0])) as string;
                     setValue("thumbnail", url);
                     if (!(await doMatchRatios(url, 16, 9))) {
                       setCropOpen(true);
@@ -488,9 +505,7 @@ const QuizFormDialog: React.FC<State> = ({
               setValue("references", chips.join(","), { shouldValidate: true })
             }
             error={!!errors.references}
-            defaultValue={
-              oldData?.references?.map((ref) => ref.requestUrl) || []
-            }
+            defaultValue={oldData?.references?.map(ref => ref.requestUrl) || []}
             fullWidthInput
           />
         </DialogContent>

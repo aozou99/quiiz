@@ -23,6 +23,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^6.0.0",
     "react-image": "^4.0.2",
+    "react-image-file-resizer": "^0.3.8",
     "react-infinite-scroll-hook": "^3.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
