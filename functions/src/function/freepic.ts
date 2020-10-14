@@ -14,17 +14,22 @@ module.exports = functions
 
     const version = req.query.version as string;
     const sourcePath = req.path.substr(1);
-    const imgBuffer = await loadImageFile(domain, sourcePath, version);
-    const buffer = await loadImageBuffer(imgBuffer, size);
-    const contentType = `image/webp`;
-    const age = 86400 * 30;
-
-    res.set("Content-Type", contentType);
-    res.set("Cache-Control", `public, max-age=${age}, s-maxage=${age}`);
-    res.set("Access-Control-Allow-Origin", "https://quiiz.space");
-    // add Vary header only for reqs that need auto detection
-    // res.set("Vary", "Accept-Encoding, Accept");
-    res.status(200).send(buffer);
+    try {
+      const imgBuffer = await loadImageFile(domain, sourcePath, version);
+      const buffer = await loadImageBuffer(imgBuffer, size);
+      const contentType = `image/webp`;
+      const age = 86400 * 30;
+      res.set("Content-Type", contentType);
+      res.set("Cache-Control", `public, max-age=${age}, s-maxage=${age}`);
+      res.set("Access-Control-Allow-Origin", "https://quiiz.space");
+      res.status(200).send(buffer);
+    } catch (error) {
+      console.error(error);
+      const age = 30;
+      res.set("Cache-Control", `public, max-age=${age}, s-maxage=${age}`);
+      res.set("Access-Control-Allow-Origin", "https://quiiz.space");
+      res.status(500);
+    }
   });
 
 const fileterSize = (size: string) => {

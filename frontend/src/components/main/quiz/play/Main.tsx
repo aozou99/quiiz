@@ -1,4 +1,5 @@
 import { Container, Grow, makeStyles, Theme } from "@material-ui/core";
+import { MetaTag } from "components/common/meta/MetaTag";
 import AnswerPanel from "components/common/quiz/answer/AnswerPanel";
 import DummyAnswerPanel from "components/common/quiz/answer/DummyAnswerPanel";
 import React, { useEffect, useState } from "react";
@@ -24,16 +25,25 @@ const Play: React.FC = () => {
     setSelected(quiz);
   }, [quiz]);
   return (
-    <Grow in={true}>
-      <Container className={classes.container}>
-        {hasError && <Redirect to="/404" />}
-        {loaded && selected !== undefined ? (
-          <AnswerPanel selected={selected} elevation={0} />
-        ) : (
-          <DummyAnswerPanel />
-        )}
-      </Container>
-    </Grow>
+    <>
+      {selected && (
+        <MetaTag
+          title={selected.question}
+          description={selected.question}
+          noindex
+        />
+      )}
+      <Grow in={true}>
+        <Container className={classes.container}>
+          {hasError && <Redirect to="/404" />}
+          {loaded && selected !== undefined ? (
+            <AnswerPanel selected={selected} elevation={0} />
+          ) : (
+            <DummyAnswerPanel />
+          )}
+        </Container>
+      </Grow>
+    </>
   );
 };
 
