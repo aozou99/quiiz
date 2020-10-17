@@ -14,6 +14,7 @@ import clsx from "clsx";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     tabsRoot: {
+      maxWidth: "100vw",
       "&>div>div>button": {
         minWidth: theme.spacing(16),
       },
@@ -102,6 +103,8 @@ export const BasicTab: React.FC<{
         onChange={handleChange}
         aria-label="basic-tab"
         indicatorColor="primary"
+        variant="scrollable"
+        scrollButtons="off"
         textColor="primary"
         className={clsx(classes.paddingLeft, tabsClassName, classes.tabsRoot)}
       >

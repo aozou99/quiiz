@@ -6,6 +6,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 const db = firebase.firestore();
 
+export const useAuthUser = () => {
+  const [firebaseUser, loading] = useAuthState(firebase.auth());
+  return { firebaseUser, loading };
+};
 export const useFetchQuiizUser = (userId: string) => {
   const [firebaseUser, loading] = useAuthState(firebase.auth());
   const [user, setUser] = useState<any>();
@@ -19,7 +23,7 @@ export const useFetchQuiizUser = (userId: string) => {
       db.collection("users")
         .doc(userId)
         .get()
-        .then((doc) => {
+        .then(doc => {
           if (mounted) setUser(doc.data());
         })
         .finally(() => setLoaded(true));

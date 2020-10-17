@@ -6,12 +6,15 @@ export const themeColors = {
   primary: cyan,
   secondary: pink,
   tertiary: green,
-  quaternary: orange
+  quaternary: orange,
 };
 
 export default createMuiTheme({
   palette: {
-    primary: themeColors.primary,
-    secondary: themeColors.secondary
-  }
+    primary: {
+      main: themeColors.primary[500],
+      contrastText: "#fff",
+    },
+    secondary: themeColors.secondary,
+  },
 });

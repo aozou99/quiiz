@@ -52,7 +52,7 @@ firebase emulators:start --import=./data
 
 | mail           | password |
 | -------------- | -------- |
-| test1@test.com | test1234 |
+| test1@test.com | Test1234 |
 | test2@test.com | test1234 |
 | test3@test.com | test1234 |
 

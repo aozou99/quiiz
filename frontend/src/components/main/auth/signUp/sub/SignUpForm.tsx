@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { Link as RouterLink } from "react-router-dom";
+import { PASSWORD_REGEX } from "utils/costant/Validate";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -143,7 +144,7 @@ const SignUpForm = () => {
             inputRef={register({
               required: "パスワードを入力してください",
               pattern: {
-                value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+                value: PASSWORD_REGEX,
                 message:
                   "パスワードは8文字以上、大文字・小文字英数字を含んでください",
               },

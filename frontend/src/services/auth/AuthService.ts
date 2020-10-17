@@ -39,14 +39,14 @@ class AuthService extends Service {
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then((user) => user.user);
+      .then(user => user.user);
   }
 
   async signUp({ displayName, email, password }: AuthArgs) {
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((user) => {
+      .then(user => {
         user.user?.updateProfile({
           displayName,
         });
@@ -97,14 +97,14 @@ class AuthService extends Service {
     // dataURLをBlobに変換する
     const response = await fetch(resizedImgUrl);
     // アップロード
-    response.blob().then((blob) => {
+    response.blob().then(blob => {
       const task = storageRef.put(blob);
       task.on(
         firebase.storage.TaskEvent.STATE_CHANGED,
         onProgress || null,
         null,
         () => {
-          storageRef.getDownloadURL().then((url) => {
+          storageRef.getDownloadURL().then(url => {
             Promise.all([
               user.updateProfile({
                 photoURL: `https://storage.googleapis.com/quiiz-b06ee/${imagePath}?${new Date().getTime()}`,
@@ -120,6 +120,17 @@ class AuthService extends Service {
         }
       );
     });
+  }
+
+  reAuthenticate(email: string, password: string) {
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      email,
+      password
+    );
+
+    return firebase
+      ?.auth()
+      ?.currentUser?.reauthenticateWithCredential(credential);
   }
 }
 

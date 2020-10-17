@@ -9,6 +9,8 @@ import { QuizTabPannel } from "components/main/quiz/channel/sub/tabPannel/QuizTa
 import { PlayListTabPannel } from "components/main/quiz/channel/sub/tabPannel/PlayListTabPannel";
 import { useQuery } from "utils/helper/queryParameter";
 import { ProfileTabPannel } from "components/main/quiz/channel/sub/tabPannel/ProfileTabPannel";
+import { useFetchQuiizUser } from "services/auth/AuthHooks";
+import { AccountSettingTabPannel } from "components/main/quiz/channel/sub/tabPannel/AccountSettingTabPannel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,29 +39,40 @@ const Main: React.FC = () => {
   const query = useQuery();
   const queryTabIndex = Number.parseInt(query.get("tabIndex") || "0") || 0;
   const [selectedTab, setSelectedTab] = useState(queryTabIndex);
+  const { loaded, isMe } = useFetchQuiizUser(id);
+  const [tabs, setTabs] = useState([
+    {
+      tabLabel: "クイズ",
+      childPannel: <QuizTabPannel channelId={id} />,
+    },
+    {
+      tabLabel: "再生リスト",
+      childPannel: <PlayListTabPannel channelId={id} />,
+    },
+    {
+      tabLabel: "プロフィール",
+      childPannel: <ProfileTabPannel channelId={id} />,
+    },
+  ]);
 
   useEffect(() => {
     setSelectedTab(queryTabIndex);
-  }, [queryTabIndex]);
+    if (loaded && isMe) {
+      setTabs(pre => [
+        ...pre,
+        {
+          tabLabel: "🔒 アカウント設定",
+          childPannel: <AccountSettingTabPannel />,
+        },
+      ]);
+    }
+  }, [queryTabIndex, loaded, isMe, id]);
 
   return (
     <Box className={clsx(classes.root)}>
       <ChannelHeader channelId={id} />
       <BasicTab
-        tabsprops={[
-          {
-            tabLabel: "クイズ",
-            childPannel: <QuizTabPannel channelId={id} />,
-          },
-          {
-            tabLabel: "再生リスト",
-            childPannel: <PlayListTabPannel channelId={id} />,
-          },
-          {
-            tabLabel: "プロフィール",
-            childPannel: <ProfileTabPannel channelId={id} />,
-          },
-        ]}
+        tabsprops={tabs}
         tabsClassName={classes.tabs}
         selectedTab={selectedTab}
       />

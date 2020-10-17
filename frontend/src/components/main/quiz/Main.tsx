@@ -27,7 +27,7 @@ import BasicConfirmDialog from "components/common/dialog/BasicConfirmDialog";
 import { MetaTag } from "components/common/meta/MetaTag";
 import { BottomBar } from "components/common/bottomBar/BottomBar";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
   },
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 1000,
     color: "#fff",
   },
 }));
