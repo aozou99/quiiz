@@ -19,6 +19,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { ChangePasswordDialog } from "components/common/dialog/ChangePasswordDialog";
 import { Alert } from "@material-ui/lab";
+import { ChangeMailAddressDialog } from "components/common/dialog/ChangeMailAddressDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +55,11 @@ export const AccountSettingTabPannel = () => {
   const handleChangePassword = () => {
     setPassDialog(true);
   };
+  const handleChangeMailAddress = () => {
+    setMailAddressDialog(true);
+  };
   const [passDialog, setPassDialog] = useState(false);
+  const [mailAddressDialog, setMailAddressDialog] = useState(false);
   const [snakOpen, setSnackOpen] = useState(false);
   const [snackContent, setSnackContent] = useState<{
     type: "info" | "success" | "warning" | "error" | undefined;
@@ -119,9 +124,23 @@ export const AccountSettingTabPannel = () => {
               color="default"
               size="small"
               startIcon={<MailIcon />}
+              onClick={handleChangeMailAddress}
             >
               変更する
             </Button>
+            <ChangeMailAddressDialog
+              open={mailAddressDialog}
+              onClose={() => {
+                setMailAddressDialog(false);
+              }}
+              onUpdated={() => {
+                setSnackContent({
+                  type: "success",
+                  text: "メールアドレスを変更しました",
+                });
+                setSnackOpen(true);
+              }}
+            />
           </Box>
           <Typography variant="body2" color="textSecondary" paragraph>
             {firebaseUser.email}

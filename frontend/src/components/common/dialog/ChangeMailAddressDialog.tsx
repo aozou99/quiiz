@@ -19,12 +19,11 @@ import { useForm } from "react-hook-form";
 import { useAuthUser } from "services/auth/AuthHooks";
 import AuthService from "services/auth/AuthService";
 import { ErrorMessage } from "@hookform/error-message";
-import { PASSWORD_REGEX } from "utils/costant/Validate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formGroup: {
-      maxWidth: theme.spacing(40),
+      maxWidth: theme.spacing(45),
     },
     button: {
       marginTop: theme.spacing(1.5),
@@ -43,7 +42,7 @@ const renderErrorMessage = ({ message }: { message: string }) => (
   </Typography>
 );
 
-export const ChangePasswordDialog = ({
+export const ChangeMailAddressDialog = ({
   open,
   onClose,
   onUpdated,
@@ -59,10 +58,10 @@ export const ChangePasswordDialog = ({
   const {
     register: registerN,
     errors: errorsN,
+    setError: setErrorN,
     handleSubmit: handleSubmitN,
   } = useForm<{
-    new_password: string;
-    new_password_confirm: string;
+    new_mail_address: string;
   }>();
   const {
     register: registerC,
@@ -73,31 +72,52 @@ export const ChangePasswordDialog = ({
     current_password: string;
   }>();
 
-  const [newPassword, setNewPassword] = useState("");
+  const [newMailAddress, setNewMailAddress] = useState("");
 
-  const handlePasswordChange = handleSubmitC(async ({ current_password }) => {
-    setOpenBackDrop(true);
-    try {
-      const user = await AuthService.reAuthenticate(
-        firebaseUser?.email || "",
-        current_password
-      )?.then(cre => cre.user);
-      await user?.updatePassword(newPassword);
-      onClose();
-      onUpdated();
-    } catch (error) {
-      setErrorC("current_password", { message: "パスワードが間違ってます" });
-    } finally {
-      setOpenBackDrop(false);
-    }
-  });
+  const handleMailAddressChange = handleSubmitC(
+    async ({ current_password }) => {
+      setOpenBackDrop(true);
+      try {
+        const user = await AuthService.reAuthenticate(
+          firebaseUser?.email || "",
+          current_password
+        )?.then(cre => cre.user);
+        await user?.updateEmail(newMailAddress);
+        await user?.getIdToken(true);
+        await user?.sendEmailVerification();
+        onClose();
+        onUpdated();
+      } catch (error) {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setActiveStep(0);
+            setTimeout(() => {
+              setErrorN("new_mail_address", {
+                message: "既に登録されているメールアドレスです",
+              });
+            }, 300);
+            break;
 
-  const handleNext = handleSubmitN(({ new_password, new_password_confirm }) => {
-    if (new_password !== new_password_confirm) {
-      alert("パスワードが確認用と一致しません");
-      return;
+          case "auth/wrong-password":
+            setErrorC("current_password", {
+              message: "パスワードが間違っています",
+            });
+            break;
+          default:
+            setErrorC("current_password", {
+              message: "想定外の問題が発生しました",
+            });
+            break;
+        }
+        console.log(error);
+      } finally {
+        setOpenBackDrop(false);
+      }
     }
-    setNewPassword(new_password);
+  );
+
+  const handleNext = handleSubmitN(({ new_mail_address }) => {
+    setNewMailAddress(new_mail_address);
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   });
 
@@ -107,54 +127,27 @@ export const ChangePasswordDialog = ({
 
   const steps = [
     {
-      label: "新しいパスワード",
+      label: "新しいメールアドレス",
       content: (
         <form onSubmit={handleNext} noValidate>
           <FormGroup className={classes.formGroup}>
             <TextField
-              id="new_password"
-              name="new_password"
-              label={"新しいパスワード"}
+              id="new_mail_address"
+              name="new_mail_address"
+              label={"新しいメールアドレス"}
               margin="dense"
               inputRef={registerN({
                 required: "入力してください",
-                pattern: {
-                  value: PASSWORD_REGEX,
-                  message: "8文字以上、大文字・小文字英数字を含んでください",
-                },
               })}
               required
-              error={!!errorsN.new_password}
-              defaultValue={newPassword}
-              type="password"
-              autoComplete="off"
+              error={!!errorsN.new_mail_address}
+              defaultValue={newMailAddress}
+              type="email"
+              autoComplete="email"
             />
             <ErrorMessage
               errors={errorsN}
-              name="new_password"
-              render={renderErrorMessage}
-            />
-            <TextField
-              id="new_password_confirm"
-              name="new_password_confirm"
-              label={"新しいパスワード(確認用)"}
-              margin="dense"
-              inputRef={registerN({
-                required: "入力してください",
-                pattern: {
-                  value: PASSWORD_REGEX,
-                  message: "8文字以上、大文字・小文字英数字を含んでください",
-                },
-              })}
-              required
-              error={!!errorsN.new_password_confirm}
-              defaultValue={newPassword}
-              type="password"
-              autoComplete="off"
-            />
-            <ErrorMessage
-              errors={errorsN}
-              name="new_password_confirm"
+              name="new_mail_address"
               render={renderErrorMessage}
             />
             <Button
@@ -173,7 +166,7 @@ export const ChangePasswordDialog = ({
     {
       label: "現在のパスワードを確認",
       content: (
-        <form onSubmit={handlePasswordChange} noValidate>
+        <form onSubmit={handleMailAddressChange} noValidate>
           <FormGroup className={classes.formGroup}>
             <TextField
               id="current_password"
@@ -225,7 +218,7 @@ export const ChangePasswordDialog = ({
       onClose={onClose}
       onExit={() => {
         setActiveStep(0);
-        setNewPassword("");
+        setNewMailAddress("");
       }}
       fullWidth
     >

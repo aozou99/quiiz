@@ -14,6 +14,7 @@ type AuthArgs = {
   password: string;
 };
 const db = firebase.firestore();
+firebase.auth().languageCode = "ja";
 
 class AuthService extends Service {
   ui!: firebaseui.auth.AuthUI;
