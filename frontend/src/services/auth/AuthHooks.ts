@@ -10,7 +10,7 @@ export const useAuthUser = () => {
   const [firebaseUser, loading] = useAuthState(firebase.auth());
   return { firebaseUser, loading };
 };
-export const useFetchQuiizUser = (userId: string) => {
+export const useFetchQuiizUser = (userId?: string) => {
   const [firebaseUser, loading] = useAuthState(firebase.auth());
   const [user, setUser] = useState<any>();
   const [loaded, setLoaded] = useState(false);
@@ -18,7 +18,7 @@ export const useFetchQuiizUser = (userId: string) => {
 
   useEffect(() => {
     let mounted = true;
-    if (!loading) {
+    if (userId && !loading) {
       setIsMe(firebaseUser?.uid === userId);
       db.collection("users")
         .doc(userId)

@@ -12,14 +12,15 @@ import {
   Button,
   Snackbar,
 } from "@material-ui/core";
-import React, { useState } from "react";
-import { useAuthUser } from "services/auth/AuthHooks";
+import React, { useEffect, useState } from "react";
+import { useAuthUser, useFetchQuiizUser } from "services/auth/AuthHooks";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MailIcon from "@material-ui/icons/Mail";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import { ChangePasswordDialog } from "components/common/dialog/ChangePasswordDialog";
 import { Alert } from "@material-ui/lab";
 import { ChangeMailAddressDialog } from "components/common/dialog/ChangeMailAddressDialog";
+import NotificationService from "services/notification/NotificationService";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,13 +52,11 @@ const useStyles = makeStyles((theme: Theme) =>
 export const AccountSettingTabPannel = () => {
   const classes = useStyles();
   const { firebaseUser } = useAuthUser();
-  const handleChange = () => {};
-  const handleChangePassword = () => {
-    setPassDialog(true);
-  };
-  const handleChangeMailAddress = () => {
-    setMailAddressDialog(true);
-  };
+  const { user, loaded } = useFetchQuiizUser(firebaseUser?.uid);
+  const [sendMailState, setSendMailState] = useState({
+    whenLiked: false,
+    whenNewPost: false,
+  });
   const [passDialog, setPassDialog] = useState(false);
   const [mailAddressDialog, setMailAddressDialog] = useState(false);
   const [snakOpen, setSnackOpen] = useState(false);
@@ -68,7 +67,28 @@ export const AccountSettingTabPannel = () => {
     type: "info",
     text: "",
   });
+  const handleChangeMailState = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const latestSetting = {
+      ...sendMailState,
+      [event.target.name]: event.target.checked,
+    };
+    NotificationService.updateMailSettings(latestSetting);
+    setSendMailState(latestSetting);
+  };
+  const handleChangePassword = () => {
+    setPassDialog(true);
+  };
+  const handleChangeMailAddress = () => {
+    setMailAddressDialog(true);
+  };
 
+  useEffect(() => {
+    if (loaded && user && user.notification?.mail) {
+      setSendMailState(user.notification.mail);
+    }
+  }, [user, loaded]);
   return (
     <Container maxWidth="sm" className={classes.root}>
       <Box>
@@ -79,9 +99,10 @@ export const AccountSettingTabPannel = () => {
           <FormControlLabel
             control={
               <Checkbox
-                onChange={handleChange}
-                name="sendMailWhenLiked"
+                onChange={handleChangeMailState}
+                name="whenLiked"
                 color="primary"
+                checked={sendMailState.whenLiked}
               />
             }
             label={
@@ -94,9 +115,10 @@ export const AccountSettingTabPannel = () => {
           <FormControlLabel
             control={
               <Checkbox
-                onChange={handleChange}
-                name="sendMailWhenNewQuiz"
+                onChange={handleChangeMailState}
+                name="whenNewPost"
                 color="primary"
+                checked={sendMailState.whenNewPost}
               />
             }
             label={
